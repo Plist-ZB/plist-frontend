@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Router from "./routes/Router";
@@ -14,6 +15,17 @@ const App = (): JSX.Element => {
       },
     },
   });
+
+  useEffect(() => {
+    const initMockWorker = async () => {
+      if (import.meta.env.MODE === "development") {
+        const { worker } = await import("@/mocks/browser");
+        worker.start();
+      }
+    };
+
+    initMockWorker();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

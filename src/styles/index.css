@@ -11,8 +11,18 @@
   -moz-osx-font-smoothing: grayscale;
 
   --max-width: 768px;
-  --primary-color: #4854a2;
-  --black-color: #333333;
+  --color-primary: #4854a2;
+  --color-primary-light: #f3f5fb;
+  --color-white: #ffffff;
+  --color-black: #333333;
+  --color-black-bright: #404040;
+  --color-red: #dc4646;
+  --color-red-bright: #f24822;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
 }
 
 a {
@@ -22,15 +32,16 @@ a {
 }
 
 a:hover {
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  justify-content: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--color-white);
 }
 
 h1 {
@@ -51,7 +62,7 @@ button {
 }
 
 button:hover {
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
 }
 
 button:focus,

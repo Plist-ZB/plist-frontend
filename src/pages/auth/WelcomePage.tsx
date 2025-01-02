@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import LogoIcon from "@/assets/logo.png";
 
 export default function WelcomePage() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // 3초 후 메인 화면(/main)으로 이동
+    const timer = setTimeout(() => {
+      navigate("/HomePage");
+    }, 3000);
+
+    // 컴포넌트가 언마운트되면 타이머를 클리어
+    return () => clearTimeout(timer);
+  }, [navigate]);
+
   return (
     <Container>
       <LogoWrapper>

@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 //import { useGoogleLogin } from "@react-oauth/google";
 import LogoIcon from "@/assets/logo.png";
+import { FaGoogle } from "react-icons/fa";
 
 export default function LoginPage() {
   //const handleGoogleLogin = useGoogleLogin({
@@ -21,8 +22,6 @@ export default function LoginPage() {
         <Title>PLIST</Title>
       </LogoWrapper>
       <ButtonWrapper>
-        <LoginButton>
-          <Icon>🔒</Icon>
         <LoginButton
         // onClick={handleGoogleLogin}
         >
@@ -31,10 +30,6 @@ export default function LoginPage() {
           </Icon>
           Google 로그인하기
         </LoginButton>
-        {/*<LoginButton>
-          <Icon>🔒</Icon>
-          카카오 로그인하기
-        </LoginButton>*/}
       </ButtonWrapper>
     </Container>
   );

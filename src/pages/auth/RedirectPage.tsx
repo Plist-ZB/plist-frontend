@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import LogoIcon from "@/assets/logo.png";
 import { ScaleLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";

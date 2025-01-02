@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +17,12 @@ export default function WelcomePage() {
     return () => clearTimeout(timer);
   }, [navigate]);
 
+=======
+import React from "react";
+import LogoIcon from "@/assets/logo.png";
+
+export default function WelcomePage() {
+>>>>>>> 0ee09b7 (feat : Welcome 페이지 JSX)
   return (
     <Container>
       <LogoWrapper>
@@ -25,7 +32,10 @@ export default function WelcomePage() {
       <MessageWrapper>
         <WelcomeText>가입을 환영합니다!</WelcomeText>
         <SubText>플리스트와 함께 즐거운 음악을 공유해요!</SubText>
+<<<<<<< HEAD
         <SubText1>3초뒤 자동으로 메인화면으로 이동합니다.</SubText1>
+=======
+>>>>>>> 0ee09b7 (feat : Welcome 페이지 JSX)
       </MessageWrapper>
     </Container>
   );

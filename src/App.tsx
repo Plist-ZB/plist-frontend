@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from "react";
+import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Router from "./routes/Router";
+import JotaiProvider from "./provider/JotaiProvider";
+import "./styles/App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = (): JSX.Element => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false, // 창 포커스 시 재요청 비활성화
+        staleTime: 5 * 60 * 1000, // 데이터 유효 시간을 5분으로 설정, 최초 실행 5분 후 서버에 데이터 재요청
+        retry: 1, // 쿼리함수가 error를 throw 시 한번만 재요청
+      },
+    },
+  });
+
+  useEffect(() => {
+    const initMockWorker = async () => {
+      if (import.meta.env.MODE === "development") {
+        const { worker } = await import("@/mocks/browser");
+        worker.start();
+      }
+    };
+
+    initMockWorker();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter future={{ v7_startTransition: false }}>
+        <JotaiProvider>
+          <Router />
+        </JotaiProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
+};
 
-export default App
+export default App;

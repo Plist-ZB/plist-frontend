@@ -1,0 +1,71 @@
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 100;
+  src: url("./pretendard/Pretendard-Thin.woff2") format("woff2"),
+    url("./pretendard/Pretendard-Thin.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 200;
+  src: url("./pretendard/Pretendard-ExtraLight.woff2") format("woff2"),
+    url("./pretendard/Pretendard-ExtraLight.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 300;
+  src: url("./pretendard/Pretendard-Light.woff2") format("woff2"),
+    url("./pretendard/Pretendard-Light.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./pretendard/Pretendard-Regular.woff2") format("woff2"),
+    url("./pretendard/Pretendard-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 500;
+  src: url("./pretendard/Pretendard-Medium.woff2") format("woff2"),
+    url("./pretendard/Pretendard-Medium.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 600;
+  src: url("./pretendard/Pretendard-SemiBold.woff2") format("woff2"),
+    url("./pretendard/Pretendard-SemiBold.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 700;
+  src: url("./pretendard/Pretendard-Bold.woff2") format("woff2"),
+    url("./pretendard/Pretendard-Bold.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 800;
+  src: url("./pretendard/Pretendard-ExtraBold.woff2") format("woff2"),
+    url("./pretendard/Pretendard-ExtraBold.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 900;
+  src: url("./pretendard/Pretendard-Black.woff2") format("woff2"),
+    url("./pretendard/Pretendard-Black.woff") format("woff");
+}

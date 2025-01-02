@@ -1,8 +1,19 @@
 import React from "react";
 import styled from "styled-components";
+//import { useGoogleLogin } from "@react-oauth/google";
 import LogoIcon from "@/assets/logo.png";
 
 export default function LoginPage() {
+  //const handleGoogleLogin = useGoogleLogin({
+  //onSuccess: (response) => {
+  //console.log("Google OAuth Response:", response);
+  // 여기에 백엔드로 액세스 토큰 전송 로직 추가
+  //},
+  //onError: () => {
+  //console.error("로그인에 실패하셨습니다다");
+  //},
+  //});
+
   return (
     <Container>
       <LogoWrapper>
@@ -12,6 +23,12 @@ export default function LoginPage() {
       <ButtonWrapper>
         <LoginButton>
           <Icon>🔒</Icon>
+        <LoginButton
+        // onClick={handleGoogleLogin}
+        >
+          <Icon>
+            <FaGoogle />
+          </Icon>
           Google 로그인하기
         </LoginButton>
         {/*<LoginButton>

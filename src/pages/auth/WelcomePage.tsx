@@ -19,6 +19,7 @@ export default function WelcomePage() {
 
 =======
 import React from "react";
+import styled from "styled-components";
 import LogoIcon from "@/assets/logo.png";
 
 export default function WelcomePage() {
@@ -87,9 +88,12 @@ const SubText = styled.p`
   color: #666;
   margin: 0;
 `;
+<<<<<<< HEAD
 
 const SubText1 = styled.p`
   font-size: 15px;
   color: #4654a3;
   margin: 10px;
 `;
+=======
+>>>>>>> 2f7a5f0 (feat : Welcome 페이지 style)

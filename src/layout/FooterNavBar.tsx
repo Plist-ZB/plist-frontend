@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { House, Headphones, Search, CircleUserRound } from "lucide-react";
 import HostAdd from "../pages/HostAdd";
 
-export default function FooterNavBar() {
+export default function FooterNavBar({ className }: { className?: string }) {
   const { pathname } = useLocation();
   const [isHostAddOpen, setIsHostAddOpen] = useState(false);
 

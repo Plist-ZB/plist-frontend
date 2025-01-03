@@ -4,10 +4,11 @@ import Header from "../../layout/Header";
 import FooterNavBar from "../../layout/FooterNavBar";
 
 export default function HomePage() {
-  // 카테고리 슬라이드 구현현
+  // 카테고리 토글바 구현현
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleSlide = () => {
+  // 토글바 열기/닫기
+  const toggleBar = () => {
     setIsOpen(!isOpen);
   };
 
@@ -18,13 +19,12 @@ export default function HomePage() {
         <CategoryButtons>
           <CategoryButton>최근</CategoryButton>
           <CategoryButton>인기</CategoryButton>
-          <CategoryButtonRight onClick={toggleSlide}>
+          <CategoryButtonRight onClick={toggleBar}>
             카테고리
-            {/* 슬라이드 창 */}
-            <SlideContainer isOpen={isOpen}>
-              <h2>슬라이드 창 내용</h2>
+            {/* 토글바 */}
+            <ToggleBar isOpen={isOpen}>
               <p>여기에 카테고리 관련 내용을 넣을 수 있습니다.</p>
-            </SlideContainer>
+            </ToggleBar>
           </CategoryButtonRight>
         </CategoryButtons>
         <StreamList>
@@ -100,20 +100,21 @@ const CategoryButtonRight = styled.button`
   background: var(--color-white);
   cursor: pointer;
   margin-left: auto;
+  position: relative; /* 토글바가 버튼 외부에서 나오도록 상대적 위치 지정 */
 `;
 
-//카테고리 슬라이드
-const SlideContainer = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+// 토글바 스타일
+const ToggleBar = styled.div`
+  position: absolute;
+  top: 110%; /* 버튼 바로 아래에 위치 */
+  right: 0; /* 토글바 오른쪽 열림 */
+  width: 500px;
   height: 200px;
   background-color: #f4f4f4;
-  transform: translateY(${(props) => (props.isOpen ? "0" : "100%")});
-  transition: transform 0.3s ease-in-out;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  padding: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-height: ${(props) => (props.isOpen ? "300px" : "0")}; /* isOpen 상태에 따라 높이 설정 */
+  overflow: hidden; /* 내용이 넘치지 않게 숨김 */
+  transition: max-height 0.3s ease-in-out; /* 부드러운 애니메이션 */
 `;
 
 const StreamList = styled.div`

@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
-export default function HostAdd() {
+interface HostAddProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function HostAdd({ isOpen, onClose }: HostAddProps) {
   return (
-    <ModalOverlay>
+    <ModalOverlay style={{ display: isOpen ? "flex" : "none" }}>
       <ModalContainer>
         <ModalHeader>
           <h2>채널 생성하기</h2>
-          <CloseButton>×</CloseButton>
+          <CloseButton onClick={onClose}>×</CloseButton>
         </ModalHeader>
         <ModalBody>
           <Label>채널 제목</Label>

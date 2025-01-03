@@ -3,41 +3,33 @@ import { Link, useLocation } from "react-router-dom";
 import { House, Headphones, Search, CircleUserRound } from "lucide-react";
 import HostAdd from "../pages/HostAdd";
 
-export default function FooterNavBar({ className }: { className?: string }) {
+export default function FooterNavBar() {
   const { pathname } = useLocation();
-  const [isHostModalOpen, setIsHostModalOpen] = useState(false);
+  const [isHostAddOpen, setIsHostAddOpen] = useState(false);
 
-  const openHostModal = () => setIsHostModalOpen(true);
-  const closeHostModal = () => setIsHostModalOpen(false);
+  const openHostAddModal = () => setIsHostAddOpen(true);
+  const closeHostAddModal = () => setIsHostAddOpen(false);
 
   const menus = [
     { id: 0, name: "홈", path: "/", icon: <House /> },
-    { id: 1, name: "호스트하기", path: "", onClick: openHostModal, icon: <Headphones /> },
+    { id: 1, name: "호스트하기", path: "", onClick: openHostAddModal, icon: <Headphones /> },
     { id: 2, name: "검색", path: "/search", icon: <Search /> },
     { id: 3, name: "마이페이지", path: "/mypage", icon: <CircleUserRound /> },
   ];
 
   return (
     <>
-      <nav
-        className={`flex-shrink-0 bg-white border-t shadow-top w-full h-fnb border-gray-border ${className}`}
-      >
+      <nav className={`flex-shrink-0 bg-white border-t shadow-top w-full h-fnb border-gray-border`}>
         <ul className="grid w-full h-full grid-cols-4">
           {menus.map((menu) => (
             <li
               key={menu.id}
               role="button"
               tabIndex={menu.id + 1}
-              onClick={() => {
-                if (menu.id === 1) {
-                  openHostModal();
-                }
-              }}
+              onClick={menu.onClick}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
-                  if (menu.id === 1) {
-                    openHostModal();
-                  }
+                  menu.onClick?.();
                 }
               }}
               className={`flex flex-col items-center justify-center w-full h-full gap-1 pt-1 ${
@@ -55,8 +47,9 @@ export default function FooterNavBar({ className }: { className?: string }) {
           ))}
         </ul>
       </nav>
-      {/* 모달 컴포넌트 */}
-      <HostAdd isOpen={isHostModalOpen} onClose={closeHostModal} />
+
+      {/* HostAdd 모달 */}
+      <HostAdd isOpen={isHostAddOpen} onClose={closeHostAddModal} />
     </>
   );
 }

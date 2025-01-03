@@ -102,17 +102,17 @@ const CategoryButtonRight = styled.button`
   margin-left: auto;
 `;
 
-//카테고리 슬라이드 style
+//카테고리 슬라이드
 const SlideContainer = styled.div`
-  position: absolute;
-  top: 100%; /* 카테고리 버튼 바로 아래에 위치 */
+  position: fixed;
+  bottom: 0;
   left: 0;
   width: 100%;
   height: 200px;
   background-color: #f4f4f4;
-  transform: translateY(${(props) => (props.isOpen ? "0" : "-100%")});
+  transform: translateY(${(props) => (props.isOpen ? "0" : "100%")});
   transition: transform 0.3s ease-in-out;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   padding: 10px;
 `;
 

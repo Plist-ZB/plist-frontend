@@ -17,10 +17,14 @@ export default function HomePage() {
         <StreamList>
           {streams.map((stream, index) => (
             <StreamCard key={index}>
-              <LiveBadge>Live</LiveBadge>
-              <Thumbnail>썸네일</Thumbnail>
+              <Thumbnail>
+                <LiveBadge>Live</LiveBadge>
+                썸네일
+              </Thumbnail>
               <StreamDetails>
-                <Title>{stream.title}</Title>
+                <Title>
+                  <b>{stream.title}</b>
+                </Title>
                 <Info>{stream.host}</Info>
                 <Info>카테고리: {stream.category}</Info>
                 <Info>스트리밍 시간: {stream.duration}</Info>
@@ -71,7 +75,7 @@ const CategoryButton = styled.button`
   padding: 8px 16px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background: #f9f9f9;
+  background: var(--color-white);
   cursor: pointer;
 `;
 
@@ -79,7 +83,7 @@ const CategoryButtonRight = styled.button`
   padding: 8px 16px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background: #f9f9f9;
+  background: var(--color-white);
   cursor: pointer;
   margin-left: auto;
 `;
@@ -88,6 +92,7 @@ const StreamList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border-radius: 8px;
 `;
 
 const StreamCard = styled.div`
@@ -99,24 +104,28 @@ const StreamCard = styled.div`
 `;
 
 const LiveBadge = styled.div`
+  position: absolute;
+  top: 4px;
+  left: 4px;
   background: red;
   color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 2px 4px;
+  border-radius: 8px;
   font-size: 12px;
-  font-weight: bold;
-  align-self: flex-start;
+  font-weight: regule;
 `;
 
 const Thumbnail = styled.div`
+  position: relative;
   width: 100px;
   height: 100px;
-  background: #ddd;
+  background: var(--color-primary-50);
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 8px;
   font-size: 14px;
-  color: #555;
+  color: black;
 `;
 
 const StreamDetails = styled.div`

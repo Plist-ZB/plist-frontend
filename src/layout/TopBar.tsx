@@ -15,7 +15,7 @@ const TopBar: React.FC<TopBarProps> = ({
   hasAction = false,
 }) => {
   return (
-    <div className="sticky top-0 flex items-center justify-between flex-shrink-0 px-1 bg-transparent bg-white border-b border-gray-200 h-header">
+    <div className="sticky top-0 z-10 flex items-center justify-between flex-shrink-0 px-1 bg-transparent bg-white border-b border-gray-200 h-header">
       {/* 뒤로가기 버튼 */}
       <Link
         to={backURL ?? "/"}

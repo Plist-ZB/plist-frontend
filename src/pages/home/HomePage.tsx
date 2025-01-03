@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Header from "../../layout/Header";
 import FooterNavBar from "../../layout/FooterNavBar";
 
 export default function HomePage() {
+  // 카테고리 슬라이드 구현현
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSlide = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <Container>
       <Header />
@@ -11,7 +18,14 @@ export default function HomePage() {
         <CategoryButtons>
           <CategoryButton>최근</CategoryButton>
           <CategoryButton>인기</CategoryButton>
-          <CategoryButtonRight>카테고리</CategoryButtonRight>
+          <CategoryButtonRight onClick={toggleSlide}>
+            카테고리
+            {/* 슬라이드 창 */}
+            <SlideContainer isOpen={isOpen}>
+              <h2>슬라이드 창 내용</h2>
+              <p>여기에 카테고리 관련 내용을 넣을 수 있습니다.</p>
+            </SlideContainer>
+          </CategoryButtonRight>
         </CategoryButtons>
         <StreamList>
           {streams.map((stream, index) => (
@@ -88,6 +102,20 @@ const CategoryButtonRight = styled.button`
   margin-left: auto;
 `;
 
+//카테고리 슬라이드 style
+const SlideContainer = styled.div`
+  position: absolute;
+  top: 100%; /* 카테고리 버튼 바로 아래에 위치 */
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background-color: #f4f4f4;
+  transform: translateY(${(props) => (props.isOpen ? "0" : "-100%")});
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+`;
+
 const StreamList = styled.div`
   display: flex;
   flex-direction: column;
@@ -103,6 +131,7 @@ const StreamCard = styled.div`
   padding: 16px;
 `;
 
+//Live 뱃지
 const LiveBadge = styled.div`
   position: absolute;
   top: 4px;

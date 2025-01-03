@@ -16,16 +16,16 @@ const App = (): JSX.Element => {
     },
   });
 
-  useEffect(() => {
-    const initMockWorker = async () => {
-      if (import.meta.env.MODE === "development") {
-        const { worker } = await import("@/mocks/browser");
-        worker.start();
-      }
-    };
+  //useEffect(() => {
+  //   async function initMockWorker() {
+  //     if (import.meta.env.MODE === "development") {
+  //       const { worker } = await import("@/mocks/browser");
+  //       worker.start();
+  //     }
+  //   }
 
-    initMockWorker();
-  }, []);
+  //   initMockWorker();
+  // }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

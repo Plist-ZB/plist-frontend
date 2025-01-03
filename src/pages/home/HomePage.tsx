@@ -68,6 +68,7 @@ const CategoryButtons = styled.div`
   display: flex;
   gap: 8px;
   margin: 16px 0;
+  color: var(--color-gray-dark);
 `;
 
 const CategoryButton = styled.button`

@@ -4,12 +4,34 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#4854A2",
-        "primary-light": "#F3F5FB",
-        black: "#333333",
-        "black-bright": "#404040",
-        red: "#DC4646",
-        "red-bright": "#F24822",
+        primary: {
+          50: "#f3f5fb",
+          100: "#e4e9f5",
+          200: "#cfd9ee",
+          300: "#adbfe3",
+          400: "#869fd4",
+          500: "#6981c8",
+          600: "#5668ba",
+          700: "#4854a2",
+          800: "#424a8b",
+          900: "#39406f",
+          main: "#4854a2",
+          light: "#F3F5FB",
+        },
+        white: "#ffffff",
+        black: {
+          DEFAULT: "#333333",
+          bright: "#404040",
+        },
+        gray: {
+          dark: "#888787",
+          light: "#A7A7A7",
+          border: "#d9d9d9",
+        },
+        red: {
+          main: "#DC4646",
+        },
+        border: "#A7A7A7",
       },
       boxShadow: {
         top: "0px -2px 2px rgba(72, 84, 162, 0.03)",

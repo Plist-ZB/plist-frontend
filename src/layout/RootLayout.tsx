@@ -4,14 +4,13 @@ import FooterNavBar from "@/layout/FooterNavBar";
 
 export default function RootLayout() {
   return (
-    <div className="relative w-full max-w-screen-md border-[#D9D9D9] bg-white">
-      {/* 스크롤할 떄 헤더도 내릴지말지 정해야함 */}
-      <Header />
+    <div className="relative w-full max-w-screen-md h-full border-[#D9D9D9] bg-white flex flex-col">
+      <Header className="sticky top-0 z-10 max-w-screen-md md:border-x" />
 
-      <main className="w-full pt-header pb-fnb">
+      <main className={`w-full mb-fnb`}>
         <Outlet />
       </main>
-      <FooterNavBar />
+      <FooterNavBar className="fixed bottom-0 z-10 max-w-screen-md -translate-x-1/2 md:border-x left-1/2 pb-safe" />
     </div>
   );
 }

@@ -29,7 +29,7 @@ const App = (): JSX.Element => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter future={{ v7_startTransition: false }}>
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <JotaiProvider>
           <Router />
         </JotaiProvider>

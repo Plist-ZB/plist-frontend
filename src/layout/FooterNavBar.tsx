@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { House, Headphones, Search, CircleUserRound } from "lucide-react";
-// 사이즈 애매함 -> lucide-react의 아이콘을 피그마로 가져와서 사이즈 재측정해야할듯함
-import LogoIcon from "@/assets/svg/logo.svg";
 
-export default function FooterNavBar() {
+export default function FooterNavBar({ className }: { className?: string }) {
+  const { pathname } = useLocation();
+  // TODO: 호스트하기 메뉴 클릭 시 모달창 띄우기
   const onClickHostMenu = () => console.log("호스트하기");
 
   const menus = [
@@ -16,9 +16,7 @@ export default function FooterNavBar() {
   return (
     <nav
       // shadow-top으론 잘 안보여서 border-top으로 대체해야 할듯함
-      className={
-        "bg-white shadow-top md:border-x w-full h-fnb max-w-screen-md fixed bottom-0 left-1/2 -translate-x-1/2 z-10 pb-safe border-[#D9D9D9]"
-      }
+      className={`flex-shrink-0 bg-white border-t shadow-top w-full h-fnb border-gray-border ${className}`}
     >
       <ul className="grid w-full h-full grid-cols-4">
         {menus.map((menu) => (
@@ -38,7 +36,9 @@ export default function FooterNavBar() {
                 }
               }
             }}
-            className="flex flex-col items-center justify-center w-full h-full gap-1 pt-1 hover:text-primary"
+            className={`flex flex-col items-center justify-center w-full h-full gap-1 pt-1 ${
+              pathname === menu.path ? "text-primary" : "text-black"
+            } hover:text-primary`}
           >
             <Link
               to={menu.path}

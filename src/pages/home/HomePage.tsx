@@ -81,6 +81,7 @@ const CategoryButtonRight = styled.button`
   border-radius: 8px;
   background: #f9f9f9;
   cursor: pointer;
+  margin-left: auto;
 `;
 
 const StreamList = styled.div`

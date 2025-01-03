@@ -10,7 +10,9 @@ export default function HostAdd() {
           <CloseButton>×</CloseButton>
         </ModalHeader>
         <ModalBody>
-          <Input type="text" placeholder="방 제목을 입력해주세요." />
+          <Label>채널 제목</Label>
+          <Input type="text" placeholder="채널 제목을 입력해주세요." />
+          <Label>카테고리 선택하기</Label>
           <Select>
             <option value="">카테고리</option>
             <option value="1">공부</option>
@@ -32,6 +34,7 @@ export default function HostAdd() {
             ))}
           </RadioGroup> */}
           <Label>썸네일</Label>
+          <SmallLabel>* 썸네일은 재생목록 첫번째 이미지로 자동 선택됩니다.</SmallLabel>
           <ThumbnailPreview>
             <span>재생목록 1 썸네일</span>
           </ThumbnailPreview>
@@ -76,6 +79,7 @@ const ModalHeader = styled.div`
   h2 {
     font-size: 18px;
     font-weight: 600;
+    margin-left: 10px;
   }
 `;
 
@@ -115,6 +119,14 @@ const Label = styled.label`
   font-weight: 600;
   margin-bottom: 8px;
   display: block;
+`;
+
+const SmallLabel = styled.label`
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+  color: var(--color-primary);
 `;
 
 // const RadioGroup = styled.div`

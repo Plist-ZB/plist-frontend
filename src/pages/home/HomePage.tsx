@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import Header from "../../layout/Header";
 import FooterNavBar from "../../layout/FooterNavBar";
-import HeaderButton from "../../layout/HeaderButton";
 
 export default function HomePage() {
   return (

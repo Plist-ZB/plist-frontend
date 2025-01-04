@@ -39,7 +39,7 @@ export default function CreatePlaylistModal({ unmount }: CreatePlaylistModalProp
             취소
           </button>
           <button
-            className="px-3 py-1 text-black border border-black rounded-lg bg-primary-light hover:bg-primary hover:text-white"
+            className="px-3 py-1 text-black border border-black rounded-lg bg-primary-light hover:bg-primary hover:text-primary-main"
             onClick={() => console.log("생성")}
           >
             생성

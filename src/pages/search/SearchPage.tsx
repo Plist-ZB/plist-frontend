@@ -15,6 +15,7 @@ export default function SearchPage() {
         </SearchBarContainer>
         <Line />
         <ResultText>검색 결과가 없습니다.</ResultText>
+          <LoadingText>검색 중...</LoadingText>
           <StreamList>
             {streams.map((stream, index) => (
               <StreamCard key={index}>
@@ -66,6 +67,13 @@ const Line = styled.div`
   height: 1px;
   background-color: #ddd;
   margin-top: 35px;
+`;
+
+const LoadingText = styled.p`
+  margin-top: 30px;
+  font-size: 15px;
+  color: #888;
+  text-align: center;
 `;
 
 const SearchInput = styled.input`

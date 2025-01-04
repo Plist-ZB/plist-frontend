@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Router from "./routes/Router";
 import JotaiProvider from "./provider/JotaiProvider";
 import "./styles/App.css";
+import { OverlayProvider } from "overlay-kit";
 
 const App = (): JSX.Element => {
   const queryClient = new QueryClient({
@@ -31,7 +32,9 @@ const App = (): JSX.Element => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <JotaiProvider>
-          <Router />
+          <OverlayProvider>
+            <Router />
+          </OverlayProvider>
         </JotaiProvider>
       </BrowserRouter>
     </QueryClientProvider>

@@ -35,8 +35,8 @@ export default function FooterNavBar({ className }: { className?: string }) {
                 }
               }}
               className={`flex flex-col items-center justify-center w-full h-full gap-1 pt-1 ${
-                pathname === menu.path ? "text-primary" : "text-black"
-              } hover:text-primary`}
+                pathname === menu.path ? "text-primary-main" : "text-black"
+              } hover:text-primary-main`}
             >
               <Link
                 to={menu.path}

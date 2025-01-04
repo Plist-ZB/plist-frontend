@@ -15,6 +15,24 @@ export default function SearchPage() {
         </SearchBarContainer>
         <Line />
         <ResultText>검색 결과가 없습니다.</ResultText>
+          <StreamList>
+            {streams.map((stream, index) => (
+              <StreamCard key={index}>
+                <Thumbnail>
+                  <LiveBadge>Live</LiveBadge>
+                  썸네일
+                </Thumbnail>
+                <StreamDetails>
+                  <Title>
+                    <b>{stream.title}</b>
+                  </Title>
+                  <Info>{stream.host}</Info>
+                  <Info>카테고리: {stream.category}</Info>
+                  <Info>스트리밍 시간: {stream.duration}</Info>
+                </StreamDetails>
+              </StreamCard>
+            ))}
+          </StreamList>
       </MainContent>
       <FooterNavBar />
     </Container>

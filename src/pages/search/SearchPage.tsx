@@ -81,6 +81,7 @@ const SearchInput = styled.input`
   border: none;
   outline: none;
   font-size: 16px;
+  padding: 4px;
 `;
 
 const ResultText = styled.p`

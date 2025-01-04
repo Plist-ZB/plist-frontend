@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 import FooterNavBar from "@/layout/FooterNavBar";
-import RootLayout from "@/layout/RootLayout";
+import TopBar from "@/layout/TopBar";
 
 export default function CategoryPage() {
   return (
     <Container>
+      <TopBar title="공부" />
       <MainContent>
         <StreamList>
           {streams.map((stream, index) => (

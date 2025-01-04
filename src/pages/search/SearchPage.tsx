@@ -1,21 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Header from "../../layout/Header";
 import FooterNavBar from "../../layout/FooterNavBar";
 import { IoIosSearch } from "react-icons/io";
 
+interface SearchResult {
+  id: number;
+  name: string;
+  description: string;
+}
+
 export default function SearchPage() {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [results, setResults] = useState<SearchResult[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return; // 빈 입력 방지
+    setLoading(true);
+    try {
+      // API 호출 (가상 API로 대체)
+      const response = await fetch(`https://api.example.com/search?query=${searchQuery}`);
+      const data: SearchResult[] = await response.json();
+      setResults(data);
+    } catch (error) {
+      console.error("검색 중 오류 발생:", error);
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Container>
       <Header />
       <MainContent>
         <SearchBarContainer>
-          <SearchInput placeholder="검색창" />
-          <IoIosSearch size={20} color="#888787" />
+          <SearchInput
+            placeholder="채널명, 카테고리를 검색해주세요."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <IoIosSearch onClick={handleSearch} size={20} color="#888787" />
         </SearchBarContainer>
         <Line />
-        <ResultText>검색 결과가 없습니다.</ResultText>
+        {/* 검색 결과 */}
+        {loading ? (
           <LoadingText>검색 중...</LoadingText>
+        ) : results === null ? null : results.length > 0 ? ( // 검색을 수행하지 않았을 경우 아무것도 표시하지 않음
           <StreamList>
             {streams.map((stream, index) => (
               <StreamCard key={index}>
@@ -34,6 +66,9 @@ export default function SearchPage() {
               </StreamCard>
             ))}
           </StreamList>
+        ) : (
+          <ResultText>검색 결과가 없습니다.</ResultText>
+        )}
       </MainContent>
       <FooterNavBar />
     </Container>

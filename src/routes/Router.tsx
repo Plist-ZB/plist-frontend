@@ -7,7 +7,7 @@ const RedirectPage = lazy(() => import("@/pages/auth/RedirectPage"));
 const WelcomePage = lazy(() => import("@/pages/auth/WelcomePage"));
 const CategoryPage = lazy(() => import("@/pages/category/CategoryPage"));
 const SearchPage = lazy(() => import("@/pages/search/SearchPage"));
-const RoomPage = lazy(() => import("@/pages/room/RoomPage"));
+const ChannelPage = lazy(() => import("@/pages/channel/ChannelPage"));
 const MyPage = lazy(() => import("@/pages/mypage/MyPage"));
 const ProfilePage = lazy(() => import("@/pages/mypage/ProfilePage"));
 const PlaylistPage = lazy(() => import("@/pages/mypage/PlaylistPage"));
@@ -33,7 +33,7 @@ const Router = () => {
 
         <Route path="/search" element={<SearchPage />} />
 
-        <Route path="/room/:roomId" element={<RoomPage />} />
+        <Route path="/channel/:channelId" element={<ChannelPage />} />
 
         <Route path="/mypage">
           <Route index element={<MyPage />} />

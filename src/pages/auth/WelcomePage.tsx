@@ -9,7 +9,7 @@ export default function WelcomePage() {
   useEffect(() => {
     // 3초 후 메인 화면(/main)으로 이동
     const timer = setTimeout(() => {
-      navigate("/HomePage");
+      navigate("/");
     }, 3000);
 
     // 컴포넌트가 언마운트되면 타이머를 클리어

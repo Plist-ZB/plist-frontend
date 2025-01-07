@@ -1,17 +1,8 @@
-import React, { useState } from "react";
 import styled from "styled-components";
 import FooterNavBar from "../../layout/FooterNavBar";
 import StreamList from "@/common/components/StreamList";
 
 export default function HomePage() {
-  // 카테고리 토글바 구현현
-  const [isOpen, setIsOpen] = useState(false);
-
-  // 토글바 열기/닫기
-  const toggleBar = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
     <Container>
       <MainContent>

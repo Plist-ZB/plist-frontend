@@ -1,35 +1,73 @@
-import React, { useEffect } from "react";
+//JSON-server 데이터작업
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+//api 연결할때 사용
+//import { useNavigate, useSearchParams } from "react-router-dom";
+//import React, { useEffect } from "react";
 import styled from "styled-components";
 import LogoIcon from "@/assets/svg/logo.svg";
 import TextLogoIcon from "@/assets/svg/text-logo.svg";
 import { FaGoogle } from "react-icons/fa";
-import { useNavigate, useSearchParams } from "react-router-dom";
+
+//JSON-server 데이터작업
+interface UserInfo {
+  user_id: number;
+  username: string;
+  avatar: string;
+}
 
 export default function LoginPage() {
+  // const navigate = useNavigate();
+  // const [searchParams] = useSearchParams();
+
+  // // 리다이렉트된 URL에서 토큰 처리
+  // useEffect(() => {
+  //   const accessToken = searchParams.get("access");
+  //   const isMember = searchParams.get("isMember");
+
+  //   if (accessToken) {
+  //     // Access token을 localStorage에 저장
+  //     localStorage.setItem("access_token", accessToken);
+
+  //     // 사용자 상태에 따라 페이지 이동
+  //     if (isMember === "true") {
+  //       navigate("/home"); // 홈페이지로 이동
+  //     } else {
+  //       navigate("/welcome"); // Welcome 페이지로 이동
+  //     }
+  //   }
+  // }, [searchParams, navigate]);
+
+  // // 구글 로그인 버튼 클릭 시 서버로 이동
+  // const handleLogin = () => {
+  //   window.location.href = "서버주소/login";
+  // };
+
+  //JSON-server 데이터작업
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
-  // 리다이렉트된 URL에서 토큰 처리
+  // 사용자 정보 가져오기
   useEffect(() => {
-    const accessToken = searchParams.get("access");
-    const isMember = searchParams.get("isMember");
-
-    if (accessToken) {
-      // Access token을 localStorage에 저장
-      localStorage.setItem("access_token", accessToken);
-
-      // 사용자 상태에 따라 페이지 이동
-      if (isMember === "true") {
-        navigate("/home"); // 홈페이지로 이동
-      } else {
-        navigate("/welcome"); // Welcome 페이지로 이동
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/auth/login");
+        setUserInfo(response.data);
+      } catch (error) {
+        console.error("Failed to fetch user info:", error);
       }
-    }
-  }, [searchParams, navigate]);
+    };
 
-  // 구글 로그인 버튼 클릭 시 서버로 이동
+    fetchUserInfo();
+  }, []);
+
   const handleLogin = () => {
-    window.location.href = "서버주소/login";
+    //window.location.href = "서버주소/login";
+
+    // 로그인 완료 후 특정 페이지로 이동
+    navigate("/");
   };
 
   return (

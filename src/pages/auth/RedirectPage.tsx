@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import LogoIcon from "@/assets/logo.png";
+import LogoIcon from "@/assets/svg/logo.svg";
+import TextLogoIcon from "@/assets/svg/text-logo.svg";
 import { ScaleLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -44,8 +45,8 @@ export default function RedirectPage() {
   return (
     <Container>
       <LogoWrapper>
-        <Logo src={LogoIcon} alt="Logo" />
-        <LogoText>PLIST</LogoText>
+        <LogoIcon />
+        <TextLogoIcon />
       </LogoWrapper>
       <Spinners>
         <ScaleLoader

@@ -44,7 +44,7 @@ export default function RedirectPage() {
         if (isMember === "true") {
           navigate("/"); // 홈페이지로 이동
         } else {
-          navigate("/welcome"); // Welcome 페이지로 이동
+          navigate("/auth/welcome"); // Welcome 페이지로 이동
         }
       } catch (error) {
         // axios 요청에서 오류가 발생하면 여기로 이동

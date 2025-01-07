@@ -4,7 +4,7 @@ import LogoIcon from "@/assets/svg/logo.svg";
 import TextLogoIcon from "@/assets/svg/text-logo.svg";
 import { ScaleLoader } from "react-spinners";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import axios from "axios";
+import { instance } from "@/services/api/instance";
 
 export default function RedirectPage() {
   const navigate = useNavigate();
@@ -12,11 +12,12 @@ export default function RedirectPage() {
 
   // 리다이렉트된 URL에서 토큰 처리
   useEffect(() => {
-    const accessToken = searchParams.get("access");
-    const isMember = searchParams.get("isMember");
+    const accessToken = searchParams.get("access-token");
+    const isMember = searchParams.get("is-Member");
+    console.log("isMember:", isMember);
 
     // access_token이 없으면 오류 처리
-    if (!accessToken || isMember === null) {
+    if (!accessToken || !isMember) {
       alert("로그인에 실패했습니다. 다시 시도해주세요.");
       return;
     }
@@ -28,7 +29,7 @@ export default function RedirectPage() {
     const fetchUserData = async () => {
       try {
         // mock API 호출
-        const response = await axios.get("http://localhost:5003/users/1");
+        const response = await instance.get("/users/1");
         const user = response.data;
 
         // user 데이터가 없으면 사용자 정보를 가져오는 데 실패한 것으로 간주

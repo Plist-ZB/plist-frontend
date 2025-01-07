@@ -1,5 +1,10 @@
 {
-  "user_id": "1",
-  "username": "송유나",
-  "avatar": ""
+  "users": [
+    {
+      "id": 1,
+      "username": "송유나",
+      "avatar": "",
+      "isMember": true
+    }
+  ]
 }

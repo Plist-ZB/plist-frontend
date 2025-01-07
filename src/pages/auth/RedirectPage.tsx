@@ -4,6 +4,7 @@ import LogoIcon from "@/assets/svg/logo.svg";
 import TextLogoIcon from "@/assets/svg/text-logo.svg";
 import { ScaleLoader } from "react-spinners";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import axios from "axios";
 
 export default function RedirectPage() {
   const navigate = useNavigate();
@@ -16,20 +17,43 @@ export default function RedirectPage() {
 
     // access_token이 없으면 오류 처리
     if (!accessToken || isMember === null) {
-      alert("로그인에 실패했습니다다. 다시 시도해주세요.");
+      alert("로그인에 실패했습니다. 다시 시도해주세요.");
       return;
     }
 
     // Access token을 localStorage에 저장
     localStorage.setItem("access_token", accessToken);
 
-    // 사용자 상태에 따라 페이지 이동
-    if (isMember === "true") {
-      navigate("/"); // 홈페이지로 이동
-    } else {
-      navigate("/welcome"); // Welcome 페이지로 이동
-    }
-  }, [searchParams, navigate]);
+    // 사용자 정보를 가져오는 API 요청
+    const fetchUserData = async () => {
+      try {
+        // mock API 호출
+        const response = await axios.get("http://localhost:5003/users/1");
+        const user = response.data;
+
+        // user 데이터가 없으면 사용자 정보를 가져오는 데 실패한 것으로 간주
+        if (!user) {
+          alert("사용자 정보를 가져오는 데 실패했습니다.");
+          return;
+        }
+
+        console.log("User data:", user);
+
+        // 사용자 상태에 따라 페이지 이동
+        if (isMember === "true") {
+          navigate("/"); // 홈페이지로 이동
+        } else {
+          navigate("/welcome"); // Welcome 페이지로 이동
+        }
+      } catch (error) {
+        // axios 요청에서 오류가 발생하면 여기로 이동
+        console.error("Error fetching user data:", error);
+        alert("사용자 정보를 가져오는 데 실패했습니다. 다시 시도해주세요.");
+      }
+    };
+
+    fetchUserData();
+  }, [searchParams, navigate]); // 의존성 배열에서 불필요한 상태 제거
 
   return (
     <Container>

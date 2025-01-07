@@ -3,23 +3,21 @@ import LogoIcon from "@/assets/svg/logo.svg";
 import TextLogoIcon from "@/assets/svg/text-logo.svg";
 import { FaGoogle } from "react-icons/fa";
 
-export default function LoginPage() {
-  const handleLogin = () => {
-    window.location.href = "서버주소/login";
-  };
+const LOGIN_URL = import.meta.env.VITE_API_SERVER_URL + "/login/oauth2/code/google";
 
+export default function LoginPage() {
   return (
     <Container>
       <LogoWrapper>
-        <LogoIcon />
+        <LogoIcon className="mr-1" />
         <TextLogoIcon />
       </LogoWrapper>
       <ButtonWrapper>
-        <LoginButton onClick={handleLogin}>
-          <Icon color="#4854a2">
+        <LoginButton href={LOGIN_URL} target="_self">
+          <Icon>
             <FaGoogle />
           </Icon>
-          <Text>google 로그인</Text>
+          <Text>Google 로그인</Text>
         </LoginButton>
       </ButtonWrapper>
     </Container>
@@ -51,10 +49,10 @@ const ButtonWrapper = styled.div`
 `;
 
 const Text = styled.div`
-  color: #4854a2;
+  color: #333333;
 `;
 
-const LoginButton = styled.button`
+const LoginButton = styled.a`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,6 +65,7 @@ const LoginButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s, box-shadow 0.2s;
+  color: #333333;
 
   &:hover {
     background-color: #f9f9f9;
@@ -76,4 +75,5 @@ const LoginButton = styled.button`
 
 const Icon = styled.span`
   font-size: 18px;
+  color: #333333;
 `;

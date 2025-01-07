@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import LogoIcon from "@/assets/svg/logo.svg";
 import TextLogoIcon from "@/assets/svg/text-logo.svg";
 import { FaGoogle } from "react-icons/fa";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // 리다이렉트된 URL에서 토큰 처리
+  useEffect(() => {
+    const accessToken = searchParams.get("access");
+    const isMember = searchParams.get("isMember");
+
+    if (accessToken) {
+      // Access token을 localStorage에 저장
+      localStorage.setItem("access_token", accessToken);
+
+      // 사용자 상태에 따라 페이지 이동
+      if (isMember === "true") {
+        navigate("/home"); // 홈페이지로 이동
+      } else {
+        navigate("/welcome"); // Welcome 페이지로 이동
+      }
+    }
+  }, [searchParams, navigate]);
+
+  // 구글 로그인 버튼 클릭 시 서버로 이동
+  const handleLogin = () => {
+    window.location.href = "서버주소/login";
+  };
 
   return (
     <Container>
@@ -13,6 +39,8 @@ export default function LoginPage() {
         <TextLogoIcon />
       </LogoWrapper>
       <ButtonWrapper>
+        <LoginButton onClick={handleLogin}>
+          <Icon color="#4854a2">
             <FaGoogle />
           </Icon>
           <Text>google 로그인</Text>

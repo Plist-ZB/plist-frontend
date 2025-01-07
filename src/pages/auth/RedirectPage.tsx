@@ -60,23 +60,10 @@ const Container = styled.div`
   background-color: white;
 `;
 
-const Logo = styled.img`
-  width: 80px;
-  height: 80px;
-  margin-bottom: 10px;
-`;
-
 const LogoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
-
-const LogoText = styled.h1`
-  font-size: 24px;
-  color: #4654a3;
-  font-weight: bold;
-  margin: 0;
 `;
 
 const Spinners = styled.div`

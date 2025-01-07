@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import LogoIcon from "@/assets/logo.png";
+import LogoIcon from "@/assets/svg/logo.svg";
+import TextLogoIcon from "@/assets/svg/text-logo.svg";
 import { FaGoogle } from "react-icons/fa";
 
 export default function LoginPage() {
@@ -8,13 +9,13 @@ export default function LoginPage() {
   return (
     <Container>
       <LogoWrapper>
-        <Logo src={LogoIcon} alt="Logo" />
-        <Title>PLIST</Title>
+        <LogoIcon />
+        <TextLogoIcon />
       </LogoWrapper>
       <ButtonWrapper>
             <FaGoogle />
           </Icon>
-          Google 로그인하기
+          <Text>google 로그인</Text>
         </LoginButton>
       </ButtonWrapper>
     </Container>
@@ -38,23 +39,15 @@ const LogoWrapper = styled.div`
   margin-bottom: 40px;
 `;
 
-const Logo = styled.img`
-  width: 80px;
-  height: 80px;
-  margin-bottom: 10px;
-`;
-
-const Title = styled.h1`
-  font-size: 24px;
-  font-weight: bold;
-  color: #4a4a4a;
-`;
-
 const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
   width: 80%;
+`;
+
+const Text = styled.div`
+  color: #4854a2;
 `;
 
 const LoginButton = styled.button`

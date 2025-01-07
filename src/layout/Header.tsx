@@ -1,8 +1,15 @@
 import Logo from "@/assets/svg/logo.svg";
 import TextLogo from "@/assets/svg/text-logo.svg";
 import HeaderButton from "@/layout/HeaderButton";
+import { useLocation } from "react-router-dom";
 
-export default function Header({ className }: { className?: string }) {
+interface HeaderProps {
+  readonly className?: string;
+}
+
+export default function Header({ className }: HeaderProps) {
+  const { pathname } = useLocation();
+
   return (
     <header
       className={`flex-shrink-0 py-0 pl-2 pr-4 h-header border-b border-[#D9D9D9] w-full bg-white flex items-center justify-between ${className}`}
@@ -12,7 +19,7 @@ export default function Header({ className }: { className?: string }) {
         <TextLogo className="" />
       </div>
 
-      <HeaderButton />
+      {pathname !== "/mypage" && <HeaderButton />}
     </header>
   );
 }

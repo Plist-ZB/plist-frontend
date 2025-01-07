@@ -6,6 +6,7 @@ const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
 const RedirectPage = lazy(() => import("@/pages/auth/RedirectPage"));
 const WelcomePage = lazy(() => import("@/pages/auth/WelcomePage"));
 const CategoryPage = lazy(() => import("@/pages/category/CategoryPage"));
+const CategoryDetailPage = lazy(() => import("@/pages/category/CategoryDetailPage"));
 const SearchPage = lazy(() => import("@/pages/search/SearchPage"));
 const ChannelPage = lazy(() => import("@/pages/channel/ChannelPage"));
 const MyPage = lazy(() => import("@/pages/mypage/MyPage"));
@@ -29,7 +30,8 @@ const Router = () => {
           <Route path="welcome" element={<WelcomePage />} />
         </Route>
 
-        <Route path="/category/:name" element={<CategoryPage />} />
+        <Route path="/category" element={<CategoryPage />}></Route>
+        <Route path="/category/:name" element={<CategoryDetailPage />} />
 
         <Route path="/search" element={<SearchPage />} />
 

@@ -3,44 +3,33 @@ import styled from "styled-components";
 import LogoIcon from "@/assets/svg/logo.svg";
 import TextLogoIcon from "@/assets/svg/text-logo.svg";
 import { ScaleLoader } from "react-spinners";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function RedirectPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
+  // 리다이렉트된 URL에서 토큰 처리
   useEffect(() => {
-    const handleRedirect = async () => {
-      try {
-        // URL에서 인가코드 가져오기
-        const urlParams = new URLSearchParams(window.location.search);
-        const authorizationCode = urlParams.get("code");
+    const accessToken = searchParams.get("access");
+    const isMember = searchParams.get("isMember");
 
-        if (!authorizationCode) {
-          throw new Error("Authorization code not found.");
-        }
+    // access_token이 없으면 오류 처리
+    if (!accessToken || isMember === null) {
+      alert("로그인에 실패했습니다다. 다시 시도해주세요.");
+      return;
+    }
 
-        // 로그인 API 호출
-        const response = await axios.post("/api/login", {
-          code: authorizationCode,
-        });
+    // Access token을 localStorage에 저장
+    localStorage.setItem("access_token", accessToken);
 
-        const { member_type } = response.data;
-
-        if (!member_type) {
-          throw new Error("Member type not found in API response.");
-        }
-
-        // member_type에 따라 WelcomePage로 이동
-        navigate("/WelcomePage", { state: { memberType: member_type } });
-      } catch (error) {
-        console.error("Error during login process:", error);
-        alert("로그인에 실패했습니다. 다시 시도해주세요.");
-      }
-    };
-
-    handleRedirect();
-  }, [navigate]);
+    // 사용자 상태에 따라 페이지 이동
+    if (isMember === "true") {
+      navigate("/"); // 홈페이지로 이동
+    } else {
+      navigate("/welcome"); // Welcome 페이지로 이동
+    }
+  }, [searchParams, navigate]);
 
   return (
     <Container>

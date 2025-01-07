@@ -1,8 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export default function CategoryPage() {
-  return <div>CategoryPage</div>;
+  const categories = ["공부", "힙합", "K-POP", "POP", "봄", "여름", "가을", "겨울"];
+  const navigate = useNavigate(); // React Router의 useNavigate 사용
+
+  const handleCategoryClick = (category: string) => {
+    navigate(`/category/${category}`); // 경로 변경
+  };
+
   return (
     <Container>
       {categories.map((category, index) => (

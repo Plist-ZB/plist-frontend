@@ -1,31 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { instance } from "@/services/api/instance";
 
-// Category 데이터를 가져오는 API 함수
+// API 호출 함수 (목 데이터 JSON 파일에서 카테고리 가져오기)
 const fetchCategories = async () => {
-  const response = await fetch("/api/categories");
-  if (!response.ok) {
-    throw new Error("Categories 데이터를 가져오는 데 실패했습니다.");
-  }
-  return response.json(); // 서버에서 반환하는 데이터 포맷에 맞게 수정
+  const response = await instance.get("/categories");
+  return response.data.categories; // categories 배열을 그대로 반환
 };
 
 export default function CategoryPage() {
   const navigate = useNavigate();
 
   // React Query로 categories 데이터 가져오기
-  const { data: categories, isLoading, isError } = useQuery(["categories"], fetchCategories);
+  const { data: categories, isError } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+  });
 
   // 카테고리 클릭 시 페이지 이동
-  const handleCategoryClick = (category: string) => {
-    navigate(`/category/${category}`);
+  const handleCategoryClick = (categoryName: string) => {
+    navigate(`/category/${categoryName}`);
   };
-
-  // 로딩 상태 처리
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
 
   // 에러 상태 처리
   if (isError) {
@@ -34,11 +30,12 @@ export default function CategoryPage() {
 
   return (
     <Container>
-      {categories.map((category: string, index: number) => (
-        <CategoryButton key={index} onClick={() => handleCategoryClick(category)}>
-          {category}
-        </CategoryButton>
-      ))}
+      {Array.isArray(categories) &&
+        categories.map((category) => (
+          <CategoryButton key={category.name} onClick={() => handleCategoryClick(category.name)}>
+            {category.name} {/* 이름만 표시 */}
+          </CategoryButton>
+        ))}
     </Container>
   );
 }

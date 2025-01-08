@@ -22,7 +22,9 @@ const fetchUserData = async (accessToken: string) => {
 
 // 유저 정보를 가져오는 React Query 훅
 function useUserData(accessToken: string) {
-  return useQuery(["userData", accessToken], () => fetchUserData(accessToken), {
+  return useQuery({
+    queryKey: ["userData", accessToken],
+    queryFn: () => fetchUserData(accessToken),
     enabled: !!accessToken, // accessToken이 있을 때만 쿼리 실행
   });
 }

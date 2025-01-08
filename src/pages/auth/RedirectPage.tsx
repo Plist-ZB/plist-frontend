@@ -24,7 +24,6 @@ const fetchUserData = async (accessToken: string) => {
 function useUserData(accessToken: string) {
   return useQuery(["userData", accessToken], () => fetchUserData(accessToken), {
     enabled: !!accessToken, // accessToken이 있을 때만 쿼리 실행
-    staleTime: 1000 * 60 * 5, // 5분 동안 데이터 유효
   });
 }
 

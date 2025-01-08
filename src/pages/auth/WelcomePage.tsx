@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import LogoIcon from "@/assets/logo.png";
+import LogoIcon from "@/assets/svg/logo.svg";
+import TextLogoIcon from "@/assets/svg/text-logo.svg";
 
 export default function WelcomePage() {
   const navigate = useNavigate();
@@ -19,8 +20,8 @@ export default function WelcomePage() {
   return (
     <Container>
       <LogoWrapper>
-        <Logo src={LogoIcon} alt="Logo" />
-        <LogoText>PLIST</LogoText>
+        <LogoIcon />
+        <TextLogoIcon />
       </LogoWrapper>
       <MessageWrapper>
         <WelcomeText>가입을 환영합니다!</WelcomeText>

@@ -3,26 +3,26 @@ import styled from "styled-components";
 
 export default function CategoryPage() {
   const categories = [
-    "공부",
+    "발라드",
     "힙합",
     "K-POP",
     "POP",
+    "드라마/영화 OST",
+    "클래식",
+    "재즈",
     "봄",
     "여름",
     "가을",
     "겨울",
+    "코딩",
+    "운동",
+    "출/퇴근",
+    "힐링",
+    "여행",
+    "드라이브",
+    "게임",
     "공부",
-    "힙합",
-    "K-POP",
-    "POP",
-    "봄",
-    "여름",
-    "가을",
-    "겨울",
-    "공부",
-    "힙합",
-    "K-POP",
-    "POP",
+    "카페",
   ];
   const navigate = useNavigate(); // React Router의 useNavigate 사용
 

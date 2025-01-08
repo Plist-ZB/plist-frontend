@@ -5,7 +5,7 @@ import FooterNavBar from "@/layout/FooterNavBar";
 export default function RootLayout() {
   return (
     <div className="relative w-full max-w-screen-md h-full border-[#D9D9D9] bg-white flex flex-col">
-      <Header className="sticky top-0 z-10 max-w-screen-md md:border-x" />
+      <Header className="sticky top-0 z-10 max-w-screen-md" />
 
       <main className={`w-full mb-fnb`}>
         <Outlet />

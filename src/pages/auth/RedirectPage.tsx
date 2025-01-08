@@ -34,7 +34,7 @@ export default function RedirectPage() {
 
   // URL에서 accessToken 및 isMember 가져오기
   const accessToken = searchParams.get("access-token");
-  const isMember = searchParams.get("is-Member");
+  const isMember = searchParams.get("is-member");
 
   // React Query를 사용하여 유저 데이터 가져오기
   const { data: user, isLoading, isError } = useUserData(accessToken || "");

@@ -1,10 +1,17 @@
 import styled from "styled-components";
+import Select from "react-select";
 import { IoClose } from "react-icons/io5";
 
 interface HostAddProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const CategoryOptions = [
+  { value: "bal", label: "발라드" },
+  { value: "hip", label: "힙합" },
+  { value: "ost", label: "OST" },
+];
 
 export default function HostAdd({ isOpen, onClose }: HostAddProps) {
   return (
@@ -20,11 +27,7 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           <Label>채널 제목</Label>
           <Input type="text" placeholder="채널 제목을 입력해주세요." />
           <Label>카테고리 선택하기</Label>
-          <Select>
-            <option value="">카테고리</option>
-            <option value="1">공부</option>
-            <option value="2">코딩</option>
-          </Select>
+          <StyledSelect options={CategoryOptions} classNamePrefix="react-select" />
           <Label>내 재생목록에서 가져오기</Label>
           <Select>
             <option value="">재생목록 선택하기</option>
@@ -94,11 +97,6 @@ const CloseButton = styled.button`
   background: none;
   font-size: 15px;
   cursor: pointer;
-
-  &:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-  }
 `;
 
 const ModalBody = styled.div`
@@ -106,14 +104,6 @@ const ModalBody = styled.div`
 `;
 
 const Input = styled.input`
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-`;
-
-const Select = styled.select`
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;

@@ -5,10 +5,11 @@ import { useParams } from "react-router-dom";
 
 export default function CategoryDetailPage() {
   const { name } = useParams();
+  const category = { name }; // 카테고리 이름을 받아와서 객체로 만들기
 
   return (
     <Container>
-      <TopBar title={name as string} backURL="/category" />
+      <TopBar title={category?.name} backURL="/category" />
       <MainContent>
         <StreamList />
       </MainContent>

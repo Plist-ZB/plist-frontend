@@ -6,7 +6,7 @@ import { instance } from "@/services/api/instance";
 // API 호출 함수 (목 데이터 JSON 파일에서 카테고리 가져오기)
 const fetchCategories = async () => {
   const response = await instance.get("/categories");
-  return response.data.categories; // categories 배열을 그대로 반환
+  return response.data; // categories 배열을 그대로 반환
 };
 
 export default function CategoryPage() {

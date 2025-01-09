@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import StreamList from "@/common/components/StreamList";
 import { Headphones } from "lucide-react";
+import { overlay } from "overlay-kit";
+import HostAdd from "./components/HostAdd";
 
 export default function HomePage() {
   return (
@@ -12,7 +14,11 @@ export default function HomePage() {
         </CategoryButtons>
         <StreamList />
       </MainContent>
-      <HostButton>
+      <HostButton
+        onClick={() =>
+          overlay.open(({ isOpen, unmount }) => <HostAdd isOpen={isOpen} onClose={unmount} />)
+        }
+      >
         <Headphones />
         <HostText>호스트</HostText>
       </HostButton>

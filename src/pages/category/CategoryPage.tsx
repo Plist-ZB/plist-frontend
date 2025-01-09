@@ -19,8 +19,8 @@ export default function CategoryPage() {
   });
 
   // 카테고리 클릭 시 페이지 이동
-  const handleCategoryClick = (categoryName: string) => {
-    navigate(`/category/${categoryName}`);
+  const handleCategoryClick = (categoryId: number, categoryName: string) => () => {
+    navigate(`/category/${categoryId}`, { state: { categoryName: categoryName } });
   };
 
   // 에러 상태 처리
@@ -32,7 +32,10 @@ export default function CategoryPage() {
     <Container>
       {Array.isArray(categories) &&
         categories.map((category) => (
-          <CategoryButton key={category.name} onClick={() => handleCategoryClick(category.name)}>
+          <CategoryButton
+            key={category.id}
+            onClick={handleCategoryClick(category.id, category.name)}
+          >
             {category.name} {/* 이름만 표시 */}
           </CategoryButton>
         ))}

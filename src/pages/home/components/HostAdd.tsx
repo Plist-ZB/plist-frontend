@@ -7,12 +7,14 @@ interface HostAddProps {
   onClose: () => void;
 }
 
+const CategoryPlaceholder = "카테고리";
 const CategoryOptions = [
   { value: "bal", label: "발라드" },
   { value: "hip", label: "힙합" },
   { value: "ost", label: "OST" },
 ];
 
+const PlaylistPlaceholder = "재생목록";
 const PlaylistOptions = [
   { value: "재생목록", label: "없음" },
   { value: "재생목록", label: "데이식스 -  한페이지가 될 수 있게" },
@@ -27,16 +29,27 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
         <ModalHeader>
           <h2>채널 생성하기</h2>
           <CloseButton>
-            <IoClose onClick={onClose} size={20} />
+            <IoClose onClick={onClose} size={25} />
           </CloseButton>
         </ModalHeader>
         <ModalBody>
           <Label>채널 제목</Label>
           <Input type="text" placeholder="채널 제목을 입력해주세요." />
           <Label>카테고리 선택하기</Label>
-          <StyledSelect options={CategoryOptions} classNamePrefix="react-select" />
+          <SmallLabel>* 카테고리 선택은 필수입니다.</SmallLabel>
+          <StyledSelect
+            options={CategoryOptions}
+            classNamePrefix="react-select"
+            placeholder={CategoryPlaceholder}
+            components={{ IndicatorSeparator: () => null }}
+          />
           <Label>내 재생목록에서 가져오기</Label>
-          <StyledSelect options={PlaylistOptions} classNamePrefix="react-select" />
+          <StyledSelect
+            options={PlaylistOptions}
+            classNamePrefix="react-select"
+            placeholder={PlaylistPlaceholder}
+            components={{ IndicatorSeparator: () => null }}
+          />
           {/* <Label>채널 최대 인원 수</Label>
           <RadioGroup>
             {["5명", "15명", "20명", "25명"].map((option) => (
@@ -98,7 +111,6 @@ const ModalHeader = styled.div`
 
 const CloseButton = styled.button`
   background: none;
-  font-size: 15px;
   cursor: pointer;
 `;
 
@@ -112,6 +124,9 @@ const Input = styled.input`
   margin-bottom: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
+  &:hover {
+    border-color: var(--color-primary);
+  }
 `;
 
 const Label = styled.label`
@@ -130,7 +145,7 @@ const StyledSelect = styled(Select)`
     box-shadow: none;
     margin-bottom: 20px;
     &:hover {
-      border-color: #aaa;
+      border-color: var(--color-primary);
     }
   }
 

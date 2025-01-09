@@ -5,16 +5,12 @@ import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { instance } from "@/services/api/instance";
 
-interface Streams {
-  id: string;
-}
-
 export default function CategoryDetailPage() {
   const { id } = useParams<{ id: string }>();
   const state = useLocation().state;
   const categoryName = state?.categoryName;
 
-  const [streams, setStreams] = useState<Streams[]>([]);
+  const [streams, setStreams] = useState<ChannelList>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -42,7 +38,7 @@ export default function CategoryDetailPage() {
         {loading ? (
           <p>Loading streams...</p>
         ) : (
-          streams.map((stream) => <StreamCard key={stream.id} item={stream} />)
+          streams.map((stream) => <StreamCard key={stream.channelId} item={stream} />)
         )}
       </MainContent>
     </Container>

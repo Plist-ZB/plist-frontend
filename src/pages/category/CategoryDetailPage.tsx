@@ -1,16 +1,20 @@
 import styled from "styled-components";
-import TopBar from "@/layout/TopBar";
+import TopBar from "@/layout/TopBar"; // Adjust the import path as necessary
 import StreamCard from "@/common/components/StreamCard";
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { instance } from "@/services/api/instance";
+
+interface Streams {
+  id: string;
+}
 
 export default function CategoryDetailPage() {
   const { id } = useParams<{ id: string }>();
   const state = useLocation().state;
   const categoryName = state?.categoryName;
 
-  const [streams, setStreams] = useState<Stream[]>([]);
+  const [streams, setStreams] = useState<Streams[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

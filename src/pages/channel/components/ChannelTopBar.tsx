@@ -1,5 +1,5 @@
 import { ChevronLeft } from "lucide-react";
-import ExitRoomModal from "@/pages/channel/components/ExitRoomModal";
+import ExitRoomModal from "@/pages/channel/components/top-bar/ExitRoomModal";
 import { overlay } from "overlay-kit";
 import { GoDotFill } from "react-icons/go";
 

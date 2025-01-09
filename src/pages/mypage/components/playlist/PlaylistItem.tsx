@@ -26,8 +26,9 @@ export default function PlaylistItem({ item }: PlaylistItemProps) {
         className="relative flex w-full bg-gray-200 bg-cover aspect-square"
         style={{ backgroundImage: `url('${thumbnails}')` }}
       >
+        {/* TODO: 배경 흰색만 투명도 적용하기 */}
         <button
-          className={`${item.id} absolute p-1 transition-all duration-300 bg-transparent top-2 right-2 hover:scale-110 hover:border-transparent hover:text-black`}
+          className={`${item.id} bg-white/30 rounded-full absolute p-1 transition-all duration-300 bg-transparent top-2 right-2 hover:scale-110 hover:border-transparent hover:text-black`}
           onClick={(e) => {
             e.stopPropagation();
             console.log("option clicked");
@@ -35,7 +36,7 @@ export default function PlaylistItem({ item }: PlaylistItemProps) {
           }}
           onBlur={() => setIsOpen(false)}
         >
-          <EllipsisVertical className="text-black bg-white border-black rounded-full" />
+          <EllipsisVertical className="text-black border-black rounded-full opacity-100" />
         </button>
         <PlaylistItemOptionModal isOpen={isOpen} playListId={id} />
       </div>

@@ -2,11 +2,24 @@ import styled from "styled-components";
 import Select from "react-select";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { instance } from "@/services/api/instance";
 
 interface HostAddProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+// API 요청 함수 정의
+const fetchCategories = async () => {
+  const { data } = await instance.get("/categories"); // 실제 API 경로로 수정
+  return data;
+};
+
+const fetchPlaylists = async () => {
+  const { data } = await instance.get("/playlists"); // 실제 API 경로로 수정
+  return data;
+};
 
 const CategoryPlaceholder = "카테고리";
 const CategoryOptions = [
@@ -26,10 +39,29 @@ const PlaylistOptions = [
 export default function HostAdd({ isOpen, onClose }: HostAddProps) {
   const navigate = useNavigate(); // useNavigate 훅 사용
 
+  // useQuery 훅을 사용하여 데이터를 불러옴
+  const { data: categories, isLoading: categoriesLoading } = useQuery(
+    ["categories"],
+    fetchCategories
+  );
+
+  const { data: playlists, isLoading: playlistsLoading } = useQuery(["playlists"], fetchPlaylists);
+
+  const [selectedPlaylist, setSelectedPlaylist] = React.useState<any>(null);
+
+  const handlePlaylistChange = (selectedOption: any) => {
+    setSelectedPlaylist(selectedOption);
+  };
+
   const handleSubmit = () => {
     onClose(); // 모달 닫기
-    navigate("/playlist"); // PlaylistPage로 이동
+    navigate("/channel/{id}"); // PlaylistPage로 이동
   };
+
+  // 카테고리와 재생목록 데이터 로딩 중일 경우 로딩 메시지
+  if (categoriesLoading || playlistsLoading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <ModalOverlay style={{ display: isOpen ? "flex" : "none" }}>
@@ -46,16 +78,24 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           <Label>카테고리 선택하기</Label>
           <SmallLabel>* 카테고리 선택은 필수입니다.</SmallLabel>
           <StyledSelect
-            options={CategoryOptions}
+            options={categories?.map((category: any) => ({
+              value: category.id,
+              label: category.name,
+            }))}
             classNamePrefix="react-select"
             placeholder={CategoryPlaceholder}
             components={{ IndicatorSeparator: () => null }}
           />
           <Label>내 재생목록에서 가져오기</Label>
           <StyledSelect
-            options={PlaylistOptions}
+            options={playlists?.map((playlist: any) => ({
+              value: playlist.id,
+              label: playlist.title,
+              thumbnail: playlist.thumbnail, // 썸네일 정보 추가
+            }))}
             classNamePrefix="react-select"
             placeholder={PlaylistPlaceholder}
+            onChange={handlePlaylistChange}
             components={{ IndicatorSeparator: () => null }}
           />
           {/* <Label>채널 최대 인원 수</Label>
@@ -70,7 +110,11 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           <Label>썸네일</Label>
           <SmallLabel>* 썸네일은 재생목록 첫번째 이미지로 자동 선택됩니다.</SmallLabel>
           <ThumbnailPreview>
-            <span>재생목록 1 썸네일</span>
+            {selectedPlaylist ? (
+              <img src={selectedPlaylist.thumbnail} alt="썸네일" />
+            ) : (
+              <span>썸네일 없음</span>
+            )}
           </ThumbnailPreview>
         </ModalBody>
         <ModalFooter>

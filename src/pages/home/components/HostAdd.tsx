@@ -13,6 +13,13 @@ const CategoryOptions = [
   { value: "ost", label: "OST" },
 ];
 
+const PlaylistOptions = [
+  { value: "재생목록", label: "없음" },
+  { value: "재생목록", label: "데이식스 -  한페이지가 될 수 있게" },
+  { value: "재생목록", label: "태연 - 그대라는 시" },
+  { value: "재생목록", label: "아이유 - 관객이 될게게" },
+];
+
 export default function HostAdd({ isOpen, onClose }: HostAddProps) {
   return (
     <ModalOverlay style={{ display: isOpen ? "flex" : "none" }}>
@@ -29,11 +36,7 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           <Label>카테고리 선택하기</Label>
           <StyledSelect options={CategoryOptions} classNamePrefix="react-select" />
           <Label>내 재생목록에서 가져오기</Label>
-          <Select>
-            <option value="">재생목록 선택하기</option>
-            <option value="1">재생목록 1</option>
-            <option value="2">재생목록 2</option>
-          </Select>
+          <StyledSelect options={PlaylistOptions} classNamePrefix="react-select" />
           {/* <Label>채널 최대 인원 수</Label>
           <RadioGroup>
             {["5명", "15명", "20명", "25명"].map((option) => (

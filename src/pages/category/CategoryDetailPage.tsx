@@ -2,22 +2,44 @@ import styled from "styled-components";
 import TopBar from "@/layout/TopBar";
 import StreamCard from "@/common/components/StreamCard";
 import { useLocation, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { instance } from "@/services/api/instance";
 
 export default function CategoryDetailPage() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const state = useLocation().state;
   const categoryName = state?.categoryName;
 
+  const [streams, setStreams] = useState<Stream[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    // TODO: id로 데이터 페칭하는 로직
-    //
+    const fetchStreamsByCategoryId = async () => {
+      try {
+        setLoading(true);
+        const response = await instance.get(`/streams?categoryId=${id}`);
+        setStreams(response.data); // categoryId에 해당하는 스트림 리스트 설정
+      } catch (error) {
+        console.error("Failed to fetch streams:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchStreamsByCategoryId();
+    }
   }, [id]);
 
   return (
     <Container>
       <TopBar title={categoryName || "Default Title"} backURL="/category" />
       <MainContent>
+        {loading ? (
+          <p>Loading streams...</p>
+        ) : (
+          streams.map((stream) => <StreamCard key={stream.id} item={stream} />)
+        )}
       </MainContent>
     </Container>
   );

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { IoClose } from "react-icons/io5";
 
 interface HostAddProps {
   isOpen: boolean;
@@ -11,7 +12,9 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
       <ModalContainer>
         <ModalHeader>
           <h2>채널 생성하기</h2>
-          <CloseButton onClick={onClose}>×</CloseButton>
+          <CloseButton>
+            <IoClose onClick={onClose} size={20} />
+          </CloseButton>
         </ModalHeader>
         <ModalBody>
           <Label>채널 제목</Label>
@@ -133,6 +136,7 @@ const SmallLabel = styled.label`
   color: var(--color-primary);
 `;
 
+// 최대 인원수 style
 // const RadioGroup = styled.div`
 //   display: flex;
 //   gap: 8px;

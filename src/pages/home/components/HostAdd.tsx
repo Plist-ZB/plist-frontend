@@ -121,6 +121,34 @@ const Label = styled.label`
   display: block;
 `;
 
+const StyledSelect = styled(Select)`
+  .react-select__control {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: none;
+    margin-bottom: 20px;
+    &:hover {
+      border-color: #aaa;
+    }
+  }
+
+  .react-select__option {
+    background-color: #fff;
+    color: #666;
+    &:hover {
+      background-color: #e6e6e6;
+      color: #000;
+    }
+  }
+
+  .react-select__option--is-selected {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+`;
+
 const SmallLabel = styled.label`
   font-size: 10px;
   font-weight: 600;

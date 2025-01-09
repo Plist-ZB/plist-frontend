@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Select from "react-select";
 import { IoClose } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 interface HostAddProps {
   isOpen: boolean;
@@ -23,6 +24,13 @@ const PlaylistOptions = [
 ];
 
 export default function HostAdd({ isOpen, onClose }: HostAddProps) {
+  const navigate = useNavigate(); // useNavigate 훅 사용
+
+  const handleSubmit = () => {
+    onClose(); // 모달 닫기
+    navigate("/playlist"); // PlaylistPage로 이동
+  };
+
   return (
     <ModalOverlay style={{ display: isOpen ? "flex" : "none" }}>
       <ModalContainer>
@@ -66,7 +74,7 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           </ThumbnailPreview>
         </ModalBody>
         <ModalFooter>
-          <SubmitButton>생성</SubmitButton>
+          <SubmitButton onClick={handleSubmit}>생성</SubmitButton>
         </ModalFooter>
       </ModalContainer>
     </ModalOverlay>

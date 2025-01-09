@@ -29,7 +29,7 @@ export default {
           border: "#d9d9d9",
         },
         red: {
-          main: "#DC4646",
+          main: "#d34848",
         },
         border: "#A7A7A7",
       },

@@ -50,6 +50,7 @@ const CategoryButton = styled.button`
   background: var(--color-white);
   cursor: pointer;
 `;
+<<<<<<< HEAD
 
 const HostButton = styled.button`
   position: fixed; /* 화면 기준으로 설정 */
@@ -76,3 +77,5 @@ const HostText = styled.span`
   font-size: 14px;
   color: #000;
 `;
+=======
+>>>>>>> main

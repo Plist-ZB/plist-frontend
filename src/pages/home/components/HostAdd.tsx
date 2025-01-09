@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 import Select from "react-select";
 import { IoClose } from "react-icons/io5";
@@ -22,35 +23,39 @@ const fetchPlaylists = async () => {
 };
 
 const CategoryPlaceholder = "카테고리";
-const CategoryOptions = [
-  { value: "bal", label: "발라드" },
-  { value: "hip", label: "힙합" },
-  { value: "ost", label: "OST" },
-];
-
 const PlaylistPlaceholder = "재생목록";
-const PlaylistOptions = [
-  { value: "재생목록", label: "없음" },
-  { value: "재생목록", label: "데이식스 -  한페이지가 될 수 있게" },
-  { value: "재생목록", label: "태연 - 그대라는 시" },
-  { value: "재생목록", label: "아이유 - 관객이 될게게" },
-];
 
 export default function HostAdd({ isOpen, onClose }: HostAddProps) {
   const navigate = useNavigate(); // useNavigate 훅 사용
 
   // useQuery 훅을 사용하여 데이터를 불러옴
-  const { data: categories, isLoading: categoriesLoading } = useQuery(
-    ["categories"],
-    fetchCategories
-  );
+  const { data: categories, isLoading: categoriesLoading } = useQuery({
+    queryKey: ["/categories"],
+    queryFn: fetchCategories,
+  });
 
-  const { data: playlists, isLoading: playlistsLoading } = useQuery(["playlists"], fetchPlaylists);
+  const { data: playlists, isLoading: playlistsLoading } = useQuery({
+    queryKey: ["playlists"],
+    queryFn: fetchPlaylists,
+  });
 
-  const [selectedPlaylist, setSelectedPlaylist] = React.useState<any>(null);
+  interface Playlist {
+    id: string;
+    title: string;
+    thumbnail: string;
+  }
 
-  const handlePlaylistChange = (selectedOption: any) => {
-    setSelectedPlaylist(selectedOption);
+  const [selectedPlaylist, setSelectedPlaylist] = React.useState<Playlist | null>(null);
+
+  const handlePlaylistChange = (
+    newValue: { value: string; label: string; thumbnail: string } | null
+  ) => {
+    const selectedOption = newValue as { value: string; label: string; thumbnail: string };
+    setSelectedPlaylist({
+      id: selectedOption.value,
+      title: selectedOption.label,
+      thumbnail: selectedOption.thumbnail,
+    });
   };
 
   const handleSubmit = () => {
@@ -78,7 +83,7 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           <Label>카테고리 선택하기</Label>
           <SmallLabel>* 카테고리 선택은 필수입니다.</SmallLabel>
           <StyledSelect
-            options={categories?.map((category: any) => ({
+            options={categories?.map((category: { id: string; name: string }) => ({
               value: category.id,
               label: category.name,
             }))}
@@ -88,7 +93,7 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           />
           <Label>내 재생목록에서 가져오기</Label>
           <StyledSelect
-            options={playlists?.map((playlist: any) => ({
+            options={playlists?.map((playlist: Playlist) => ({
               value: playlist.id,
               label: playlist.title,
               thumbnail: playlist.thumbnail, // 썸네일 정보 추가

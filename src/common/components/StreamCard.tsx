@@ -1,40 +1,30 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { FaUserAlt } from "react-icons/fa";
+import { getTimeAgo } from "@/utils/time";
 
 interface StreamCardProps {
-  readonly item: {
-    id: number;
-    title: string;
-    host: string;
-    category: string;
-    duration: string;
-    participants: number;
-  };
+  readonly item: IChannel;
 }
 
-/* 
-최근: 스트리밍 중인 전체 항목 100개를 다 줌
-
-*/
-
 export default function StreamCard({ item }: StreamCardProps) {
+  const duration = getTimeAgo(item.channelCreatedAt);
+
   return (
-    <Card to={`/stream/${item.id}`}>
-      <Thumbnail>
+    <Card to={`/stream/${item.channelId}`}>
+      <Thumbnail $thumbnailUrl={item.channelThumbnail}>
         <LiveBadge>
-          <FaUserAlt size={8} />
-          {item.participants}
+          <FaUserAlt size={8} className="mb-[1px]" />
+          {item.channelParticipantCount}
         </LiveBadge>
-        썸네일
       </Thumbnail>
       <StreamDetails>
         <Title>
-          <b>{item.title}</b>
+          <b>{item.channelName}</b>
         </Title>
-        <Info>{item.host}</Info>
-        <Info>카테고리: {item.category}</Info>
-        <Info>스트리밍 시간: {item.duration}</Info>
+        <Info>{item.channelHost}</Info>
+        <Info>카테고리: {item.channelCategoryName}</Info>
+        <Info>스트리밍 시간: {duration}</Info>
       </StreamDetails>
     </Card>
   );
@@ -62,21 +52,25 @@ const LiveBadge = styled.div`
   color: var(--color-white);
   background-color: var(--color-red);
   font-size: 10px;
-  padding: 2px 4px;
+  padding: 2px 6px;
   border-radius: 8px;
 `;
 
-const Thumbnail = styled.div`
+const Thumbnail = styled.div<{ $thumbnailUrl: string }>`
   position: relative;
   width: 100px;
   height: 100px;
-  background: #f0f0f0;
+  background-image: url(${(props) => props.$thumbnailUrl});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
   font-size: 14px;
   color: black;
+  border: 1px solid var(--color-gray-border);
 `;
 
 const StreamDetails = styled.div`
@@ -84,11 +78,12 @@ const StreamDetails = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
+
+  color: var(--color-black);
 `;
 
 const Title = styled.h3`
   font-size: 16px;
-  margin: 0;
 
   b {
     color: var(--color-black);
@@ -96,7 +91,22 @@ const Title = styled.h3`
 `;
 
 const Info = styled.p`
-  margin: 4px 0;
-  font-size: 14px;
-  color: #555;
+  font-size: 13px;
+  color: var(--color-black);
+  margin: 0;
+
+  &:nth-of-type(1) {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  &:nth-of-type(2) {
+    font-size: 13px;
+    color: #555;
+  }
+
+  &:nth-of-type(3) {
+    font-size: 12px;
+    color: #777;
+  }
 `;

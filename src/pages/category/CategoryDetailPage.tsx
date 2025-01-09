@@ -9,7 +9,7 @@ export default function CategoryDetailPage() {
 
   return (
     <Container>
-      <TopBar title={category?.name} backURL="/category" />
+      <TopBar title={category?.name || "Default Title"} backURL="/category" />
       <MainContent>
         <StreamList />
       </MainContent>

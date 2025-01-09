@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import TopBar from "@/layout/TopBar";
-import StreamList from "@/common/components/StreamList";
+import StreamCard from "@/common/components/StreamCard";
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -18,12 +18,11 @@ export default function CategoryDetailPage() {
     <Container>
       <TopBar title={categoryName || "Default Title"} backURL="/category" />
       <MainContent>
-        {/* TODO: 아래 StreamList 컴포넌트에 페칭해온 데이터 전달해줘야함 */}
-        <StreamList />
       </MainContent>
     </Container>
   );
 }
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;

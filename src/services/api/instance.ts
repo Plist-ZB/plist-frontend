@@ -1,5 +1,5 @@
 // axios instance
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_SERVER_URL;
 const MOCK_SERVER_NAME = import.meta.env.VITE_MOCK_SERVER_URL;
@@ -17,7 +17,7 @@ export const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     // TODO: 임시 토큰 로직
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("access_token");
     config.headers.Authorization = accessToken ? `Bearer ${accessToken}` : ``;
 
     return config;
@@ -27,13 +27,39 @@ instance.interceptors.request.use(
   }
 );
 
+interface ErrorResponse extends AxiosError {
+  response: AxiosResponse & {
+    data: {
+      message?: string;
+    };
+  };
+}
+
 // 응답 인터셉터
 instance.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
-    const axiosError = error as AxiosError;
+    const axiosError = error as ErrorResponse;
+
+    const isTokenExpired = axiosError.status === 401;
+    const errorMessage = axiosError.response.data.message;
+
+    if (isTokenExpired && errorMessage === "EXPIRED_ACCESS_TOKEN") {
+      const getToken = async () => {
+        const response = await instance.get("/auth/access", { withCredentials: true });
+        localStorage.setItem("access_token", response.data.data.access_token);
+      };
+      getToken();
+
+      return instance(axiosError.config!);
+    }
+
+    if (isTokenExpired && errorMessage === "EXPIRED_REFRESH_TOKEN") {
+      localStorage.removeItem("access_token");
+      window.location.reload();
+    }
 
     return Promise.reject(axiosError);
   }

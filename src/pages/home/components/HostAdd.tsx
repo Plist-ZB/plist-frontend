@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Select from "react-select";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { instance } from "@/services/api/instance";
 
 interface HostAddProps {
@@ -12,6 +12,16 @@ interface HostAddProps {
 }
 
 // API 요청 함수 정의
+const createChannel = async (channelData: {
+  title: string;
+  categoryId: string;
+  playlistId: string;
+  thumbnail: string;
+}) => {
+  const { data } = await instance.post("/channel/{id}", channelData); // 채널 생성 API 경로로 수정
+  return data;
+};
+
 const fetchCategories = async () => {
   const { data } = await instance.get("/categories"); // 실제 API 경로로 수정
   return data;
@@ -46,6 +56,9 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
   }
 
   const [selectedPlaylist, setSelectedPlaylist] = React.useState<Playlist | null>(null);
+  const [channelTitle, setChannelTitle] = React.useState<string>("");
+  const [categoryId, setCategoryId] = React.useState<string>("");
+  const [thumbnail, setThumbnail] = React.useState<string>("");
 
   const handlePlaylistChange = (
     newValue: { value: string; label: string; thumbnail: string } | null
@@ -56,11 +69,32 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
       title: selectedOption.label,
       thumbnail: selectedOption.thumbnail,
     });
+    setThumbnail(selectedOption.thumbnail); // 썸네일 업데이트
   };
 
+  const handleCategoryChange = (selectedOption: { value: string; label: string }) => {
+    setCategoryId(selectedOption.value);
+  };
+
+  const { mutate: createChannelMutation, status: createChannelStatus } = useMutation({
+    mutationFn: createChannel,
+    onSuccess: (data) => {
+      navigate(`/channel/${data.id}`); // 생성된 채널로 이동
+      onClose(); // 모달 닫기
+    },
+    onError: (error) => {
+      console.error("Error creating channel:", error);
+    },
+  });
+
   const handleSubmit = () => {
-    onClose(); // 모달 닫기
-    navigate("/channel/{id}"); // PlaylistPage로 이동
+    const channelData = {
+      title: channelTitle,
+      categoryId,
+      playlistId: selectedPlaylist?.id || "",
+      thumbnail,
+    };
+    createChannelMutation(channelData); // 채널 생성
   };
 
   // 카테고리와 재생목록 데이터 로딩 중일 경우 로딩 메시지
@@ -79,7 +113,12 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
         </ModalHeader>
         <ModalBody>
           <Label>채널 제목</Label>
-          <Input type="text" placeholder="채널 제목을 입력해주세요." />
+          <Input
+            type="text"
+            placeholder="채널 제목을 입력해주세요."
+            value={channelTitle}
+            onChange={(e) => setChannelTitle(e.target.value)}
+          />
           <Label>카테고리 선택하기</Label>
           <SmallLabel>* 카테고리 선택은 필수입니다.</SmallLabel>
           <StyledSelect
@@ -89,6 +128,7 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
             }))}
             classNamePrefix="react-select"
             placeholder={CategoryPlaceholder}
+            onChange={handleCategoryChange}
             components={{ IndicatorSeparator: () => null }}
           />
           <Label>내 재생목록에서 가져오기</Label>
@@ -96,7 +136,7 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
             options={playlists?.map((playlist: Playlist) => ({
               value: playlist.id,
               label: playlist.title,
-              thumbnail: playlist.thumbnail, // 썸네일 정보 추가
+              thumbnail: playlist.thumbnail,
             }))}
             classNamePrefix="react-select"
             placeholder={PlaylistPlaceholder}
@@ -123,7 +163,9 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           </ThumbnailPreview>
         </ModalBody>
         <ModalFooter>
-          <SubmitButton onClick={handleSubmit}>생성</SubmitButton>
+          <SubmitButton onClick={handleSubmit} disabled={createChannelStatus === "loading"}>
+            {createChannelStatus === "pending" ? "생성 중..." : "생성"}
+          </SubmitButton>
         </ModalFooter>
       </ModalContainer>
     </ModalOverlay>

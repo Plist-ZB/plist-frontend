@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { IoIosSearch } from "react-icons/io";
 import StreamList from "@/common/components/StreamList";
+import { instance } from "@/services/api/instance";
 
 interface SearchResult {
   id: number;
@@ -18,10 +19,11 @@ export default function SearchPage() {
     if (!searchQuery.trim()) return; // 빈 입력 방지
     setLoading(true);
     try {
-      // API 호출 (가상 API로 대체)
-      const response = await fetch(`https://api.example.com/search?query=${searchQuery}`);
-      const data: SearchResult[] = await response.json();
-      setResults(data);
+      // API 호출: instance 사용
+      const response = await instance.get<SearchResult[]>("/search", {
+        params: { query: searchQuery }, // 쿼리 파라미터 전달
+      });
+      setResults(response.data);
     } catch (error) {
       console.error("검색 중 오류 발생:", error);
       setResults([]);

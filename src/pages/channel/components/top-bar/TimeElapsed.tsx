@@ -24,10 +24,10 @@ export function TimeElapsed({ date, className }: TimeElapsedProps) {
       setElapsedTime(getTimeElapsed(date));
     };
 
-    updateElapsedTime(); // Initial update
-    const intervalId = setInterval(updateElapsedTime, 1000); // Update every second
+    updateElapsedTime();
+    const intervalId = setInterval(updateElapsedTime, 1000);
 
-    return () => clearInterval(intervalId); // Cleanup on unmount
+    return () => clearInterval(intervalId);
   }, [date]);
 
   return <div className={className}>{elapsedTime}</div>;

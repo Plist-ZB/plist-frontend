@@ -41,7 +41,9 @@ export default function SearchPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <IoIosSearch onClick={handleSearch} size={20} color="#888787" />
+          <SearchIcon onClick={handleSearch}>
+            <IoIosSearch onClick={handleSearch} size={20} color="#888787" />
+          </SearchIcon>
         </SearchBarContainer>
         <Line />
         {/* 검색 결과 */}
@@ -75,6 +77,13 @@ const SearchBarContainer = styled.div`
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 8px;
+`;
+
+const SearchIcon = styled.div`
+  cursor: pointer; // 마우스 커서를 포인터로 변경
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Line = styled.div`

@@ -45,9 +45,7 @@ export default function SearchPage() {
         </SearchBarContainer>
         <Line />
         {/* 검색 결과 */}
-        {loading ? (
-          <LoadingText>검색 중...</LoadingText>
-        ) : results === null ? null : results.length > 0 ? ( // 검색을 수행하지 않았을 경우 아무것도 표시하지 않음
+        {loading ? null : results === null ? null : results.length > 0 ? (
           <StreamList />
         ) : (
           <ResultText>검색 결과가 없습니다.</ResultText>
@@ -84,13 +82,6 @@ const Line = styled.div`
   height: 1px;
   background-color: #ddd;
   margin-top: 35px;
-`;
-
-const LoadingText = styled.p`
-  margin-top: 30px;
-  font-size: 15px;
-  color: #888;
-  text-align: center;
 `;
 
 const SearchInput = styled.input`

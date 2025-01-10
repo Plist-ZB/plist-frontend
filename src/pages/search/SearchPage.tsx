@@ -32,6 +32,12 @@ export default function SearchPage() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch(); // Enter 키로 검색 실행
+    }
+  };
+
   return (
     <Container>
       <MainContent>
@@ -40,6 +46,7 @@ export default function SearchPage() {
             placeholder="채널명, 카테고리를 검색해주세요."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown} // Enter 키 이벤트 핸들러 추가
           />
           <SearchIcon onClick={handleSearch}>
             <IoIosSearch onClick={handleSearch} size={20} color="#888787" />

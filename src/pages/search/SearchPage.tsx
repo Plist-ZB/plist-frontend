@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Header from "../../layout/Header";
-import FooterNavBar from "../../layout/FooterNavBar";
 import { IoIosSearch } from "react-icons/io";
 import StreamList from "@/common/components/StreamList";
 
@@ -34,7 +32,6 @@ export default function SearchPage() {
 
   return (
     <Container>
-      <Header />
       <MainContent>
         <SearchBarContainer>
           <SearchInput
@@ -54,7 +51,6 @@ export default function SearchPage() {
           <ResultText>검색 결과가 없습니다.</ResultText>
         )}
       </MainContent>
-      <FooterNavBar />
     </Container>
   );
 }

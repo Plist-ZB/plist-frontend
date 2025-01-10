@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { IoIosSearch } from "react-icons/io";
-import StreamList from "@/common/components/StreamList";
+import StreamCard from "@/common/components/StreamCard";
 import { instance } from "@/services/api/instance";
 
 interface SearchResult {
   id: number;
-  name: string;
+  channelName: string;
+  channelHost: string;
+  channelCategoryName: string;
   description: string;
 }
 
 export default function SearchPage() {
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>(""); // 검색어
   const [results, setResults] = useState<SearchResult[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -19,10 +21,12 @@ export default function SearchPage() {
     if (!searchQuery.trim()) return; // 빈 입력 방지
     setLoading(true);
     try {
-      // API 호출: instance 사용
+      // API 호출: instance 사용 (이때 DB로부터 검색된 채널 정보 받아옴)
       const response = await instance.get<SearchResult[]>("/search", {
-        params: { query: searchQuery }, // 쿼리 파라미터 전달
+        params: { query: searchQuery }, // 쿼리 파라미터로 검색어 전달
       });
+
+      // 받아온 데이터에서 StreamCard에 필요한 항목 추출
       setResults(response.data);
     } catch (error) {
       console.error("검색 중 오류 발생:", error);
@@ -38,12 +42,14 @@ export default function SearchPage() {
     }
   };
 
+  const noResults = results && results.length === 0;
+
   return (
     <Container>
       <MainContent>
         <SearchBarContainer>
           <SearchInput
-            placeholder="채널명, 카테고리를 검색해주세요."
+            placeholder="채널명, 카테고리, 호스트명을 검색해주세요."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleKeyDown} // Enter 키 이벤트 핸들러 추가
@@ -54,10 +60,16 @@ export default function SearchPage() {
         </SearchBarContainer>
         <Line />
         {/* 검색 결과 */}
-        {loading ? null : results === null ? null : results.length > 0 ? (
-          <StreamList />
+        {loading ? (
+          <LoadingText>로딩 중...</LoadingText>
+        ) : noResults ? (
+          <ResultText>검색 결과가 없습니다.</ResultText> // 검색 결과가 없을 경우 메시지
         ) : (
-          <ResultText>검색 결과가 없습니다.</ResultText>
+          <ResultsContainer>
+            {results?.map((result) => (
+              <StreamCard key={result.id} item={result} /> // 검색된 채널을 StreamCard에 전달
+            ))}
+          </ResultsContainer>
         )}
       </MainContent>
     </Container>
@@ -91,6 +103,17 @@ const SearchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const ResultsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+`;
+
+const LoadingText = styled.p`
+  text-align: center;
+  color: #888;
 `;
 
 const Line = styled.div`

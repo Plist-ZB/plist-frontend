@@ -1,4 +1,4 @@
-import { Heart, Menu } from "lucide-react";
+import { Heart } from "lucide-react";
 
 interface PlayListItemBoxProps {
   item: {
@@ -9,6 +9,7 @@ interface PlayListItemBoxProps {
   currentVideoId: number;
   setCurrentVideoId: (id: number) => void;
   setIsOpen: (isOpen: boolean) => void;
+  "data-id": string;
 }
 
 export default function PlayListItemBox({
@@ -16,9 +17,11 @@ export default function PlayListItemBox({
   currentVideoId,
   setCurrentVideoId,
   setIsOpen,
+  "data-id": dataId,
 }: PlayListItemBoxProps) {
   return (
     <div
+      data-id={dataId}
       className={`flex items-center gap-2 p-2 cursor-pointer border border-border rounded-lg hover:bg-gray-100 ${
         currentVideoId === item.id ? "bg-gray-50" : ""
       }`}
@@ -26,9 +29,8 @@ export default function PlayListItemBox({
         setCurrentVideoId(item.id);
         setIsOpen(false);
       }}
-      draggable={true}
+      draggable={false}
     >
-      <Menu className="flex-shrink-0" />
       <div
         className="w-10 bg-gray-200 bg-cover rounded-lg shrink-0 aspect-square"
         style={{ backgroundImage: `url('${item.thumbnail}')` }}

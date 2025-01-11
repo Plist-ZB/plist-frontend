@@ -29,7 +29,36 @@
     { "id": 19, "name": "공부" },
     { "id": 20, "name": "카페" }
   ],
-
+  "search": [
+    {
+      "channelId": 1,
+      "channelName": "잔잔한 발라드곡 듣기",
+      "channelCategoryName": "발라드",
+      "channelThumbnail": "https://i.ytimg.com/vi/g83xaZiMqbs/mqdefault.jpg",
+      "channelCreatedAt": "2025-01-09 19:00:00",
+      "channelStatus": "live",
+      "channelHost": "노지훈",
+      "channelParticipantCount": 1011
+    },
+    {
+      "channelId": 2,
+      "channelName": "데이식스 전곡 듣기",
+      "channelCategoryName": "밴드",
+      "channelThumbnail": "https://i.ytimg.com/vi/Mhyi9p7T7OM/mqdefault.jpg",
+      "channelCreatedAt": "2025-01-01 00:00:00",
+      "channelStatus": "live",
+      "channelHost": "송유나",
+      "channelParticipantCount": 20
+    },
+    {
+      "channelId": 3,
+      "channelName": "데이식스 전곡 듣기",
+      "channelCategoryName": "밴드",
+      "channelThumbnail": "https://i.ytimg.com/vi/Mhyi9p7T7OM/mqdefault.jpg",
+      "channelCreatedAt": "2025-01-09 20:01:10",
+      "channelStatus": "live",
+      "channelHost": "김플리",
+      "channelParticipantCount": 20
   "playlists": [
     { "value": "none", "label": "없음" },
     {

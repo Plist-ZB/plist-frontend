@@ -1,3 +1,51 @@
 {
-  "test": ["test1", "test2"]
+  "users": [
+    {
+      "id": 1,
+      "username": "송유나",
+      "avatar": ""
+    }
+  ],
+
+  "categories": [
+    { "id": 1, "name": "발라드" },
+    { "id": 2, "name": "힙합" },
+    { "id": 3, "name": "K-POP" },
+    { "id": 4, "name": "POP" },
+    { "id": 5, "name": "드라마/영화 OST" },
+    { "id": 6, "name": "클래식" },
+    { "id": 7, "name": "재즈" },
+    { "id": 8, "name": "봄" },
+    { "id": 9, "name": "여름" },
+    { "id": 10, "name": "가을" },
+    { "id": 11, "name": "겨울" },
+    { "id": 12, "name": "코딩" },
+    { "id": 13, "name": "운동" },
+    { "id": 14, "name": "출/퇴근" },
+    { "id": 15, "name": "힐링" },
+    { "id": 16, "name": "여행" },
+    { "id": 17, "name": "드라이브" },
+    { "id": 18, "name": "게임" },
+    { "id": 19, "name": "공부" },
+    { "id": 20, "name": "카페" }
+  ],
+
+  "playlists": [
+    { "value": "none", "label": "없음" },
+    {
+      "value": "day6",
+      "label": "데이식스 - 한페이지가 될 수 있게",
+      "thumbnail": "https://i.ytimg.com/vi/Mhyi9p7T7OM/mqdefault.jpg"
+    },
+    {
+      "value": "taeyeon",
+      "label": "태연 - 그대라는 시",
+      "thumbnail": "https://i.ytimg.com/vi/siF3GM68IDE/mqdefault.jpg"
+    },
+    {
+      "value": "iu",
+      "label": "아이유 - 관객이 될게",
+      "thumbnail": "https://i.ytimg.com/vi/Mhyi9p7T7OM/mqdefault.jpg"
+    }
+  ]
 }

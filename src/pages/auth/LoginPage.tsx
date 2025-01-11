@@ -1,34 +1,23 @@
-import React from "react";
 import styled from "styled-components";
-//import { useGoogleLogin } from "@react-oauth/google";
-import LogoIcon from "@/assets/logo.png";
+import LogoIcon from "@/assets/svg/logo.svg";
+import TextLogoIcon from "@/assets/svg/text-logo.svg";
 import { FaGoogle } from "react-icons/fa";
 
-export default function LoginPage() {
-  //const handleGoogleLogin = useGoogleLogin({
-  //onSuccess: (response) => {
-  //console.log("Google OAuth Response:", response);
-  // 여기에 백엔드로 액세스 토큰 전송 로직 추가
-  //},
-  //onError: () => {
-  //console.error("로그인에 실패하셨습니다다");
-  //},
-  //});
+const LOGIN_URL = import.meta.env.VITE_API_SERVER_URL + "/login/oauth2/code/google";
 
+export default function LoginPage() {
   return (
     <Container>
       <LogoWrapper>
-        <Logo src={LogoIcon} alt="Logo" />
-        <Title>PLIST</Title>
+        <LogoIcon className="mr-1" />
+        <TextLogoIcon />
       </LogoWrapper>
       <ButtonWrapper>
-        <LoginButton
-        // onClick={handleGoogleLogin}
-        >
+        <LoginButton href={LOGIN_URL} target="_self">
           <Icon>
             <FaGoogle />
           </Icon>
-          Google 로그인하기
+          <Text>Google 로그인</Text>
         </LoginButton>
       </ButtonWrapper>
     </Container>
@@ -52,18 +41,6 @@ const LogoWrapper = styled.div`
   margin-bottom: 40px;
 `;
 
-const Logo = styled.img`
-  width: 80px;
-  height: 80px;
-  margin-bottom: 10px;
-`;
-
-const Title = styled.h1`
-  font-size: 24px;
-  font-weight: bold;
-  color: #4a4a4a;
-`;
-
 const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -71,7 +48,11 @@ const ButtonWrapper = styled.div`
   width: 80%;
 `;
 
-const LoginButton = styled.button`
+const Text = styled.div`
+  color: #333333;
+`;
+
+const LoginButton = styled.a`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,6 +65,7 @@ const LoginButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s, box-shadow 0.2s;
+  color: #333333;
 
   &:hover {
     background-color: #f9f9f9;
@@ -93,4 +75,5 @@ const LoginButton = styled.button`
 
 const Icon = styled.span`
   font-size: 18px;
+  color: #333333;
 `;

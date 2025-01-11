@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import LogoIcon from "@/assets/logo.png";
+import LogoIcon from "@/assets/svg/logo.svg";
+import TextLogoIcon from "@/assets/svg/text-logo.svg";
 
 export default function WelcomePage() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ export default function WelcomePage() {
   useEffect(() => {
     // 3초 후 메인 화면(/main)으로 이동
     const timer = setTimeout(() => {
-      navigate("/HomePage");
+      navigate("/");
     }, 3000);
 
     // 컴포넌트가 언마운트되면 타이머를 클리어
@@ -19,8 +20,8 @@ export default function WelcomePage() {
   return (
     <Container>
       <LogoWrapper>
-        <Logo src={LogoIcon} alt="Logo" />
-        <LogoText>PLIST</LogoText>
+        <LogoIcon />
+        <TextLogoIcon />
       </LogoWrapper>
       <MessageWrapper>
         <WelcomeText>가입을 환영합니다!</WelcomeText>

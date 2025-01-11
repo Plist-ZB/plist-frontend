@@ -36,7 +36,7 @@ const Router = () => {
           <Route path="welcome" element={<WelcomePage />} />
         </Route>
 
-        <Route path="/category/:name" element={<CategoryDetailPage />} />
+        <Route path="/category/:id" element={<CategoryDetailPage />} />
 
         <Route path="/channel/:channelId" element={<ChannelPage />} />
 

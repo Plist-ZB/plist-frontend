@@ -128,7 +128,9 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
             }))}
             classNamePrefix="react-select"
             placeholder={CategoryPlaceholder}
-            onChange={handleCategoryChange}
+            onChange={(newValue) =>
+              handleCategoryChange(newValue as { value: string; label: string })
+            } // 매개변수 추가
             components={{ IndicatorSeparator: () => null }}
           />
           <Label>내 재생목록에서 가져오기</Label>
@@ -140,7 +142,11 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
             }))}
             classNamePrefix="react-select"
             placeholder={PlaylistPlaceholder}
-            onChange={handlePlaylistChange}
+            onChange={(newValue) =>
+              handlePlaylistChange(
+                newValue as { value: string; label: string; thumbnail: string } | null
+              )
+            } // 매개변수 추가
             components={{ IndicatorSeparator: () => null }}
           />
           {/* <Label>채널 최대 인원 수</Label>
@@ -163,7 +169,7 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           </ThumbnailPreview>
         </ModalBody>
         <ModalFooter>
-          <SubmitButton onClick={handleSubmit} disabled={createChannelStatus === "loading"}>
+          <SubmitButton onClick={handleSubmit} disabled={createChannelStatus === "pending"}>
             {createChannelStatus === "pending" ? "생성 중..." : "생성"}
           </SubmitButton>
         </ModalFooter>

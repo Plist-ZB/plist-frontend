@@ -1,7 +1,8 @@
 import { ChevronLeft } from "lucide-react";
-import ExitRoomModal from "@/pages/channel/components/ExitRoomModal";
+import ExitRoomModal from "@/pages/channel/components/top-bar/ExitRoomModal";
 import { overlay } from "overlay-kit";
 import { GoDotFill } from "react-icons/go";
+import { TimeElapsed } from "@/pages/channel/components/top-bar/TimeElapsed";
 
 export interface ChannelTopBarProps {
   title: string;
@@ -21,7 +22,7 @@ const ChannelTopBar: React.FC<ChannelTopBarProps> = ({
   };
 
   // TODO: jotai 변수로 선언하여 1초마다 업데이트 해주기
-  const streamDuration = "10:00:00";
+  const SAMPLE_CREATED_AT = new Date("2025-01-09T10:00:00");
 
   return (
     <div className="flex items-center justify-between flex-shrink-0 px-0 pr-4 bg-transparent bg-white border-b border-gray-200 h-header">
@@ -44,7 +45,7 @@ const ChannelTopBar: React.FC<ChannelTopBarProps> = ({
       {hasAction && <>{rightActionElement}</>}
       <div className="flex items-center gap-1">
         <GoDotFill className="text-red-main" />
-        <div className="text-sm text-gray-500">{streamDuration}</div>
+        <TimeElapsed date={SAMPLE_CREATED_AT} className="text-sm text-center text-gray-500" />
       </div>
     </div>
   );

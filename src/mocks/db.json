@@ -29,7 +29,6 @@
     { "id": 19, "name": "공부" },
     { "id": 20, "name": "카페" }
   ],
-
   "search": [
     {
       "channelId": 1,
@@ -60,6 +59,22 @@
       "channelStatus": "live",
       "channelHost": "김플리",
       "channelParticipantCount": 20
+  "playlists": [
+    { "value": "none", "label": "없음" },
+    {
+      "value": "day6",
+      "label": "데이식스 - 한페이지가 될 수 있게",
+      "thumbnail": "https://i.ytimg.com/vi/Mhyi9p7T7OM/mqdefault.jpg"
+    },
+    {
+      "value": "taeyeon",
+      "label": "태연 - 그대라는 시",
+      "thumbnail": "https://i.ytimg.com/vi/siF3GM68IDE/mqdefault.jpg"
+    },
+    {
+      "value": "iu",
+      "label": "아이유 - 관객이 될게",
+      "thumbnail": "https://i.ytimg.com/vi/Mhyi9p7T7OM/mqdefault.jpg"
     }
   ]
 }

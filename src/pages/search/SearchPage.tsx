@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { IoIosSearch } from "react-icons/io";
 import StreamCard from "@/common/components/StreamCard";

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import ChatBox from "./ChatBox";
-import ChatInput from "./ChatInput";
+import ChatBox from "./chat/ChatBox";
+import ChatInput from "./chat/ChatInput";
 
 export default function ChatArea() {
   const scrollRef = useRef<HTMLDivElement>(null);

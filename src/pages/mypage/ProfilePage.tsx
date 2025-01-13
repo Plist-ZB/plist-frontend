@@ -42,7 +42,6 @@ export default function ProfilePage() {
             id="profile-image"
             type="file"
             accept="image/jpg, image/jpeg, image/png, image/webp"
-            capture="environment"
             className="hidden"
             onChange={onChangeFileChange}
           />

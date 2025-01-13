@@ -31,6 +31,27 @@ export default function HomePage() {
     navigate(`/channel/${channelId}`); // 특정 채널 페이지로 이동
   };
 
+  // 호스트 버튼 노출 관련
+  const [showHostButton, setShowHostButton] = useState(true);
+  const [mouseTimeout, setMouseTimeout] = useState<NodeJS.Timeout | null>(null);
+  // 스크롤 이벤트 처리
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowHostButton(false); // 스크롤 시 버튼 숨기기
+
+      // 3초 후 버튼 다시 표시
+      if (mouseTimeout) clearTimeout(mouseTimeout);
+      const timeout = setTimeout(() => setShowHostButton(true), 3000);
+      setMouseTimeout(timeout);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (mouseTimeout) clearTimeout(mouseTimeout); // 컴포넌트 언마운트 시 타이머 제거
+    };
+  }, [mouseTimeout]);
+
   return (
     <Container>
       <MainContent>
@@ -56,14 +77,16 @@ export default function HomePage() {
           />
         ))}
       </MainContent>
-      <HostButton
-        onClick={() =>
-          overlay.open(({ isOpen, unmount }) => <HostAdd isOpen={isOpen} onClose={unmount} />)
-        }
-      >
-        <Headphones />
-        <HostText>호스트</HostText>
-      </HostButton>
+      {showHostButton && (
+        <HostButton
+          onClick={() =>
+            overlay.open(({ isOpen, unmount }) => <HostAdd isOpen={isOpen} onClose={unmount} />)
+          }
+        >
+          <Headphones />
+          <HostText>호스트</HostText>
+        </HostButton>
+      )}
     </Container>
   );
 }

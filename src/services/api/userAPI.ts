@@ -8,6 +8,25 @@ const userAPI = {
 
     return response;
   },
+
+  patchUserProfile: async ({ nickname, image }: { nickname: string; image: File | null }) => {
+    const formData = new FormData();
+
+    formData.append("nickname", nickname);
+    if (image) formData.append("image", image);
+
+    const { data: response } = await instance.patch<UserProfile>(
+      `${userPrefix}/profile`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    return response;
+  },
 };
 
 export default userAPI;

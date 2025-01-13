@@ -1,17 +1,25 @@
-import { useRef, useState } from "react";
+import userAPI from "@/services/api/userAPI";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { useAtom } from "jotai";
+import { userProfileAtom } from "@/store/user";
 
 const useProfile = () => {
-  const profileImageRef = useRef<null | HTMLInputElement>(null);
+  const [prevUserProfile, setUserProfile] = useAtom(userProfileAtom);
 
-  const [previewAvatar, setPreviewAvatar] = useState("");
+  const [newProfile, setNewProfile] = useState({
+    nickname: prevUserProfile?.nickname ?? "",
+    image: null as File | null,
+  });
+
+  const [previewAvatar, setPreviewAvatar] = useState(prevUserProfile?.image);
 
   const onChangeFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const uploadFiles = e.target.files;
+    const file = e.target.files?.[0];
 
-    if (uploadFiles) {
-      const uploadedFile = uploadFiles[0];
-      // TODO: form 데이터에 파일 등록 로직 추가하기
-      extractUrlFromImageFile(uploadedFile);
+    if (file) {
+      setNewProfile((prev) => ({ ...prev, image: file }));
+      extractUrlFromImageFile(file);
     }
   };
 
@@ -34,20 +42,46 @@ const useProfile = () => {
   };
 
   /* 프로필 닉네임 관련 */
-  const currentNickname = "김플리";
-  const [newNickname, setNewNickname] = useState(currentNickname);
 
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewNickname(e.target.value);
+    setNewProfile((prev) => ({ ...prev, nickname: e.target.value }));
+  };
+
+  const {
+    mutate: updateProfile,
+    isPending,
+    isError,
+  } = useMutation({
+    mutationFn: async ({ nickname, image }: { nickname: string; image: File | null }) => {
+      try {
+        const result = await userAPI.patchUserProfile({ nickname, image });
+
+        setUserProfile(result);
+
+        return result;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    await updateProfile(newProfile);
+
+    console.log("프로필 변경");
   };
 
   return {
-    profileImageRef,
     onChangeFileChange,
     backgroundImageStyle,
-    currentNickname,
-    newNickname,
+    prevUserProfile,
+    newProfile,
     onChangeNickname,
+    onSubmit,
+    isPending,
+    isError,
   };
 };
 

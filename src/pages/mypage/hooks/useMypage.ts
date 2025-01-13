@@ -1,8 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import userAPI from "@/services/api/userAPI";
+import { useAtom } from "jotai";
+import { userProfileAtom } from "@/store/user";
+import { useEffect } from "react";
 
 const useMypage = () => {
-  const { data: userProfile, isLoading: isProfileLoading } = useQuery<UserProfile>({
+  const [userProfile, setUserProfile] = useAtom(userProfileAtom);
+
+  const { data, isLoading: isProfileLoading } = useQuery<UserProfile>({
     queryKey: ["userProfile"],
     queryFn: async () => {
       try {
@@ -10,16 +15,24 @@ const useMypage = () => {
 
         return result;
       } catch (error) {
-        return {
+        const fallbackData = {
           id: 1,
-          user_name: "김플리리스트입니다30글자제한김플리리스트입니다30글자제한",
-          user_email: "account@domain.com",
-          user_image: "https://picsum.photos/200/300",
+          nickname: "",
+          email: "",
+          image: "",
         };
+
+        return fallbackData;
       }
     },
     enabled: true,
   });
+
+  useEffect(() => {
+    if (!userProfile && data) {
+      setUserProfile(data);
+    }
+  }, [data, userProfile, setUserProfile]);
 
   return { userProfile, isProfileLoading };
 };

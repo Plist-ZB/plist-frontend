@@ -5,10 +5,11 @@ import { overlay } from "overlay-kit";
 import HostAdd from "./components/HostAdd";
 import { useState, useEffect } from "react";
 import { instance } from "@/services/api/instance";
+import { channelMockData } from "@/mocks/channelMock";
 
 export default function HomePage() {
   const [currentCategory, setCurrentCategory] = useState<"recent" | "popular">("recent");
-  const [streams, setStreams] = useState<IChannel[]>([]);
+  const [streams, setStreams] = useState(channelMockData);
 
   useEffect(() => {
     const fetchStreams = async () => {

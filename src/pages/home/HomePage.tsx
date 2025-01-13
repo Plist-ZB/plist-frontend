@@ -1,18 +1,49 @@
 import styled from "styled-components";
-import StreamList from "@/common/components/StreamList";
+import StreamCard from "@/common/components/StreamCard";
 import { Headphones } from "lucide-react";
 import { overlay } from "overlay-kit";
 import HostAdd from "./components/HostAdd";
+import { useState, useEffect } from "react";
+import { instance } from "@/services/api/instance";
 
 export default function HomePage() {
+  const [currentCategory, setCurrentCategory] = useState<"recent" | "popular">("recent");
+  const [streams, setStreams] = useState<IChannel[]>([]);
+
+  useEffect(() => {
+    const fetchStreams = async () => {
+      try {
+        const endpoint = currentCategory === "recent" ? "/channels" : "/channels/popular";
+        const response = await instance.get(endpoint);
+        setStreams(response.data);
+      } catch (error) {
+        console.error("Error fetching streams:", error);
+      }
+    };
+
+    fetchStreams();
+  }, [currentCategory]);
+
   return (
     <Container>
       <MainContent>
         <CategoryButtons>
-          <CategoryButton>최근</CategoryButton>
-          <CategoryButton>인기</CategoryButton>
+          <CategoryButton
+            onClick={() => setCurrentCategory("recent")}
+            isActive={currentCategory === "recent"}
+          >
+            최근
+          </CategoryButton>
+          <CategoryButton
+            onClick={() => setCurrentCategory("popular")}
+            isActive={currentCategory === "popular"}
+          >
+            인기
+          </CategoryButton>
         </CategoryButtons>
-        <StreamList />
+        {streams.map((stream) => (
+          <StreamCard key={stream.channelId} item={stream} />
+        ))}
       </MainContent>
       <HostButton
         onClick={() =>
@@ -43,11 +74,12 @@ const CategoryButtons = styled.div`
   color: var(--color-gray-dark);
 `;
 
-const CategoryButton = styled.button`
+const CategoryButton = styled.button<{ isActive?: boolean }>`
   padding: 8px 16px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background: var(--color-white);
+  background-color: ${({ isActive }) => (isActive ? "#adbfe3" : "#ffffff")};
+  color: ${({ isActive }) => (isActive ? "#fff" : "#000")};
   cursor: pointer;
 `;
 

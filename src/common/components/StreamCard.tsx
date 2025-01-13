@@ -36,6 +36,7 @@ const Card = styled(Link)`
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 16px;
+  margin-bottom: 11px;
 
   &:hover {
     border: 1px solid var(--color-primary);

@@ -70,11 +70,7 @@ export default function HomePage() {
           </CategoryButton>
         </CategoryButtons>
         {streams.map((stream) => (
-          <StreamCard
-            key={stream.channelId}
-            item={stream}
-            onClick={() => handleCardClick(stream.channelId)}
-          />
+          <StreamCard key={stream.channelId} item={stream} />
         ))}
       </MainContent>
       {showHostButton && (

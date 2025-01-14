@@ -27,6 +27,12 @@ const userAPI = {
 
     return response;
   },
+
+  logout: async () => {
+    const { data: response } = await instance.post(`${userPrefix}/logout`);
+
+    return response;
+  },
 };
 
 export default userAPI;

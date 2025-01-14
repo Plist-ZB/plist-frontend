@@ -2,6 +2,8 @@ import UserInfo from "./components/mypage/UserInfo";
 import MenuButton from "./components/mypage/MenuButton";
 import { Link } from "react-router-dom";
 import { UserRoundPen } from "lucide-react";
+import useMypage from "@/pages/mypage/hooks/useMypage";
+import { useCallback } from "react";
 
 const myPageMenus = [
   {
@@ -15,9 +17,11 @@ const myPageMenus = [
 ];
 
 export default function MyPage() {
-  const onClickLogout = () => {
-    console.log("로그아웃");
-  };
+  const { logout } = useMypage();
+
+  const onClickLogout = useCallback(async () => {
+    logout();
+  }, [logout]);
 
   return (
     <div className="flex flex-col w-full h-full">

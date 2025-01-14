@@ -3,7 +3,7 @@ import LogoIcon from "@/assets/svg/logo.svg";
 import TextLogoIcon from "@/assets/svg/text-logo.svg";
 import { FaGoogle } from "react-icons/fa";
 
-const LOGIN_URL = import.meta.env.VITE_API_SERVER_URL + "/login/oauth2/code/google";
+const LOGIN_URL = import.meta.env.VITE_API_SERVER_DOMAIN + "/login/oauth2/code/google";
 
 export default function LoginPage() {
   return (

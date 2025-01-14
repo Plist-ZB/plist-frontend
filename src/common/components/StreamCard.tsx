@@ -11,8 +11,8 @@ export default function StreamCard({ item }: StreamCardProps) {
   const duration = getTimeAgo(item.channelCreatedAt);
 
   return (
-    <Card to={`/stream/${item.channelId}`}>
-      <Thumbnail $thumbnailUrl={item.channelThumbnail}>
+    <Card to={`/channel/${item.channelId}`}>
+      <Thumbnail $thumbnailUrl={item.channelThumbnail} className="flex-shrink-0">
         <LiveBadge>
           <FaUserAlt size={8} className="mb-[1px]" />
           {item.channelParticipantCount}

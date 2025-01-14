@@ -6,12 +6,10 @@ import HostAdd from "./components/HostAdd";
 import { useState, useEffect } from "react";
 import { instance } from "@/services/api/instance";
 import { channelMockData } from "@/mocks/channelMock";
-import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
   const [currentCategory, setCurrentCategory] = useState<"recent" | "popular">("recent");
   const [streams, setStreams] = useState(channelMockData);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStreams = async () => {
@@ -26,10 +24,6 @@ export default function HomePage() {
 
     fetchStreams();
   }, [currentCategory]);
-
-  const handleCardClick = (channelId: number) => {
-    navigate(`/channel/${channelId}`); // 특정 채널 페이지로 이동
-  };
 
   // 호스트 버튼 노출 관련
   const [showHostButton, setShowHostButton] = useState(true);

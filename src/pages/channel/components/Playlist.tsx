@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
-import PlayListItemBox from "./PlayListItemBox";
+import PlayListItemBox from "@/pages/channel/components/playlist/PlayListItemBox";
 
 export default function Playlist() {
   const [playlist, setPlaylist] = useState<any[]>([

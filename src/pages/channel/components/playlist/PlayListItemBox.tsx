@@ -9,7 +9,7 @@ interface PlayListItemBoxProps {
   currentVideoId: number;
   setCurrentVideoId: (id: number) => void;
   setIsOpen: (isOpen: boolean) => void;
-  "data-id": string;
+  "data-id"?: string;
 }
 
 export default function PlayListItemBox({

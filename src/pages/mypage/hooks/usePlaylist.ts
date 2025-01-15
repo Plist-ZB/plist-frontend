@@ -1,7 +1,9 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import userAPI from "@/services/api/userAPI";
 
 const usePlaylist = () => {
+  const queryClient = useQueryClient();
+
   const getMyPlaylistsQuery = useQuery({
     queryKey: ["myPlaylists"],
     queryFn: async () => {
@@ -21,11 +23,18 @@ const usePlaylist = () => {
       try {
         const result = await userAPI.addMyPlaylist(name);
 
+        if (result.errorCode === 400) {
+          throw new Error(result.message);
+        }
+
         return result;
       } catch (error) {
         console.error("플레이리스트 추가 실패:", error);
         return;
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["myPlaylists"] });
     },
   });
 
@@ -34,6 +43,7 @@ const usePlaylist = () => {
       try {
         const result = await userAPI.changeMyPlaylistName({ playlistId, name });
 
+        queryClient.invalidateQueries({ queryKey: ["myPlaylists"] });
         return result;
       } catch (error) {
         console.error("플레이리스트 이름 변경 실패:", error);
@@ -47,6 +57,7 @@ const usePlaylist = () => {
       try {
         const result = await userAPI.deleteMyPlaylist(playlistId);
 
+        queryClient.invalidateQueries({ queryKey: ["myPlaylists"] });
         return result;
       } catch (error) {
         console.error("플레이리스트 삭제 실패:", error);

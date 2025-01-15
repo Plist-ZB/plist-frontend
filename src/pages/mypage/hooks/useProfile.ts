@@ -1,10 +1,14 @@
 import userAPI from "@/services/api/userAPI";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useAtom } from "jotai";
 import { userProfileAtom } from "@/store/user";
+import { useNavigate } from "react-router-dom";
 
 const useProfile = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const [prevUserProfile, setUserProfile] = useAtom(userProfileAtom);
 
   const [newProfile, setNewProfile] = useState({
@@ -63,14 +67,16 @@ const useProfile = () => {
         console.log(error);
       }
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+      navigate("/mypage");
+    },
   });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     await updateProfile(newProfile);
-
-    console.log("프로필 변경");
   };
 
   return {

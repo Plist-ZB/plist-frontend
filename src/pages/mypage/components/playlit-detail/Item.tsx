@@ -1,6 +1,7 @@
 import usePlaylistDetail from "@/pages/mypage/hooks/usePlaylistDetail";
 import { Menu, Heart } from "lucide-react";
 import { useCallback } from "react";
+import { decode } from "html-entities";
 
 const Item = ({ item }: { item: { id: number; videoThumbnail: string; videoName: string } }) => {
   const { deletePlaylistMutation } = usePlaylistDetail();
@@ -20,7 +21,7 @@ const Item = ({ item }: { item: { id: number; videoThumbnail: string; videoName:
         className="w-10 bg-gray-200 bg-center bg-cover rounded-lg shrink-0 aspect-square"
         style={{ backgroundImage: `url('${item.videoThumbnail}')` }}
       ></div>
-      <div className="flex-grow truncate">{item.videoName}</div>
+      <div className="flex-grow truncate">{decode(item.videoName)}</div>
       <button
         className="p-0 hover:border-transparent hover:text-red-main"
         onClick={deleteItem(item.id)}

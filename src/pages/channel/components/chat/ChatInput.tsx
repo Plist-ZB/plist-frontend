@@ -1,7 +1,7 @@
 import { CirclePlus, Send } from "lucide-react";
 import { overlay } from "overlay-kit";
 import { useState } from "react";
-import SearchBottomSheet from "./SearchBottomSheet";
+import SearchBottomSheet from "../search/SearchBottomSheet";
 
 export default function ChatInput() {
   const [message, setMessage] = useState("");

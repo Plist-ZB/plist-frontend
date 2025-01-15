@@ -16,6 +16,19 @@ const usePlaylist = () => {
     enabled: true,
   });
 
+  const addPlaylistMutation = useMutation({
+    mutationFn: async (name: string) => {
+      try {
+        const result = await userAPI.addMyPlaylist(name);
+
+        return result;
+      } catch (error) {
+        console.error("플레이리스트 추가 실패:", error);
+        return;
+      }
+    },
+  });
+
   const changePlaylistNameMutation = useMutation({
     mutationFn: async ({ playlistId, name }: { playlistId: number; name: string }) => {
       try {
@@ -42,7 +55,12 @@ const usePlaylist = () => {
     },
   });
 
-  return { getMyPlaylistsQuery, changePlaylistNameMutation, deletePlaylistMutation };
+  return {
+    getMyPlaylistsQuery,
+    addPlaylistMutation,
+    changePlaylistNameMutation,
+    deletePlaylistMutation,
+  };
 };
 
 export default usePlaylist;

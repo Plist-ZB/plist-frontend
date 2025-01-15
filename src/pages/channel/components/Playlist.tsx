@@ -50,7 +50,7 @@ export default function Playlist() {
         /* TODO: 드래그앤드랍 적용하기 */
         /* TODO: 호스트가 아이템박스 클릭 시 현재 재생 영상 변경 */
         /* TODO: 클릭하면 favorite에 추가하기 */
-        <div className="overflow-y-auto flex flex-col gap-2 px-2 py-4 absolute left-0 right-0 z-10 transition-all duration-300 ease-in-out origin-top transform bg-white border-b shadow-lg h-[calc(100vh*0.5)] top-full animate-dropdown rounded-b-lg">
+        <div className="overflow-y-auto flex flex-col gap-2 px-2 py-4 absolute left-0 right-0 z-10 transition-all duration-300 ease-in-out origin-top transform bg-white border-b shadow-lg max-h-[calc(100vh*0.5)] top-full animate-dropdown rounded-b-lg">
           {playlist.map((item) => (
             <PlayListItemBox
               key={item.id}

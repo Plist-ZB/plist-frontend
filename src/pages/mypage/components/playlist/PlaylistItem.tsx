@@ -23,7 +23,7 @@ export default function PlaylistItem({ item }: PlaylistItemProps) {
       role="button"
     >
       <div
-        className="relative flex w-full bg-gray-200 bg-cover aspect-square"
+        className="relative flex w-full bg-gray-200 bg-center bg-cover aspect-square"
         style={{ backgroundImage: `url('${userPlaylistThumbnail}')` }}
       >
         <button

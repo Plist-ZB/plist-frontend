@@ -1,9 +1,22 @@
+import usePlaylist from "@/pages/mypage/hooks/usePlaylist";
+import { useState } from "react";
+
 interface CreatePlaylistModalProps {
   unmount: () => void;
 }
 
 export default function CreatePlaylistModal({ unmount }: CreatePlaylistModalProps) {
   // TODO: onChange와 onClick 함수 구현
+  const [newPlaylistName, setNewPlaylistName] = useState("");
+  const { addPlaylistMutation } = usePlaylist();
+
+  const onClickHandler = async () => {
+    if (!newPlaylistName) return;
+
+    await addPlaylistMutation.mutateAsync(newPlaylistName);
+
+    unmount();
+  };
 
   return (
     <div
@@ -26,7 +39,8 @@ export default function CreatePlaylistModal({ unmount }: CreatePlaylistModalProp
             id="playlist-name"
             type="text"
             placeholder="플레이리스트 이름"
-            onChange={(e) => console.log(e.target.value)}
+            value={newPlaylistName}
+            onChange={(e) => setNewPlaylistName(e.target.value)}
             className="p-2 border rounded-lg border-gray-border"
           />
         </div>
@@ -40,7 +54,7 @@ export default function CreatePlaylistModal({ unmount }: CreatePlaylistModalProp
           </button>
           <button
             className="px-3 py-1 text-black border border-black rounded-lg bg-primary-light hover:bg-primary hover:text-primary-main"
-            onClick={() => console.log("생성")}
+            onClick={onClickHandler}
           >
             생성
           </button>

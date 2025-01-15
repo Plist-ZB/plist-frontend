@@ -18,12 +18,12 @@ export default function PlaylistItem({ item }: PlaylistItemProps) {
   return (
     <div
       onClick={onClickItem}
-      className="flex flex-col w-full border rounded-md cursor-pointer border-gray-border hover:text-black"
+      className="flex flex-col w-full border rounded-lg cursor-pointer border-gray-border hover:text-black"
       aria-label={userPlaylistName}
       role="button"
     >
       <div
-        className="relative flex w-full bg-gray-200 bg-center bg-cover aspect-square"
+        className="relative flex w-full bg-gray-200 bg-center bg-cover rounded-t-lg aspect-square"
         style={{ backgroundImage: `url('${userPlaylistThumbnail}')` }}
       >
         <button

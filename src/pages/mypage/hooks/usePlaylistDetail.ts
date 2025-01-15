@@ -18,7 +18,39 @@ const usePlaylistDetail = () => {
         return [] as const;
       }
     },
-    enabled: true,
+    enabled: !!playlistId,
+  });
+
+  const addItemToPlaylistMutation = useMutation({
+    mutationFn: async ({
+      playlistId,
+      videoId,
+      videoName,
+      videoThumbnail,
+    }: {
+      playlistId: string;
+      videoId: string;
+      videoName: string;
+      videoThumbnail: string;
+    }) => {
+      if (!playlistId) throw new Error("플레이리스트 ID가 없습니다.");
+
+      try {
+        const result = await userAPI.addItemToMyPlaylist(Number(playlistId), {
+          videoId,
+          videoName,
+          videoThumbnail,
+        });
+
+        queryClient.invalidateQueries({ queryKey: ["myPlaylistDetail"] });
+        // TODO: 토스트 메세지로 교체
+        alert("영상이 추가되었습니다.");
+        return result;
+      } catch (error) {
+        console.error("플레이리스트에 영상 추가 실패:", error);
+        return;
+      }
+    },
   });
 
   const deletePlaylistMutation = useMutation({
@@ -37,6 +69,7 @@ const usePlaylistDetail = () => {
 
   return {
     myPlaylistDetailQuery,
+    addItemToPlaylistMutation,
     deletePlaylistMutation,
   };
 };

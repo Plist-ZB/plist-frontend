@@ -75,6 +75,15 @@ const userAPI = {
 
     return response;
   },
+
+  addItemToMyPlaylist: async (
+    playlistId: number,
+    item: { videoId: string; videoName: string; videoThumbnail: string }
+  ) => {
+    const { data: response } = await instance.patch(`/user/playlist/${playlistId}/add`, item);
+
+    return response;
+  },
 };
 
 export default userAPI;

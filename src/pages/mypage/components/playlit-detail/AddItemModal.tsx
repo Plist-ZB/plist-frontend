@@ -3,6 +3,7 @@ import usePlaylistDetail from "@/pages/mypage/hooks/usePlaylistDetail";
 import { instance } from "@/services/api/instance";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 interface AddItemModalProps {
   playlistId: string;
@@ -13,25 +14,29 @@ export default function AddItemModal({ playlistId, unmount }: AddItemModalProps)
   const { addItemToPlaylistMutation } = usePlaylistDetail();
 
   const [search, setSearch] = useState("");
-  // TODO: 타입 외부에 정의하기
-  const [searchResult, setSearchResult] = useState<
-    { id: number; videoId: string; videoName: string; videoThumbnail: string }[]
-  >([]);
+  const [isSearchEnabled, setIsSearchEnabled] = useState(false);
+
+  const searchYoutubeQuery = useQuery({
+    queryKey: ["searchVideo", search],
+    queryFn: async () => {
+      const { data } = await instance.get(`/search-video?keyword=${search}`);
+      return data;
+    },
+    enabled: isSearchEnabled && search.length > 0,
+  });
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
+    setIsSearchEnabled(false);
+  };
+
+  const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      setIsSearchEnabled(true);
+    }
   };
 
   const dialogRef = useRef<HTMLDivElement>(null);
-
-  const onKeyDownHandler = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== "Enter") return;
-    // 검색어 입력 시 검색 API 호출
-    const { data: response } = await instance.get(`/search-video?keyword=${search}`);
-
-    // 검색 결과 출력
-    setSearchResult(response);
-  };
 
   const onCLickAddItem =
     (item: { id: number; videoId: string; videoName: string; videoThumbnail: string }) =>
@@ -57,7 +62,7 @@ export default function AddItemModal({ playlistId, unmount }: AddItemModalProps)
         role="dialog"
         ref={dialogRef}
         className={`relative flex flex-col w-full max-w-3xl gap-4 pt-0 mx-4 overflow-y-scroll bg-white border rounded-lg shadow-lg cursor-default transition-[height] duration-500 ease-in-out ${
-          searchResult && searchResult.length >= 2 ? "h-[80%]" : "h-1/2"
+          searchYoutubeQuery.data && searchYoutubeQuery.data.length >= 2 ? "h-[80%]" : "h-1/2"
         } border-gray-border animate-slideUp`}
         onClick={(e) => e.stopPropagation()}
       >
@@ -77,7 +82,13 @@ export default function AddItemModal({ playlistId, unmount }: AddItemModalProps)
         </div>
         {/* 검색한 결과가 나타나는 곳 */}
         <div className="flex flex-col gap-3 px-4">
-          {searchResult?.map((item) => (
+          {searchYoutubeQuery.isLoading && <div>Loading...</div>}
+
+          {searchYoutubeQuery.data?.length === 0 && (
+            <div className="text-center text-gray-500">검색 결과가 없습니다</div>
+          )}
+
+          {searchYoutubeQuery.data?.map((item) => (
             <SearchItem key={item.id} item={item} onClick={onCLickAddItem(item)} />
           ))}
         </div>

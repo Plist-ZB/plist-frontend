@@ -61,6 +61,20 @@ const userAPI = {
 
     return response;
   },
+
+  getMyPlaylistByID: async (playlistId: number) => {
+    const { data: response } = await instance.get(`/user/playlist/${playlistId}`);
+
+    return response;
+  },
+
+  deleteItemFromMyPlaylist: async (playlistId: number, itemId: number) => {
+    const { data: response } = await instance.patch(
+      `/user/playlist/${playlistId}/remove?id=${itemId}`
+    );
+
+    return response;
+  },
 };
 
 export default userAPI;

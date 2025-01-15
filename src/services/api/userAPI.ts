@@ -1,6 +1,6 @@
 import { instance } from "@/services/api/instance";
 
-const userPrefix = import.meta.env.MODE === "development" ? "" : "/user";
+const userPrefix = "/user";
 
 const userAPI = {
   getProfile: async () => {
@@ -36,6 +36,14 @@ const userAPI = {
 
   getMyPlaylists: async () => {
     const { data: response } = await instance.get<MyPlaylists>(`${userPrefix}/playlists`);
+
+    return response;
+  },
+
+  addMyPlaylist: async (name: string) => {
+    const { data: response } = await instance.post(`${userPrefix}/playlist`, {
+      userPlaylistName: name,
+    });
 
     return response;
   },

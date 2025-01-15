@@ -49,7 +49,7 @@ const userAPI = {
   },
 
   changeMyPlaylistName: async ({ playlistId, name }: { playlistId: number; name: string }) => {
-    const { data: response } = await instance.patch(`${userPrefix}/playlists/${playlistId}`, {
+    const { data: response } = await instance.patch(`${userPrefix}/playlist/${playlistId}`, {
       userPlaylistName: name,
     });
 
@@ -57,7 +57,7 @@ const userAPI = {
   },
 
   deleteMyPlaylist: async (playlistId: number) => {
-    const { data: response } = await instance.delete(`${userPrefix}/playlists/${playlistId}`);
+    const { data: response } = await instance.delete(`${userPrefix}/playlist/${playlistId}`);
 
     return response;
   },

@@ -33,6 +33,26 @@ const userAPI = {
 
     return response;
   },
+
+  getMyPlaylists: async () => {
+    const { data: response } = await instance.get<MyPlaylists>(`${userPrefix}/playlists`);
+
+    return response;
+  },
+
+  changeMyPlaylistName: async ({ playlistId, name }: { playlistId: number; name: string }) => {
+    const { data: response } = await instance.patch(`${userPrefix}/playlists/${playlistId}`, {
+      userPlaylistName: name,
+    });
+
+    return response;
+  },
+
+  deleteMyPlaylist: async (playlistId: number) => {
+    const { data: response } = await instance.delete(`${userPrefix}/playlists/${playlistId}`);
+
+    return response;
+  },
 };
 
 export default userAPI;

@@ -46,7 +46,8 @@ instance.interceptors.response.use(
     const isTokenExpired = axiosError.status === 401;
     const errorMessage = axiosError.response.data.message;
 
-    if (isTokenExpired && errorMessage === "EXPIRED_ACCESS_TOKEN") {
+    // 리프레시 토큰 롤백하면 복구할 코드
+    /* if (isTokenExpired && errorMessage === "EXPIRED_ACCESS_TOKEN") {
       const getToken = async () => {
         const response = await instance.get("/auth/access", { withCredentials: true });
         localStorage.setItem("access_token", response.data.data.access_token);
@@ -58,7 +59,12 @@ instance.interceptors.response.use(
 
     if (isTokenExpired && errorMessage === "EXPIRED_REFRESH_TOKEN") {
       localStorage.removeItem("access_token");
-      window.location.reload();
+      return window.location.reload();
+    } */
+
+    if (isTokenExpired) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/auth/login";
     }
 
     return Promise.reject(axiosError);

@@ -59,6 +59,8 @@
       "channelStatus": "live",
       "channelHost": "김플리",
       "channelParticipantCount": 20
+    }
+  ],
   "playlists": [
     { "value": "none", "label": "없음" },
     {

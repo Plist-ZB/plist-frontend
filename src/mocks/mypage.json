@@ -1,0 +1,53 @@
+{
+  "profile": {
+    "id": 1,
+    "nickname": "김플리리스트입니다30글자제한김플리리스트입니다30글자제한",
+    "email": "account@domain.com",
+    "image": "https://picsum.photos/200/300"
+  },
+
+  "playlists": [
+    {
+      "userPlaylistId": 1,
+      "userPlaylistName": "favorite",
+      "videoCount": 10,
+      "userPlaylistThumbnail": "https://picsum.photos/200/300"
+    },
+    {
+      "userPlaylistId": 2,
+      "userPlaylistName": "플레이리스트2",
+      "videoCount": 10,
+      "userPlaylistThumbnail": "https://picsum.photos/200/300"
+    },
+    {
+      "userPlaylistId": 3,
+      "userPlaylistName": "플레이리스트3",
+      "videoCount": 10,
+      "userPlaylistThumbnail": "https://picsum.photos/200/300"
+    },
+    {
+      "userPlaylistId": 4,
+      "userPlaylistName": "플레이리스트4",
+      "videoCount": 10,
+      "userPlaylistThumbnail": "https://picsum.photos/200/300"
+    },
+    {
+      "userPlaylistId": 5,
+      "userPlaylistName": "플레이리스트5",
+      "videoCount": 10,
+      "userPlaylistThumbnail": "https://picsum.photos/200/300"
+    },
+    {
+      "userPlaylistId": 6,
+      "userPlaylistName": "플레이리스트6",
+      "videoCount": 10,
+      "userPlaylistThumbnail": "https://picsum.photos/200/300"
+    },
+    {
+      "userPlaylistId": 7,
+      "userPlaylistName": "플레이리스트7",
+      "videoCount": 10,
+      "userPlaylistThumbnail": "https://picsum.photos/200/300"
+    }
+  ]
+}

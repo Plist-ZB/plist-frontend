@@ -4,7 +4,7 @@ import LogoIcon from "@/assets/svg/logo.svg";
 import TextLogoIcon from "@/assets/svg/text-logo.svg";
 import { ScaleLoader } from "react-spinners";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useGetUserData } from "./hooks/useGetUserData";
+import { useGetUserData } from "@/pages/auth/hooks/useGetUserData";
 
 export default function RedirectPage() {
   const navigate = useNavigate();
@@ -31,9 +31,9 @@ export default function RedirectPage() {
     // 유저 데이터가 성공적으로 로드된 후 페이지 이동
     if (user) {
       if (isMember === "true") {
-        //navigate("/"); // 홈페이지로 이동
+        navigate("/"); // 홈페이지로 이동
       } else {
-        //navigate("/auth/welcome"); // Welcome 페이지로 이동
+        navigate("/auth/welcome"); // Welcome 페이지로 이동
       }
     }
   }, [user, isMember, navigate]);

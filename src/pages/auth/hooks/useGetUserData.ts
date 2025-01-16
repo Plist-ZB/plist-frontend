@@ -2,11 +2,9 @@ import { instance } from "@/services/api/instance";
 import { useQuery } from "@tanstack/react-query";
 
 // API 호출 함수 (유저 정보 가져오기)
-const fetchUserData = async () => {
+export const fetchUserData = async () => {
   try {
     const response = await instance.get("/user/profile");
-
-    console.log(response);
 
     return response.data;
   } catch (error) {

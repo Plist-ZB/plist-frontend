@@ -1,11 +1,24 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useAtomValue } from "jotai";
+import { userProfileAtom } from "@/store/user-profile";
 
 export default function HeaderButton() {
   // Access token 가져오기
-  const accessToken = localStorage.getItem("access_token");
 
-  return <>{!accessToken && <StyledButton to={"/auth/login"}>로그인</StyledButton>}</>;
+  const userProfile = useAtomValue(userProfileAtom);
+
+  return (
+    <>
+      {!userProfile.data ? (
+        <StyledButton to={"/auth/login"}>로그인</StyledButton>
+      ) : (
+        <StyledButton to={"/mypage"} className="truncate">
+          {userProfile.data?.nickname}
+        </StyledButton>
+      )}
+    </>
+  );
 }
 
 const StyledButton = styled(Link)`

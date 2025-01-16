@@ -1,20 +1,22 @@
 import usePlaylist from "@/pages/mypage/hooks/usePlaylist";
 import { useState } from "react";
 
-interface CreatePlaylistModalProps {
-  unmount: () => void;
+interface ModifyPlaylistModalProps {
+  readonly playListId: number;
+  readonly prevName: string;
+  readonly unmount: () => void;
 }
 
-export default function CreatePlaylistModal({ unmount }: CreatePlaylistModalProps) {
-  // TODO: onChange와 onClick 함수 구현
-  const [newPlaylistName, setNewPlaylistName] = useState("");
-  const { addPlaylistMutation } = usePlaylist();
+export default function ModifyPlaylistModal({
+  playListId,
+  prevName,
+  unmount,
+}: ModifyPlaylistModalProps) {
+  const { changePlaylistNameMutation } = usePlaylist();
+  const [newName, setNewName] = useState(prevName);
 
-  const onClickHandler = async () => {
-    if (!newPlaylistName) return;
-
-    await addPlaylistMutation.mutateAsync(newPlaylistName);
-
+  const handleChangeName = async () => {
+    await changePlaylistNameMutation.mutateAsync({ playlistId: playListId, name: newName });
     unmount();
   };
 
@@ -29,18 +31,18 @@ export default function CreatePlaylistModal({ unmount }: CreatePlaylistModalProp
         className="relative flex flex-col w-4/5 max-w-3xl gap-8 p-5 bg-white border rounded-lg shadow-lg center border-gray-border"
         onClick={(e) => e.stopPropagation()}
       >
-        <header className="font-bold">플레이리스트 추가</header>
+        <header className="font-bold">이름 변경</header>
 
         <div className="flex flex-col gap-2">
           <label htmlFor="playlist-name" className="font-medium">
-            새 플레이리스트
+            {prevName}
           </label>
           <input
             id="playlist-name"
             type="text"
-            placeholder="플레이리스트 이름"
-            value={newPlaylistName}
-            onChange={(e) => setNewPlaylistName(e.target.value)}
+            placeholder={prevName}
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
             className="p-2 border rounded-lg border-gray-border"
           />
         </div>
@@ -54,9 +56,9 @@ export default function CreatePlaylistModal({ unmount }: CreatePlaylistModalProp
           </button>
           <button
             className="px-3 py-1 text-black border border-black rounded-lg bg-primary-light hover:bg-primary hover:text-primary-main"
-            onClick={onClickHandler}
+            onClick={handleChangeName}
           >
-            생성
+            변경
           </button>
         </div>
       </div>

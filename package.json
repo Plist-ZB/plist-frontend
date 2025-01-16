@@ -9,7 +9,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "json": "json-server ./src/mocks/db.json --port 5000"
+    "json": "json-server ./src/mocks/db.json --port 5000",
+    "json-mypage": "json-server ./src/mocks/mypage.json --port 5000"
   },
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
@@ -18,6 +19,7 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
+    "html-entities": "^2.5.2",
     "jotai": "^2.9.3",
     "jotai-tanstack-query": "^0.9.0",
     "lucide-react": "^0.469.0",

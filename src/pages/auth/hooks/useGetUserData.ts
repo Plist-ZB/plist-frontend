@@ -15,7 +15,7 @@ export const fetchUserData = async () => {
 // 유저 정보를 가져오는 React Query 훅
 export function useGetUserData(accessToken: string) {
   return useQuery({
-    queryKey: ["userData", accessToken],
+    queryKey: ["userProfile", accessToken],
     queryFn: () => fetchUserData(),
     enabled: !!accessToken, // accessToken이 있을 때만 쿼리 실행
   });

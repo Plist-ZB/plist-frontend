@@ -29,7 +29,7 @@ const userAPI = {
   },
 
   logout: async () => {
-    const { data: response } = await instance.post(`${userPrefix}/logout`);
+    const { data: response } = await instance.post(`auth/logout`);
 
     return response;
   },

@@ -44,7 +44,7 @@ export default function ChannelPage() {
 
       <div className="flex flex-col flex-1 w-full min-h-0 bg-white">
         <Playlist isHost={isHost} stompClient={stompClient} />
-        <ChatArea stompClient={stompClient} />
+        <ChatArea channelId={channelId as string} stompClient={stompClient} />
       </div>
     </div>
   );

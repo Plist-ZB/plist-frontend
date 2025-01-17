@@ -46,12 +46,12 @@ export default function ChatArea({
     if (!stompClient) return;
 
     const message = {
-      sender, // 현재 사용자 닉네임
+      sender: "FE_송유나", // 현재 사용자 닉네임
       message: chatMessage, // 입력된 채팅 메시지
     };
 
     stompClient.publish({
-      destination: `/chat.${channelId}`, // 메시지를 발행할 서버 엔드포인트
+      destination: `/pub/chat.${channelId}`, // 메시지를 발행할 서버 엔드포인트
       body: JSON.stringify(message), // JSON 형식으로 메시지 전송
     });
 

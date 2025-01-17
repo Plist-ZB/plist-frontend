@@ -45,13 +45,13 @@ export const useStomp = () => {
 
     const client = createStompClient({
       onConnectCallback: (client) => {
-        console.log("연결 성공");
-        client.subscribe(`/sub/chat.${channelId}`, function (message) {
-          // 메시지를 JSON 형식으로 파싱
-          console.log("SUB 채팅");
-          const chatMessage = JSON.parse(message.body);
-          console.log(chatMessage);
-        });
+        // console.log("연결 성공");
+        // client.subscribe(`/sub/chat.${channelId}`, function (message) {
+        //   // 메시지를 JSON 형식으로 파싱
+        //   console.log("SUB 채팅");
+        //   const chatMessage = JSON.parse(message.body);
+        //   console.log(chatMessage);
+        // });
       },
       onErrorCallback: (error) => {
         console.error("STOMP Connection Error: ", error);

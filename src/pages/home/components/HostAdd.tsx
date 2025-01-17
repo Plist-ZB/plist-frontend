@@ -78,8 +78,18 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
     setThumbnail(selectedOption.thumbnail); // 썸네일 업데이트
   };
 
-  const handleCategoryChange = (selectedOption: { value: string; label: string }) => {
-    setCategoryId(Number(selectedOption.value)); // categoryId는 숫자
+  const [selectedCategory, setSelectedCategory] = useState<{ value: string; label: string } | null>(
+    null
+  );
+
+  const handleCategoryChange = (selectedOption: { value: string; label: string } | null) => {
+    if (!selectedOption || selectedOption.value === selectedCategory?.value) {
+      return; // 이미 같은 값이 선택되어 있으면 무시
+    }
+
+    // 상태 업데이트를 한 번만 호출하여 불필요한 렌더링 방지
+    setSelectedCategory(selectedOption);
+    setCategoryId(Number(selectedOption.value));
   };
 
   const { mutate: createChannelMutation, status: createChannelStatus } = useMutation({
@@ -128,14 +138,13 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           <SmallLabel>* 카테고리 선택은 필수입니다.</SmallLabel>
           <StyledSelect
             options={categories?.map((category: { categoryId: number; categoryName: string }) => ({
-              value: category.categoryId, // 카테고리 이름을 value로 사용
-              label: category.categoryName, // 카테고리 이름을 label로 사용
+              value: category.categoryId.toString(),
+              label: category.categoryName,
             }))}
             classNamePrefix="react-select"
             placeholder={CategoryPlaceholder}
-            onChange={(newValue) =>
-              handleCategoryChange(newValue as { value: string; label: string })
-            } // 매개변수 추가
+            value={selectedCategory} // 선택된 카테고리를 명시적으로 설정
+            onChange={handleCategoryChange} // 변경된 핸들러 사용
             components={{ IndicatorSeparator: () => null }}
           />
           <Label>내 재생목록에서 가져오기</Label>

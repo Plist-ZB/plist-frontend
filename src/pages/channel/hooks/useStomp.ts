@@ -30,7 +30,7 @@ export const useStomp = () => {
     }
 
     return () => {
-      exitChannel();
+      // exitChannel();
     };
   }, [channelId]);
 

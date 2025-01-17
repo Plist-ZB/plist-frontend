@@ -3,7 +3,11 @@ import { overlay } from "overlay-kit";
 import { useState } from "react";
 import SearchBottomSheet from "../search/SearchBottomSheet";
 
-export default function ChatInput() {
+interface ChatInputProps {
+  onSendMessage: (message: string) => void;
+}
+
+export default function ChatInput({ onSendMessage }: ChatInputProps) {
   const [message, setMessage] = useState("");
 
   const openSearchBottomSheet = () => {
@@ -15,7 +19,10 @@ export default function ChatInput() {
   };
 
   const sendMessage = () => {
-    console.log(message);
+    if (message.trim()) {
+      onSendMessage(message); // 부모로 메시지 전달
+      setMessage(""); // 입력 필드 초기화
+    }
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

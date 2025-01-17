@@ -32,10 +32,6 @@ export default function ChatArea({
     if (stompClient?.connected) {
       subscribeToChat();
     }
-
-    return () => {
-      stompClient?.unsubscribe(`/sub/chat.${channelId}`);
-    };
   }, [stompClient, channelId]);
 
   useEffect(() => {

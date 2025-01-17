@@ -97,20 +97,7 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
     onSuccess: (data) => {
       onClose(); // 모달 닫기
       navigate(`/channel/${data.channelId}`, {
-        state: {
-          channelId: 0,
-          channelName: "string",
-          channelCreatedAt: "string",
-          videoList: [
-            {
-              id: 0,
-              videoName: "string",
-              videoThumbnail: "string",
-              videoId: "string",
-            },
-          ],
-          host: true,
-        },
+        state: data, // API에서 받은 데이터를 넘겨줌
       });
     },
     onError: (error) => {

@@ -77,7 +77,7 @@ export default function HomePage() {
             <StreamCard key={stream.channelId} item={stream} /> // 받은 스트림 데이터로 StreamCard 렌더링
           ))
         ) : (
-          <NoStreamsMessage>스트림 정보가 없습니다.</NoStreamsMessage> // 데이터가 없을 경우 표시할 메시지
+          <NoStreamsMessage>라이브 방송이이 없습니다.</NoStreamsMessage> // 데이터가 없을 경우 표시할 메시지
         )}
       </MainContent>
       {showHostButton && (

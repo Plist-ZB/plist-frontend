@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import PlayListItemBox from "@/pages/channel/components/playlist/PlayListItemBox";
+import { Client } from "@stomp/stompjs";
 
-export default function Playlist() {
+export default function Playlist({ stompClient }: { stompClient: Client }) {
   const [playlist, setPlaylist] = useState<any[]>([
     { id: 1, title: "먼데이키즈 - 봄 안부" },
     { id: 2, title: "먼데이키즈 - 여름 안부" },

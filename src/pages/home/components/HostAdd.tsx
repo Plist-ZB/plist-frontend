@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import Select from "react-select";
 import { IoClose } from "react-icons/io5";
@@ -13,22 +13,25 @@ interface HostAddProps {
 
 // API 요청 함수 정의
 const createChannel = async (channelData: {
-  title: string;
-  categoryId: string;
-  playlistId: string;
-  thumbnail: string;
+  channelName: string;
+  categoryId: number;
+  userPlaylistId?: number;
 }) => {
-  const { data } = await instance.post("/channel/{id}", channelData); // 채널 생성 API 경로로 수정
+  const { data } = await instance.post("/channel", channelData);
   return data;
 };
 
-const fetchCategories = async () => {
-  const { data } = await instance.get("/categories"); // 실제 API 경로로 수정
+// 카테고리 정보를 가져오는 API 함수
+// eslint-disable-next-line no-empty-pattern
+const fetchCategories = async ({}: { queryKey: [string, number] }) => {
+  const { data } = await instance.get(`/categories`);
+  console.log(data);
   return data;
 };
 
+// 내 재생목록 정보 가져오기
 const fetchPlaylists = async () => {
-  const { data } = await instance.get("/playlists"); // 실제 API 경로로 수정
+  const { data } = await instance.get("/user/playlists");
   return data;
 };
 
@@ -38,11 +41,17 @@ const PlaylistPlaceholder = "재생목록";
 export default function HostAdd({ isOpen, onClose }: HostAddProps) {
   const navigate = useNavigate(); // useNavigate 훅 사용
 
-  // useQuery 훅을 사용하여 데이터를 불러옴
+  const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(null);
+  const [channelTitle, setChannelTitle] = useState<string>("");
+  const [categoryId, setCategoryId] = useState<number>(0); // categoryId는 숫자
+  const [, setThumbnail] = useState<string>("");
+
+  // 카테고리 데이터와 재생목록 데이터 로딩
   const { data: categories, isLoading: categoriesLoading } = useQuery({
-    queryKey: ["/categories"],
+    queryKey: ["/channels/category", categoryId], // categoryId에 따라 API를 호출
     queryFn: fetchCategories,
   });
+  console.log(categories);
 
   const { data: playlists, isLoading: playlistsLoading } = useQuery({
     queryKey: ["playlists"],
@@ -50,30 +59,27 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
   });
 
   interface Playlist {
-    id: string;
-    title: string;
-    thumbnail: string;
+    userPlaylistId: number;
+    userPlaylistName: string;
+    userPlaylistThumbnail: string;
+    videoCount: number;
   }
 
-  const [selectedPlaylist, setSelectedPlaylist] = React.useState<Playlist | null>(null);
-  const [channelTitle, setChannelTitle] = React.useState<string>("");
-  const [categoryId, setCategoryId] = React.useState<string>("");
-  const [thumbnail, setThumbnail] = React.useState<string>("");
-
   const handlePlaylistChange = (
-    newValue: { value: string; label: string; thumbnail: string } | null
+    newValue: { value: number; label: string; thumbnail: string } | null
   ) => {
-    const selectedOption = newValue as { value: string; label: string; thumbnail: string };
+    const selectedOption = newValue as { value: number; label: string; thumbnail: string };
     setSelectedPlaylist({
-      id: selectedOption.value,
-      title: selectedOption.label,
-      thumbnail: selectedOption.thumbnail,
+      userPlaylistId: selectedOption.value,
+      userPlaylistName: selectedOption.label,
+      userPlaylistThumbnail: selectedOption.thumbnail,
+      videoCount: 0, // videoCount는 선택할 필요 없으므로 임시값 설정
     });
     setThumbnail(selectedOption.thumbnail); // 썸네일 업데이트
   };
 
   const handleCategoryChange = (selectedOption: { value: string; label: string }) => {
-    setCategoryId(selectedOption.value);
+    setCategoryId(Number(selectedOption.value)); // categoryId는 숫자
   };
 
   const { mutate: createChannelMutation, status: createChannelStatus } = useMutation({
@@ -89,10 +95,9 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
 
   const handleSubmit = () => {
     const channelData = {
-      title: channelTitle,
+      channelName: channelTitle,
       categoryId,
-      playlistId: selectedPlaylist?.id || "",
-      thumbnail,
+      userPlaylistId: selectedPlaylist ? selectedPlaylist.userPlaylistId : undefined, // playlist가 있을 경우만 userPlaylistId 포함
     };
     createChannelMutation(channelData); // 채널 생성
   };
@@ -122,9 +127,9 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           <Label>카테고리 선택하기</Label>
           <SmallLabel>* 카테고리 선택은 필수입니다.</SmallLabel>
           <StyledSelect
-            options={categories?.map((category: { id: string; name: string }) => ({
-              value: category.id,
-              label: category.name,
+            options={categories?.map((category: { categoryId: number; categoryName: string }) => ({
+              value: category.categoryId, // 카테고리 이름을 value로 사용
+              label: category.categoryName, // 카테고리 이름을 label로 사용
             }))}
             classNamePrefix="react-select"
             placeholder={CategoryPlaceholder}
@@ -136,15 +141,15 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           <Label>내 재생목록에서 가져오기</Label>
           <StyledSelect
             options={playlists?.map((playlist: Playlist) => ({
-              value: playlist.id,
-              label: playlist.title,
-              thumbnail: playlist.thumbnail,
+              value: playlist.userPlaylistId, // id는 userPlaylistId로 변경
+              label: playlist.userPlaylistName, // 이름은 userPlaylistName으로 설정
+              thumbnail: playlist.userPlaylistThumbnail, // 썸네일은 userPlaylistThumbnail로 설정
             }))}
             classNamePrefix="react-select"
             placeholder={PlaylistPlaceholder}
             onChange={(newValue) =>
               handlePlaylistChange(
-                newValue as { value: string; label: string; thumbnail: string } | null
+                newValue as { value: number; label: string; thumbnail: string } | null
               )
             } // 매개변수 추가
             components={{ IndicatorSeparator: () => null }}
@@ -162,7 +167,11 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           <SmallLabel>* 썸네일은 재생목록 첫번째 이미지로 자동 선택됩니다.</SmallLabel>
           <ThumbnailPreview>
             {selectedPlaylist ? (
-              <img src={selectedPlaylist.thumbnail} alt="썸네일" />
+              <img
+                src={selectedPlaylist.userPlaylistThumbnail}
+                alt="썸네일"
+                className="thumbnail-img"
+              />
             ) : (
               <span>썸네일 없음</span>
             )}
@@ -300,7 +309,7 @@ const SmallLabel = styled.label`
 
 const ThumbnailPreview = styled.div`
   width: 100%;
-  height: 150px;
+  height: 200px;
   border: 1px solid #ddd;
   border-radius: 8px;
   display: flex;
@@ -312,6 +321,13 @@ const ThumbnailPreview = styled.div`
   span {
     font-size: 14px;
     color: #999;
+  }
+
+  .thumbnail-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
   }
 `;
 

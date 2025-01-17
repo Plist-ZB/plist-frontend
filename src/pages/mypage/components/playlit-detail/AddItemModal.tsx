@@ -2,8 +2,8 @@ import SearchItem from "@/pages/mypage/components/playlit-detail/SearchItem";
 import usePlaylistDetail from "@/pages/mypage/hooks/usePlaylistDetail";
 import { instance } from "@/services/api/instance";
 import { X } from "lucide-react";
-import { useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useRef, useState, useCallback } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface AddItemModalProps {
   playlistId: string;
@@ -12,6 +12,7 @@ interface AddItemModalProps {
 
 export default function AddItemModal({ playlistId, unmount }: AddItemModalProps) {
   const { addItemToPlaylistMutation } = usePlaylistDetail();
+  const queryClient = useQueryClient();
 
   const [search, setSearch] = useState("");
   const [isSearchEnabled, setIsSearchEnabled] = useState(false);
@@ -52,11 +53,16 @@ export default function AddItemModal({ playlistId, unmount }: AddItemModalProps)
       console.log(response);
     };
 
+  const onClickCloseModal = useCallback(() => {
+    unmount();
+    queryClient.invalidateQueries({ queryKey: ["myPlaylists"] });
+  }, [unmount, queryClient]);
+
   return (
     <div
       role="button"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-10 animate-fadeIn pt-header"
-      onClick={unmount}
+      onClick={onClickCloseModal}
     >
       <div
         role="dialog"
@@ -68,7 +74,7 @@ export default function AddItemModal({ playlistId, unmount }: AddItemModalProps)
       >
         <header className="sticky top-0 flex items-center justify-between p-4 text-base font-bold bg-white border-b z-index-10 border-gray-border">
           <div>Youtube 영상 추가</div>
-          <X className="w-6 h-6 cursor-pointer" onClick={unmount} />
+          <X className="w-6 h-6 cursor-pointer" onClick={onClickCloseModal} />
         </header>
         <div className="flex flex-col gap-2 px-4">
           <input

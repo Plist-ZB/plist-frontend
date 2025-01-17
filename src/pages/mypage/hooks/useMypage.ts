@@ -42,7 +42,7 @@ const useMypage = () => {
     mutationFn: async () => {
       console.log("로그아웃");
 
-      await userAPI.logout();
+      localStorage.removeItem("access_token");
       navigate("/");
     },
   });

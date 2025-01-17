@@ -95,8 +95,14 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
   const { mutate: createChannelMutation, status: createChannelStatus } = useMutation({
     mutationFn: createChannel,
     onSuccess: (data) => {
-      navigate(`/channel/${data.id}`); // 생성된 채널로 이동
       onClose(); // 모달 닫기
+      navigate(`/channel/${data.id}`, {
+        state: {
+          channelName: data.channelName,
+          categoryId: data.categoryId,
+          userPlaylistId: data.userPlaylistId,
+        },
+      });
     },
     onError: (error) => {
       console.error("Error creating channel:", error);

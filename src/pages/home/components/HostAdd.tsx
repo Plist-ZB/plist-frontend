@@ -96,11 +96,20 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
     mutationFn: createChannel,
     onSuccess: (data) => {
       onClose(); // 모달 닫기
-      navigate(`/channel/${data.id}`, {
+      navigate(`/channel/${data.channelId}`, {
         state: {
-          channelName: data.channelName,
-          categoryId: data.categoryId,
-          userPlaylistId: data.userPlaylistId,
+          channelId: 0,
+          channelName: "string",
+          channelCreatedAt: "string",
+          videoList: [
+            {
+              id: 0,
+              videoName: "string",
+              videoThumbnail: "string",
+              videoId: "string",
+            },
+          ],
+          host: true,
         },
       });
     },

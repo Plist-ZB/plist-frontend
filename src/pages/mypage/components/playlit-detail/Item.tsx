@@ -1,5 +1,5 @@
 import usePlaylistDetail from "@/pages/mypage/hooks/usePlaylistDetail";
-import { Menu, Heart } from "lucide-react";
+import { Menu, Trash2 } from "lucide-react";
 import { useCallback } from "react";
 import { decode } from "html-entities";
 
@@ -26,7 +26,7 @@ const Item = ({ item }: { item: { id: number; videoThumbnail: string; videoName:
         className="p-0 hover:border-transparent hover:text-red-main"
         onClick={deleteItem(item.id)}
       >
-        <Heart className="text-red-main" />
+        <Trash2 className="text-gray-600" />
       </button>
     </div>
   );

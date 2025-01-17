@@ -76,6 +76,9 @@ export default function HomePage() {
           streams.map((stream) => (
             <StreamCard key={stream.channelId} item={stream} /> // 받은 스트림 데이터로 StreamCard 렌더링
           ))
+        ) : (
+          <NoStreamsMessage>스트림 정보가 없습니다.</NoStreamsMessage> // 데이터가 없을 경우 표시할 메시지
+        )}
       </MainContent>
       {showHostButton && (
         <HostButton
@@ -141,4 +144,11 @@ const HostButton = styled.button`
 const HostText = styled.span`
   font-size: 14px;
   color: #000;
+`;
+
+const NoStreamsMessage = styled.p`
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+  margin-top: 20px;
 `;

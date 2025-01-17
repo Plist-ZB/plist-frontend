@@ -5,29 +5,38 @@ import { overlay } from "overlay-kit";
 import HostAdd from "./components/HostAdd";
 import { useState, useEffect } from "react";
 import { instance } from "@/services/api/instance";
-import { channelMockData } from "@/mocks/channelMock";
 
 export default function HomePage() {
   const [currentCategory, setCurrentCategory] = useState<"recent" | "popular">("recent");
-  const [streams, setStreams] = useState(channelMockData);
+  interface Stream {
+    channelId: string;
+    channelName: string;
+    channelCategoryName: string;
+    channelThumbnail: string;
+    channelStreamingTime: string;
+  }
 
+  const [streams, setStreams] = useState<Stream[]>([]); // 초기값을 빈 배열로 설정
+
+  // streams 데이터를 받아오는 API 호출
   useEffect(() => {
     const fetchStreams = async () => {
       try {
         const endpoint = currentCategory === "recent" ? "/channels" : "/channels/popular";
-        const response = await instance.get(endpoint);
-        setStreams(response.data);
+        const response = await instance.get(endpoint); // API에서 데이터를 받아옴
+        setStreams(response.data); // 받아온 데이터로 streams 상태를 업데이트
       } catch (error) {
-        console.error("Error fetching streams:", error);
+        console.error("Error fetching streams:", error); // 오류 처리
       }
     };
 
     fetchStreams();
-  }, [currentCategory]);
+  }, [currentCategory]); // currentCategory가 변경될 때마다 API 호출
 
   // 호스트 버튼 노출 관련
   const [showHostButton, setShowHostButton] = useState(true);
   const [mouseTimeout, setMouseTimeout] = useState<NodeJS.Timeout | null>(null);
+
   // 스크롤 이벤트 처리
   useEffect(() => {
     const handleScroll = () => {
@@ -63,9 +72,13 @@ export default function HomePage() {
             인기
           </CategoryButton>
         </CategoryButtons>
-        {streams.map((stream) => (
-          <StreamCard key={stream.channelId} item={stream} />
-        ))}
+        {streams.length > 0 ? (
+          streams.map((stream) => (
+            <StreamCard key={stream.channelId} item={stream} /> // 받은 스트림 데이터로 StreamCard 렌더링
+          ))
+        ) : (
+          <NoStreamsMessage>라이브 방송이이 없습니다.</NoStreamsMessage> // 데이터가 없을 경우 표시할 메시지
+        )}
       </MainContent>
       {showHostButton && (
         <HostButton
@@ -131,4 +144,11 @@ const HostButton = styled.button`
 const HostText = styled.span`
   font-size: 14px;
   color: #000;
+`;
+
+const NoStreamsMessage = styled.p`
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+  margin-top: 20px;
 `;

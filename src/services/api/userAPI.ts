@@ -90,6 +90,12 @@ const userAPI = {
 
     return response;
   },
+
+  getMyPastStreamInfo: async (channelId: number) => {
+    const { data: response } = await instance.get<IPastStreamInfo>(`/user/history/${channelId}`);
+
+    return response;
+  },
 };
 
 export default userAPI;

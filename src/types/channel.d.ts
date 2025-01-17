@@ -8,4 +8,15 @@ declare interface IChannel {
   channelLastParticipantCount: number;
 }
 
+declare interface IVideo {
+  id: number;
+  videoId: string;
+  videoName: string;
+  videoThumbnail: string;
+}
+
+declare interface IPastStreamInfo extends IChannel {
+  videoList: IVideo[];
+}
+
 declare type ChannelList = IChannel[];

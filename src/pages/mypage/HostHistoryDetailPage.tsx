@@ -5,20 +5,19 @@ import { useParams } from "react-router-dom";
 
 export default function HostHistoryDetailPage() {
   const { channelId } = useParams();
-  const { getPastStreamInfoQuery } = usePastStreamDetail(Number(channelId));
+  const { getPastStreamInfoQuery, addVideoToFavoriteMutation } = usePastStreamDetail(
+    Number(channelId)
+  );
 
   const { data: pastStreamInfo } = getPastStreamInfoQuery as { data: IPastStreamInfo };
 
-  console.log(channelId, pastStreamInfo);
-
   const Item = ({ item }: { item: IVideo }) => {
-    const onClick = () => {
-      const videoInfo = {
-        videoId: item.id,
+    const onClick = (item: IVideo) => async () => {
+      await addVideoToFavoriteMutation.mutateAsync({
+        videoId: item.videoId,
         videoThumbnail: item.videoThumbnail,
         videoName: item.videoName,
-      };
-      console.log(videoInfo);
+      });
     };
 
     return (
@@ -29,7 +28,10 @@ export default function HostHistoryDetailPage() {
         ></div>
         <div className="flex-grow truncate">{item.videoName}</div>
         {/* TODO: onCLick 추가 */}
-        <button onClick={onClick} className="p-0 hover:border-transparent hover:text-red-main">
+        <button
+          onClick={onClick(item)}
+          className="p-0 hover:border-transparent hover:text-red-main"
+        >
           <CirclePlus className="text-gray-dark" />
         </button>
       </div>

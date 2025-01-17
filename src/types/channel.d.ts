@@ -4,6 +4,7 @@ declare interface IChannel {
   channelCategoryName: string;
   channelThumbnail: string;
   channelDurationTime: string;
+  channelStatus: string;
   channelHost: string;
   channelLastParticipantCount: number;
 }

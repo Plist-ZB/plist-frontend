@@ -4,12 +4,14 @@ import { IoIosSearch } from "react-icons/io";
 import StreamCard from "@/common/components/StreamCard";
 import { instance } from "@/services/api/instance";
 
+// 검색 결과 타입 정의
 interface SearchResult {
   channelId: number;
   channelName: string;
   channelCategoryName: string;
   channelThumbnail: string;
-  channelCreatedAt: string;
+  channelStreamingTime: string;
+  channelCreatedAt: string; // timestampz 데이터
   channelStatus: string;
   channelHost: string;
   channelParticipantCount: number;
@@ -17,24 +19,25 @@ interface SearchResult {
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState<string>(""); // 검색어
-  const [results, setResults] = useState<SearchResult[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [results, setResults] = useState<SearchResult[] | null>(null); // 검색 결과
+  const [loading, setLoading] = useState<boolean>(false); // 로딩 상태
 
   const handleSearch = async () => {
-    if (!searchQuery.trim()) return; // 빈 입력 방지
+    if (!searchQuery.trim()) return; // 입력값이 공백이거나 비어 있을 경우 API 호출 X
+
     setLoading(true);
     try {
-      // API 호출: instance 사용 (이때 DB로부터 검색된 채널 정보 받아옴)
-      const response = await instance.get<SearchResult[]>(`/search`, {
-        // TODO: json-server 맞춤이라 msw 변경이나 실제 API로 변경 필요
-        params: { channelCategoryName: searchQuery },
+      // API 호출
+      const response = await instance.get<SearchResult[]>(`/channels/search`, {
+        params: {
+          searchValue: searchQuery, // 검색어로 검색
+        },
       });
 
-      // 받아온 데이터에서 StreamCard에 필요한 항목 추출
-      setResults(response.data);
+      setResults(response.data); // 검색 결과 상태에 저장
     } catch (error) {
       console.error("검색 중 오류 발생:", error);
-      setResults([]);
+      setResults([]); // 검색 실패 시 빈 배열로 처리
     } finally {
       setLoading(false);
     }
@@ -58,7 +61,7 @@ export default function SearchPage() {
           onKeyDown={handleKeyDown} // Enter 키 이벤트 핸들러 추가
         />
         <SearchIcon onClick={handleSearch}>
-          <IoIosSearch onClick={handleSearch} size={20} color="#888787" />
+          <IoIosSearch size={20} color="#888787" />
         </SearchIcon>
       </SearchBarContainer>
 

@@ -39,8 +39,10 @@ export default function CategoryDetailPage() {
       <MainContent>
         {loading ? (
           <p>Loading streams...</p>
-        ) : (
+        ) : streams.length > 0 ? (
           streams.map((stream) => <StreamCard key={stream.channelId} item={stream} />)
+        ) : (
+          <NoStreamsMessage>현재 라이브 방송 중에 선택된 카테고리가 없습니다.</NoStreamsMessage>
         )}
       </MainContent>
     </Container>
@@ -57,4 +59,11 @@ const MainContent = styled.main`
   flex: 1;
   padding: 16px;
   overflow-y: auto;
+`;
+
+const NoStreamsMessage = styled.p`
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+  margin-top: 20px;
 `;

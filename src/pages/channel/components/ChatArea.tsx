@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import ChatBox from "./chat/ChatBox";
 import ChatInput from "./chat/ChatInput";
+import { Client } from "@stomp/stompjs";
 
-export default function ChatArea() {
+export default function ChatArea({ stompClient }: { stompClient: Client }) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const mockChat = {

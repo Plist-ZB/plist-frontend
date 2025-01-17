@@ -33,10 +33,10 @@ export default function CategoryPage() {
       {Array.isArray(categories) &&
         categories.map((category) => (
           <CategoryButton
-            key={category.id}
-            onClick={handleCategoryClick(category.id, category.name)}
+            key={category.categoryId}
+            onClick={handleCategoryClick(category.categoryId, category.categoryName)}
           >
-            {category.name} {/* 이름만 표시 */}
+            {category.categoryName} {/* 이름만 표시 */}
           </CategoryButton>
         ))}
     </Container>

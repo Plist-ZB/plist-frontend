@@ -1,15 +1,12 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { FaUserAlt } from "react-icons/fa";
-import { getTimeAgo } from "@/utils/time";
 
 interface StreamCardProps {
   readonly item: IChannel;
 }
 
 export default function StreamCard({ item }: StreamCardProps) {
-  const duration = getTimeAgo(item.channelCreatedAt);
-
   return (
     <Card to={`/channel/${item.channelId}`}>
       <Thumbnail $thumbnailUrl={item.channelThumbnail} className="flex-shrink-0">
@@ -24,7 +21,7 @@ export default function StreamCard({ item }: StreamCardProps) {
         </Title>
         <Info>{item.channelHost}</Info>
         <Info>카테고리: {item.channelCategoryName}</Info>
-        <Info>스트리밍 시간: {duration}</Info>
+        <Info>스트리밍 시간: {item.channelStreamingTime}</Info>
       </StreamDetails>
     </Card>
   );

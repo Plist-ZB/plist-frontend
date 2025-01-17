@@ -3,7 +3,7 @@ declare interface IChannel {
   channelName: string;
   channelCategoryName: string;
   channelThumbnail: string;
-  channelCreatedAt: string; // timestampz 데이터
+  channelStreamingTime: string; // timestampz 데이터
   channelStatus: string;
   channelHost: string;
   channelParticipantCount: number;

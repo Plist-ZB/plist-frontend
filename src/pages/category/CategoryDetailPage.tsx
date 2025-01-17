@@ -5,9 +5,11 @@ import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { instance } from "@/services/api/instance";
 
+type ChannelList = IChannel[]; // 채널 목록 타입 정의
+
 export default function CategoryDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const state = useLocation().state;
+  const state = useLocation().state as { categoryName?: string };
   const categoryName = state?.categoryName;
 
   const [streams, setStreams] = useState<ChannelList>([]);
@@ -17,8 +19,8 @@ export default function CategoryDetailPage() {
     const fetchStreamsByCategoryId = async () => {
       try {
         setLoading(true);
-        const response = await instance.get(`/streams?categoryId=${id}`);
-        setStreams(response.data); // categoryId에 해당하는 스트림 리스트 설정
+        const response = await instance.get<ChannelList>(`/channels/category/${id}`);
+        setStreams(response.data); // 반환된 데이터를 상태에 저장
       } catch (error) {
         console.error("Failed to fetch streams:", error);
       } finally {

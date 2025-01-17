@@ -3,43 +3,33 @@ import { Client } from "@stomp/stompjs";
 import ChatBox from "./chat/ChatBox";
 import ChatInput from "./chat/ChatInput";
 
-const WEBSOCKET_URL = "ws://your-websocket-server-url/ws"; // 웹소켓 서버 주소
-
 export default function ChatArea({ channelId, sender }: { channelId: string; sender: string }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [chats, setChats] = useState<
     { sender: string; message: string; userProfileImg?: string }[]
   >([]);
-  const [stompClient, setStompClient] = useState<Client | null>(null);
+  const [stompClient] = useState<Client | null>(null);
 
   // 1. 웹소켓 연결 및 구독
   useEffect(() => {
-    const client = new Client({
-      brokerURL: WEBSOCKET_URL,
-      reconnectDelay: 5000, // 자동 재연결 대기 시간
-      onConnect: () => {
-        console.log("Connected to WebSocket");
+    // 메시지 수신 구독
+    const subscribeToChat = () => {
+      stompClient?.subscribe(`/sub/chat.${channelId}`, (message) => {
+        const body = JSON.parse(message.body); // 수신된 메시지 파싱
 
-        // 메시지 수신 구독
-        client.subscribe(`/sub/chat.${channelId}`, (message) => {
-          const body = JSON.parse(message.body); // 수신된 메시지 파싱
+        // 받은 메시지를 `chats` 상태에 업데이트 (userProfileImg 포함)
+        setChats((prevChats) => [...prevChats, body]); // 기존 chats 상태에 새로운 메시지 추가
+      });
+    };
 
-          // 받은 메시지를 `chats` 상태에 업데이트 (userProfileImg 포함)
-          setChats((prevChats) => [...prevChats, body]); // 기존 chats 상태에 새로운 메시지 추가
-        });
-      },
-      onStompError: (error) => {
-        console.error("STOMP error:", error);
-      },
-    });
-
-    client.activate();
-    setStompClient(client);
+    if (stompClient?.connected) {
+      subscribeToChat();
+    }
 
     return () => {
-      client.deactivate(); // 컴포넌트 언마운트 시 웹소켓 연결 종료
+      stompClient?.unsubscribe(`/sub/chat.${channelId}`); // 컴포넌트 언마운트 시 구독 해제
     };
-  }, [channelId]);
+  }, [stompClient, channelId]);
 
   useEffect(() => {
     // 채팅 추가 시 스크롤 자동 이동

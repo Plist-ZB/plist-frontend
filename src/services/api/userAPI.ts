@@ -84,6 +84,12 @@ const userAPI = {
 
     return response;
   },
+
+  getMyPastStreams: async () => {
+    const { data: response } = await instance.get(`/user/history`);
+
+    return response;
+  },
 };
 
 export default userAPI;

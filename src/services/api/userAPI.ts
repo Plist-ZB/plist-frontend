@@ -29,7 +29,7 @@ const userAPI = {
   },
 
   logout: async () => {
-    const { data: response } = await instance.post(`${userPrefix}/logout`);
+    const { data: response } = await instance.post(`auth/logout`);
 
     return response;
   },
@@ -81,6 +81,18 @@ const userAPI = {
     item: { videoId: string; videoName: string; videoThumbnail: string }
   ) => {
     const { data: response } = await instance.patch(`/user/playlist/${playlistId}/add`, item);
+
+    return response;
+  },
+
+  getMyPastStreams: async () => {
+    const { data: response } = await instance.get(`/user/history`);
+
+    return response;
+  },
+
+  getMyPastStreamInfo: async (channelId: number) => {
+    const { data: response } = await instance.get<IPastStreamInfo>(`/user/history/${channelId}`);
 
     return response;
   },

@@ -26,22 +26,24 @@ export default function PlaylistItem({ item }: PlaylistItemProps) {
         className="relative flex w-full bg-gray-200 bg-center bg-cover rounded-t-lg aspect-square"
         style={{ backgroundImage: `url('${userPlaylistThumbnail}')` }}
       >
-        <button
-          className={`${item.userPlaylistId} absolute p-1 bg-white/65 border-black rounded-full transition-all duration-300 top-2 right-2 hover:scale-110 hover:border-transparent hover:text-black`}
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log("option clicked");
-            setIsOpen((c) => !c);
-          }}
-          onBlur={(e) => {
-            if (isOpen && e.relatedTarget?.closest(".playlist-option-modal")) {
-              return;
-            }
-            setIsOpen(false);
-          }}
-        >
-          <EllipsisVertical className="text-black" size={20} />
-        </button>
+        {userPlaylistName !== "favorite" && (
+          <button
+            className={`${item.userPlaylistId} absolute p-1 bg-white/65 border-black rounded-full transition-all duration-300 top-2 right-2 hover:scale-110 hover:border-transparent hover:text-black`}
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log("option clicked");
+              setIsOpen((c) => !c);
+            }}
+            onBlur={(e) => {
+              if (isOpen && e.relatedTarget?.closest(".playlist-option-modal")) {
+                return;
+              }
+              setIsOpen(false);
+            }}
+          >
+            <EllipsisVertical className="text-black" size={20} />
+          </button>
+        )}
         <PlaylistItemOptionModal
           prevName={userPlaylistName}
           isOpen={isOpen}

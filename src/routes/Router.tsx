@@ -48,7 +48,7 @@ const Router = () => {
           </Route>
           <Route path="host-history">
             <Route index element={<HostHistoryPage />} />
-            <Route path=":hostId" element={<HostHistoryDetailPage />} />
+            <Route path=":channelId" element={<HostHistoryDetailPage />} />
           </Route>
         </Route>
       </Routes>

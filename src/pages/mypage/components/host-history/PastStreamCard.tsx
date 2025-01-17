@@ -2,17 +2,17 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { FaUserAlt } from "react-icons/fa";
 
-interface StreamCardProps {
+interface PastStreamCardProps {
   readonly item: IChannel;
 }
 
-export default function StreamCard({ item }: StreamCardProps) {
+export default function PastStreamCard({ item }: PastStreamCardProps) {
   return (
-    <Card to={`/channel/${item.channelId}`}>
+    <Card to={`/mypage/host-history/${item.channelId}`}>
       <Thumbnail $thumbnailUrl={item.channelThumbnail} className="flex-shrink-0">
         <LiveBadge>
           <FaUserAlt size={8} className="mb-[1px]" />
-          {item.channelParticipantCount}
+          {item.channelLastParticipantCount}
         </LiveBadge>
       </Thumbnail>
       <StreamDetails>
@@ -21,7 +21,7 @@ export default function StreamCard({ item }: StreamCardProps) {
         </Title>
         <Info>{item.channelHost}</Info>
         <Info>카테고리: {item.channelCategoryName}</Info>
-        <Info>스트리밍 시간: {item.channelStreamingTime}</Info>
+        <Info>스트리밍 시간: {item.channelDurationTime}</Info>
       </StreamDetails>
     </Card>
   );

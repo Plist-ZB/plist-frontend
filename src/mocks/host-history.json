@@ -1,0 +1,61 @@
+{
+  "pastStreamIndo": {
+    "thumbnail": "https://picsum.photos/100/100",
+    "title": "발라드 추천 좀 해주세요~",
+    "participant_count": 13,
+    "duration": "1시간 27분",
+    "host_date": "2025-01-02",
+    "playlist": [
+      {
+        "id": 1,
+        "thumbnail": "https://picsum.photos/100/100",
+        "name": "가수 - 엄청 긴 이름을 가지는 노래 제목"
+      },
+      {
+        "id": 2,
+        "thumbnail": "https://picsum.photos/100/100",
+        "name": "가수 - 노래2"
+      },
+      {
+        "id": 3,
+        "thumbnail": "https://picsum.photos/100/100",
+        "name": "가수 - 노래3"
+      },
+      {
+        "id": 4,
+        "thumbnail": "https://picsum.photos/100/100",
+        "name": "가수 - 노래4"
+      },
+      {
+        "id": 5,
+        "thumbnail": "https://picsum.photos/100/100",
+        "name": "가수 - 노래5"
+      },
+      {
+        "id": 6,
+        "thumbnail": "https://picsum.photos/100/100",
+        "name": "가수 - 엄청 긴 이름을 가지는 노래 제목"
+      },
+      {
+        "id": 7,
+        "thumbnail": "https://picsum.photos/100/100",
+        "name": "가수 - 노래2"
+      },
+      {
+        "id": 8,
+        "thumbnail": "https://picsum.photos/100/100",
+        "name": "가수 - 노래3"
+      },
+      {
+        "id": 9,
+        "thumbnail": "https://picsum.photos/100/100",
+        "name": "가수 - 노래4"
+      },
+      {
+        "id": 10,
+        "thumbnail": "https://picsum.photos/100/100",
+        "name": "가수 - 노래5"
+      }
+    ]
+  }
+}

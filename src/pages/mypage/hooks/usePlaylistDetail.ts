@@ -12,6 +12,10 @@ const usePlaylistDetail = () => {
       try {
         const result = await userAPI.getMyPlaylistByID(Number(playlistId));
 
+        if (result.userPlaylistName === "favorite") {
+          queryClient.setQueryData(["myPlaylistDetail", "favorite"], result);
+        }
+
         return result;
       } catch (error) {
         console.error("플레이리스트 조회 실패:", error);

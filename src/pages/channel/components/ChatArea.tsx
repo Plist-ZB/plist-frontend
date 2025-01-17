@@ -1,14 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { Client } from "@stomp/stompjs";
 import ChatBox from "./chat/ChatBox";
 import ChatInput from "./chat/ChatInput";
+import { Client } from "@stomp/stompjs";
 
-export default function ChatArea({ channelId, sender }: { channelId: string; sender: string }) {
+export default function ChatArea({
+  channelId,
+  sender,
+  stompClient,
+}: {
+  channelId: string;
+  sender: string;
+  stompClient: Client;
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [chats, setChats] = useState<
     { sender: string; message: string; userProfileImg?: string }[]
   >([]);
-  const [stompClient] = useState<Client | null>(null);
 
   // 1. 웹소켓 연결 및 구독
   useEffect(() => {
@@ -27,7 +34,7 @@ export default function ChatArea({ channelId, sender }: { channelId: string; sen
     }
 
     return () => {
-      stompClient?.unsubscribe(`/sub/chat.${channelId}`); // 컴포넌트 언마운트 시 구독 해제
+      stompClient?.unsubscribe(`/sub/chat.${channelId}`);
     };
   }, [stompClient, channelId]);
 

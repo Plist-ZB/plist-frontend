@@ -1,33 +1,10 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import LogoIcon from "@/assets/svg/logo.svg";
 import TextLogoIcon from "@/assets/svg/text-logo.svg";
 import { ScaleLoader } from "react-spinners";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useQuery, QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { instance } from "@/services/api/instance";
-
-// React Query Client 생성
-const queryClient = new QueryClient();
-
-// API 호출 함수 (유저 정보 가져오기)
-const fetchUserData = async (accessToken: string) => {
-  const response = await instance.get("/users/1", {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return response.data;
-};
-
-// 유저 정보를 가져오는 React Query 훅
-function useUserData(accessToken: string) {
-  return useQuery({
-    queryKey: ["userData", accessToken],
-    queryFn: () => fetchUserData(accessToken),
-    enabled: !!accessToken, // accessToken이 있을 때만 쿼리 실행
-  });
-}
+import { useGetUserData } from "@/pages/auth/hooks/useGetUserData";
 
 export default function RedirectPage() {
   const navigate = useNavigate();
@@ -38,7 +15,7 @@ export default function RedirectPage() {
   const isMember = searchParams.get("is-member");
 
   // React Query를 사용하여 유저 데이터 가져오기
-  const { data: user, isLoading, isError } = useUserData(accessToken || "");
+  const { data: user, isLoading, isError } = useGetUserData(accessToken ?? "");
 
   useEffect(() => {
     if (!accessToken || !isMember) {
@@ -90,15 +67,6 @@ export default function RedirectPage() {
   }
 
   return null;
-}
-
-// 앱 전체에 React Query Provider 적용
-export function AppWithQueryProvider() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <RedirectPage />
-    </QueryClientProvider>
-  );
 }
 
 const Container = styled.div`

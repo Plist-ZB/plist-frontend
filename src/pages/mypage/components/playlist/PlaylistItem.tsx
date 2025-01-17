@@ -4,45 +4,54 @@ import PlaylistItemOptionModal from "@/pages/mypage/components/playlist/Playlist
 import { useState } from "react";
 
 interface PlaylistItemProps {
-  readonly item: { id: number; thumbnails?: string; title: string; track_count: number };
+  readonly item: IPlaylist;
 }
 
 export default function PlaylistItem({ item }: PlaylistItemProps) {
-  const { id, thumbnails, title, track_count } = item;
+  const { userPlaylistId, userPlaylistThumbnail, userPlaylistName, videoCount } = item;
   const navigate = useNavigate();
 
-  const onClickItem = () => navigate(`${id}`);
+  const onClickItem = () => navigate(`${userPlaylistId}`);
 
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div
       onClick={onClickItem}
-      className="flex flex-col w-full border rounded-md cursor-pointer border-gray-border hover:text-black"
-      aria-label={title}
+      className="flex flex-col w-full border rounded-lg cursor-pointer border-gray-border hover:text-black"
+      aria-label={userPlaylistName}
       role="button"
     >
       <div
-        className="relative flex w-full bg-gray-200 bg-cover aspect-square"
-        style={{ backgroundImage: `url('${thumbnails}')` }}
+        className="relative flex w-full bg-gray-200 bg-center bg-cover rounded-t-lg aspect-square"
+        style={{ backgroundImage: `url('${userPlaylistThumbnail}')` }}
       >
-        {/* TODO: 배경 흰색만 투명도 적용하기 */}
         <button
-          className={`${item.id} bg-white/30 rounded-full absolute p-1 transition-all duration-300 bg-transparent top-2 right-2 hover:scale-110 hover:border-transparent hover:text-black`}
+          className={`${item.userPlaylistId} absolute p-1 bg-white/65 border-black rounded-full transition-all duration-300 top-2 right-2 hover:scale-110 hover:border-transparent hover:text-black`}
           onClick={(e) => {
             e.stopPropagation();
             console.log("option clicked");
             setIsOpen((c) => !c);
           }}
-          onBlur={() => setIsOpen(false)}
+          onBlur={(e) => {
+            if (isOpen && e.relatedTarget?.closest(".playlist-option-modal")) {
+              return;
+            }
+            setIsOpen(false);
+          }}
         >
-          <EllipsisVertical className="text-black border-black rounded-full opacity-100" />
+          <EllipsisVertical className="text-black" size={20} />
         </button>
-        <PlaylistItemOptionModal isOpen={isOpen} playListId={id} />
+        <PlaylistItemOptionModal
+          prevName={userPlaylistName}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          playListId={userPlaylistId}
+        />
       </div>
       <div className="flex flex-col gap-1 px-3 py-2">
-        <div className="text-base font-medium truncate">{title}</div>
-        <div className="text-sm text-gray-500">트랙 {track_count}개</div>
+        <div className="text-base font-medium truncate">{userPlaylistName}</div>
+        <div className="text-sm text-gray-500">트랙 {videoCount}개</div>
       </div>
     </div>
   );

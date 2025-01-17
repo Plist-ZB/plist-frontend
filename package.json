@@ -9,15 +9,19 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "json": "json-server ./src/mocks/db.json --port 5000"
+    "json": "json-server ./src/mocks/db.json --port 5000",
+    "json-mypage": "json-server ./src/mocks/mypage.json --port 5000"
   },
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
+    "@tanstack/query-core": "^5.64.1",
     "@tanstack/react-query": "^5.62.11",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
+    "html-entities": "^2.5.2",
     "jotai": "^2.9.3",
+    "jotai-tanstack-query": "^0.9.0",
     "lucide-react": "^0.469.0",
     "overlay-kit": "^1.4.1",
     "postcss": "^8.4.49",

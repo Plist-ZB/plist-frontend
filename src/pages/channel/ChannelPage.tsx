@@ -1,5 +1,5 @@
 import ChannelTopBar from "@/pages/channel/components/ChannelTopBar";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import VideoPlayer from "@/pages/channel/components/VideoPlayer";
 import Playlist from "@/pages/channel/components/Playlist";
 import ChatArea from "@/pages/channel/components/ChatArea";
@@ -10,12 +10,13 @@ export default function ChannelPage() {
   //const { channelId, stompClient, channelInfo } = useStomp();
   const { channelId, isHost, enterChannelMutation, exitChannelMutation } = useChannelEvents();
 
-  useEffect(() => {
+  const email = useMemo(() => {
     const accessToken = localStorage.getItem("access_token");
     const payload = accessToken?.split(".")[1] as string;
     const decodedPayload = JSON.parse(atob(payload));
-    const email = decodedPayload.email;
-    console.log(email);
+    console.log(decodedPayload.email);
+
+    return decodedPayload.email;
   }, []);
 
   /* TODO: 위에서 얻은 id로 채널방 정보 가져오고 웹소켓 연결하기 */

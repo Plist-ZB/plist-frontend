@@ -2,26 +2,27 @@ import { useEffect, useRef, useState } from "react";
 import ChatBox from "./chat/ChatBox";
 import ChatInput from "./chat/ChatInput";
 import { Client } from "@stomp/stompjs";
+import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
 
-export default function ChatArea({
-  channelId,
-  sender,
-  stompClient,
-}: {
-  channelId: string;
-  sender: string;
-  stompClient: Client;
-}) {
+interface ChatAreaProps {
+  readonly channelId: string;
+  readonly stompClient: Client;
+}
+
+const email = getEmailFromToken();
+
+export default function ChatArea({ channelId, stompClient }: ChatAreaProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [chats, setChats] = useState<
     { sender: string; message: string; userProfileImg?: string }[]
   >([]);
 
-  // 1. 웹소켓 연결 및 구독
   useEffect(() => {
+    if (!stompClient || !channelId) return;
+
     // 메시지 수신 구독
     const subscribeToChat = () => {
-      stompClient?.subscribe(`/sub/chat.${channelId}`, (message) => {
+      stompClient.subscribe(`/sub/chat.${channelId}`, (message) => {
         const body = JSON.parse(message.body); // 수신된 메시지 파싱
 
         // 받은 메시지를 `chats` 상태에 업데이트 (userProfileImg 포함)
@@ -29,13 +30,16 @@ export default function ChatArea({
       });
     };
 
-    if (stompClient?.connected) {
+    // stompClient가 연결되었을 때 구독 설정
+    stompClient.onConnect = () => {
       subscribeToChat();
-    }
+    };
+
+    // 컴포넌트 언마운트 시 추가적인 정리 작업 없음
   }, [stompClient, channelId]);
 
+  // 채팅 추가 시 스크롤 자동 이동
   useEffect(() => {
-    // 채팅 추가 시 스크롤 자동 이동
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
@@ -46,7 +50,7 @@ export default function ChatArea({
     if (!stompClient) return;
 
     const message = {
-      sender: "FE_송유나", // 현재 사용자 닉네임
+      email: email, // 현재 사용자 닉네임
       message: chatMessage, // 입력된 채팅 메시지
     };
 
@@ -54,9 +58,6 @@ export default function ChatArea({
       destination: `/pub/chat.${channelId}`, // 메시지를 발행할 서버 엔드포인트
       body: JSON.stringify(message), // JSON 형식으로 메시지 전송
     });
-
-    // 로컬에서도 메시지 추가 (선택적으로 처리)
-    setChats((prevChats) => [...prevChats, message]);
   };
 
   return (

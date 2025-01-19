@@ -1,44 +1,37 @@
 import ChannelTopBar from "@/pages/channel/components/ChannelTopBar";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import VideoPlayer from "@/pages/channel/components/VideoPlayer";
 import Playlist from "@/pages/channel/components/Playlist";
 import ChatArea from "@/pages/channel/components/ChatArea";
 import { useStomp } from "@/pages/channel/hooks/useStomp";
 import useChannelEvents from "@/pages/channel/hooks/useChannelEvents";
+import useGetChannelInfo from "@/pages/channel/hooks/useGetChannelInfo";
 
 export default function ChannelPage() {
-  //const { channelId, stompClient, channelInfo } = useStomp();
-  const { channelId, isHost, enterChannelMutation, exitChannelMutation } = useChannelEvents();
-
-  const email = useMemo(() => {
-    const accessToken = localStorage.getItem("access_token");
-    const payload = accessToken?.split(".")[1] as string;
-    const decodedPayload = JSON.parse(atob(payload));
-    console.log(decodedPayload.email);
-
-    return decodedPayload.email;
-  }, []);
+  const getChannelInfoQuery = useGetChannelInfo();
 
   /* TODO: 위에서 얻은 id로 채널방 정보 가져오고 웹소켓 연결하기 */
   const [videoId, setVideoId] = useState("2g811Eo7K8U");
 
   const stompClient = undefined;
 
-  if (enterChannelMutation.isPending) {
+  if (getChannelInfoQuery.isFetching) {
     return <div>Loading...</div>;
   }
 
-  if (stompClient) {
+  console.log(getChannelInfoQuery.data);
+
+  /* if (stompClient) {
     return <div>Loading...</div>;
-  }
+  } */
 
   return (
     <div className="flex flex-col w-full h-screen overflow-hidden">
-      {enterChannelMutation.data && (
+      {getChannelInfoQuery.data && (
         <ChannelTopBar
-          channelId={enterChannelMutation.data.channelId}
-          channelName={enterChannelMutation.data.channelName}
-          channelCreatedAt={enterChannelMutation.data.channelCreatedAt}
+          channelId={getChannelInfoQuery.data.channelId}
+          channelName={getChannelInfoQuery.data.channelName}
+          channelCreatedAt={getChannelInfoQuery.data.channelCreatedAt}
         />
       )}
 
@@ -77,8 +70,8 @@ export default function ChannelPage() {
       </button>
 
       <div className="flex flex-col flex-1 w-full min-h-0 bg-white">
-        <Playlist isHost={isHost} stompClient={stompClient} />
-        <ChatArea channelId={channelId as string} stompClient={stompClient} />
+        <Playlist isHost={getChannelInfoQuery.data.host} stompClient={stompClient} />
+        <ChatArea channelId={getChannelInfoQuery.data.channelId} stompClient={stompClient} />
       </div>
     </div>
   );

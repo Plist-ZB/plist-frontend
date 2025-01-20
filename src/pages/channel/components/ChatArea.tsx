@@ -36,6 +36,11 @@ export default function ChatArea({ channelId, stompClient }: ChatAreaProps) {
     };
 
     // 컴포넌트 언마운트 시 추가적인 정리 작업 없음
+    return () => {
+      if (stompClient.connected) {
+        stompClient.unsubscribe(`/sub/chat.${channelId}`);
+      }
+    };
   }, [stompClient, channelId]);
 
   // 채팅 추가 시 스크롤 자동 이동

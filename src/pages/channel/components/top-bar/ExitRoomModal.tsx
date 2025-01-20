@@ -1,10 +1,19 @@
+import useExitChannel from "@/pages/channel/hooks/useExitChannel";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export default function ExitRoomModal({ unmount }: { unmount: () => void }) {
+export default function ExitRoomModal({
+  unmount,
+  channelId,
+}: {
+  readonly unmount: () => void;
+  readonly channelId: number;
+}) {
   const navigate = useNavigate();
+  const exitChannelMutation = useExitChannel();
 
   const onClickGoBack = () => {
+    exitChannelMutation.mutate(`${channelId}`);
     unmount();
     navigate("../");
   };

@@ -3,7 +3,12 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import PlayListItemBox from "@/pages/channel/components/playlist/PlayListItemBox";
 import { Client } from "@stomp/stompjs";
 
-export default function Playlist({ stompClient }: { stompClient: Client }) {
+interface PlaylistProps {
+  isHost: boolean;
+  stompClient: Client;
+}
+
+const Playlist = ({ isHost, stompClient }: PlaylistProps) => {
   const [playlist, setPlaylist] = useState<any[]>([
     { id: 1, title: "먼데이키즈 - 봄 안부" },
     { id: 2, title: "먼데이키즈 - 여름 안부" },
@@ -65,4 +70,6 @@ export default function Playlist({ stompClient }: { stompClient: Client }) {
       )}
     </div>
   );
-}
+};
+
+export default Playlist;

@@ -23,9 +23,9 @@ export default function FooterNavBar({ className }: { className?: string }) {
 
   return (
     <nav
-      className={`flex-shrink-0 bg-white border-t shadow-top w-full h-fnb border-gray-border  ${className}`}
+      className={`flex-shrink-0 bg-white border-t shadow-top w-full h-[88px] border-gray-border  ${className}`}
     >
-      <ul className="grid w-full h-full grid-cols-4">
+      <ul className="grid w-full h-full grid-cols-4 pb-4">
         {menus.map((menu) => (
           <li
             key={menu.id}

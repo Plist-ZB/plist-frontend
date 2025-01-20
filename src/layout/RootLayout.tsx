@@ -7,7 +7,7 @@ export default function RootLayout() {
     <div className="relative w-full max-w-screen-md h-full border-[#D9D9D9] bg-white flex flex-col">
       <Header className="sticky top-0 z-10 max-w-screen-md" />
 
-      <main className={`w-full mb-fnb`}>
+      <main className={`w-full mb-[88px]`}>
         <Outlet />
       </main>
       <FooterNavBar className="fixed bottom-0 z-10 max-w-screen-md -translate-x-1/2 md:border-x left-1/2 pb-safe" />

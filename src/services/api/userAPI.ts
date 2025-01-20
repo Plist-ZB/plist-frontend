@@ -28,6 +28,18 @@ const userAPI = {
     return response;
   },
 
+  updatePlaylistOrder: async (playlistId: number, updatedOrder: number[]) => {
+    try {
+      const response = await instance.post(`/playlist/${playlistId}/update`, {
+        order: updatedOrder,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("플레이리스트 순서 저장 실패:", error);
+      throw new Error("플레이리스트 순서 저장 실패");
+    }
+  },
+
   logout: async () => {
     const { data: response } = await instance.post(`auth/logout`);
 

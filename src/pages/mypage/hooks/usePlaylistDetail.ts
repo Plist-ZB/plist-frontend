@@ -71,10 +71,27 @@ const usePlaylistDetail = () => {
     },
   });
 
+  const updatePlaylistOrderMutation = useMutation({
+    mutationFn: async (updatedOrder: number[]) => {
+      try {
+        const result = await userAPI.updatePlaylistOrder(Number(playlistId), updatedOrder);
+
+        queryClient.invalidateQueries({ queryKey: ["myPlaylistDetail"] });
+        // TODO: 토스트 메세지로 교체
+        alert("순서가 저장되었습니다.");
+        return result;
+      } catch (error) {
+        console.error("플레이리스트 순서 저장 실패:", error);
+        return;
+      }
+    },
+  });
+
   return {
     myPlaylistDetailQuery,
     addItemToPlaylistMutation,
     deletePlaylistMutation,
+    updatePlaylistOrderMutation, // 추가된 부분
   };
 };
 

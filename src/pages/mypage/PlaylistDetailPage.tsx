@@ -5,18 +5,15 @@ import Item from "@/pages/mypage/components/playlit-detail/Item";
 import { useState } from "react";
 
 export default function PlaylistDetailPage() {
-  const { myPlaylistDetailQuery } = usePlaylistDetail();
+  const { myPlaylistDetailQuery, updatePlaylistOrderMutation } = usePlaylistDetail();
 
-  // 드래그 앤 드롭 상태 관리
   const [draggedItemId, setDraggedItemId] = useState<number | null>(null);
   const [videoList, setVideoList] = useState(myPlaylistDetailQuery.data?.videoList || []);
 
-  // 드래그 시작
   const onDragStart = (id: number) => {
     setDraggedItemId(id);
   };
 
-  // 드롭
   const onDrop = (targetId: number) => {
     if (draggedItemId === null || draggedItemId === targetId) return;
 
@@ -29,13 +26,24 @@ export default function PlaylistDetailPage() {
     const [draggedItem] = updatedVideoList.splice(draggedIndex, 1);
     updatedVideoList.splice(targetIndex, 0, draggedItem);
 
-    setVideoList(updatedVideoList);
-    setDraggedItemId(null);
+    setVideoList(updatedVideoList); // 상태 업데이트
+
+    // 순서를 서버에 저장
+    const updatedOrder = updatedVideoList.map((item) => item.id);
+    updatePlaylistOrderMutation.mutate(updatedOrder, {
+      onSuccess: () => {
+        console.log("순서 저장 완료!");
+      },
+      onError: () => {
+        console.error("순서 저장 실패!");
+      },
+    });
+
+    setDraggedItemId(null); // 드래그 상태 초기화
   };
 
   return (
     <TopBarLayout
-      /* TODO: 페칭해온 이름으로 title 변경하기 */
       topBarProps={{
         title: myPlaylistDetailQuery.data?.userPlaylistName,
         backURL: "/mypage/playlist",

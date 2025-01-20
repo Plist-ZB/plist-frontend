@@ -30,11 +30,15 @@ const userAPI = {
 
   updatePlaylistOrder: async (playlistId: number, updatedOrder: number[]) => {
     try {
-      const response = await instance.post(`/playlist/${playlistId}/update`, {
-        order: updatedOrder,
+      // API 호출로 updatedOrder를 서버로 전송
+      const response = await instance.patch(`/playlist/${playlistId}/update`, {
+        order: updatedOrder, // updatedOrder 배열 전송
       });
+
+      // 서버에서 반환된 데이터 반환
       return response.data;
     } catch (error) {
+      // 에러 핸들링 및 로그 출력
       console.error("플레이리스트 순서 저장 실패:", error);
       throw new Error("플레이리스트 순서 저장 실패");
     }

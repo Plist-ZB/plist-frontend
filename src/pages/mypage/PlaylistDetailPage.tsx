@@ -30,14 +30,17 @@ export default function PlaylistDetailPage() {
 
     // 순서를 서버에 저장
     const updatedOrder = updatedVideoList.map((item) => item.id);
-    updatePlaylistOrderMutation.mutate(updatedOrder, {
-      onSuccess: () => {
-        console.log("순서 저장 완료!");
-      },
-      onError: () => {
-        console.error("순서 저장 실패!");
-      },
-    });
+    updatePlaylistOrderMutation.mutate(
+      { playlistId: myPlaylistDetailQuery.data?.playlistId, updatedOrder },
+      {
+        onSuccess: () => {
+          console.log("순서 저장 완료!");
+        },
+        onError: () => {
+          console.error("순서 저장 실패!");
+        },
+      }
+    );
 
     setDraggedItemId(null); // 드래그 상태 초기화
   };

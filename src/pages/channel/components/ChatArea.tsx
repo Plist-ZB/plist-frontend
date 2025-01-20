@@ -1,84 +1,86 @@
 import { useEffect, useRef, useState } from "react";
 import ChatBox from "./chat/ChatBox";
 import ChatInput from "./chat/ChatInput";
+import { Client } from "@stomp/stompjs";
+import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
 
-export default function ChatArea() {
+interface ChatAreaProps {
+  readonly channelId: string;
+  readonly stompClient: Client;
+}
+
+const email = getEmailFromToken();
+
+export default function ChatArea({ channelId, stompClient }: ChatAreaProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [chats, setChats] = useState<
+    { sender: string; message: string; userProfileImg?: string }[]
+  >([]);
 
-  const mockChat = {
-    participants: [
-      { userId: 1, name: "John", thumbnail: "" },
-      { userId: 2, name: "Jane", thumbnail: "" },
-      { userId: 3, name: "Doe", thumbnail: "" },
-      { userId: 4, name: "Alice", thumbnail: "" },
-      { userId: 5, name: "Bob", thumbnail: "" },
-      { userId: 6, name: "Charlie", thumbnail: "" },
-      { userId: 7, name: "David", thumbnail: "" },
-      { userId: 8, name: "Eve", thumbnail: "" },
-      { userId: 9, name: "Frank", thumbnail: "" },
-      { userId: 10, name: "Grace", thumbnail: "" },
-    ],
-    chats: [
-      { userId: 1, message: "Hello" },
-      { userId: 2, message: "Hello" },
-      { userId: 3, message: "Hello" },
-      { userId: 4, message: "Hello" },
-      { userId: 5, message: "Hello" },
-      { userId: 6, message: "Hello" },
-      { userId: 7, message: "Hello" },
-      { userId: 8, message: "Hello" },
-      { userId: 9, message: "Hello" },
-      { userId: 10, message: "Hello" },
-    ],
-  };
+  useEffect(() => {
+    if (!stompClient || !channelId) return;
 
-  const [chats, setChats] = useState(mockChat.chats);
+    // 메시지 수신 구독
+    const subscribeToChat = () => {
+      stompClient.subscribe(`/sub/chat.${channelId}`, (message) => {
+        const body = JSON.parse(message.body); // 수신된 메시지 파싱
 
-  const cachingUsername: { [key: number]: string } = {
-    1: "John",
-    2: "Jane",
-    3: "Doe",
-    4: "Alice",
-    5: "Bob",
-    6: "Charlie",
-    7: "David",
-    8: "Eve",
-    9: "Frank",
-    10: "Grace",
-  };
+        // 받은 메시지를 `chats` 상태에 업데이트 (userProfileImg 포함)
+        setChats((prevChats) => [...prevChats, body]); // 기존 chats 상태에 새로운 메시지 추가
+      });
+    };
 
-  const cachingThumbnail: { [key: number]: string } = {
-    1: "",
-    2: "",
-    3: "",
-    4: "",
-    5: "",
-    6: "",
-    7: "",
-    8: "",
-    9: "",
-    10: "",
-  };
+    // stompClient가 연결되었을 때 구독 설정
+    stompClient.onConnect = () => {
+      subscribeToChat();
+    };
 
+    // 컴포넌트 언마운트 시 추가적인 정리 작업 없음
+    return () => {
+      if (stompClient.connected) {
+        subscribeToChat();
+      }
+    };
+  }, [stompClient, channelId]);
+
+  // 채팅 추가 시 스크롤 자동 이동
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [mockChat.chats]);
+  }, [chats]);
+
+  // 2. 메시지 전송
+  const sendMessage = (chatMessage: string) => {
+    if (!stompClient) return;
+
+    const message = {
+      email: email, // 현재 사용자 닉네임
+      message: chatMessage, // 입력된 채팅 메시지
+    };
+
+    stompClient.publish({
+      destination: `/pub/chat.${channelId}`, // 메시지를 발행할 서버 엔드포인트
+      body: JSON.stringify(message), // JSON 형식으로 메시지 전송
+    });
+  };
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
+      {/* 채팅 메시지 표시 영역 */}
       <div className="flex flex-col flex-1 overflow-y-auto" ref={scrollRef}>
-        {chats.map((chat) => (
+        {chats.map((chat, index) => (
           <ChatBox
-            key={chat.userId}
-            thumbnail={cachingThumbnail[chat.userId]}
+            key={index}
+            thumbnail={""}
             message={chat.message}
-            username={cachingUsername[chat.userId]}
+            username={chat.sender}
+            userProfileImg={chat.userProfileImg}
           />
         ))}
       </div>
-      <ChatInput />
+      {/* 채팅 입력 */}
+      <ChatInput onSendMessage={sendMessage} />
     </div>
   );
 }

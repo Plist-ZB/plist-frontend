@@ -20,4 +20,12 @@ declare interface IPastStreamInfo extends IChannel {
   videoList: IVideo[];
 }
 
+declare interface IChannelData {
+  channelId: number;
+  channelName: string;
+  host: boolean;
+  channelCreatedAt: string;
+  videoList: IVideo[];
+}
+
 declare type ChannelList = IChannel[];

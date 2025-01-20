@@ -1,7 +1,14 @@
 import { useState } from "react";
 import YouTube, { YouTubeProps } from "react-youtube";
+import { Client } from "@stomp/stompjs";
 
-export default function VideoPlayer({ videoId }: { videoId: string }) {
+export default function VideoPlayer({
+  videoId,
+  stompClient,
+}: {
+  videoId: string;
+  stompClient: Client;
+}) {
   /* TODO: Youtube Player로 사용할 메서드 타입 정의하기 */
   const [player, setPlayer] = useState<any>(null);
 

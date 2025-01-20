@@ -1,14 +1,28 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaUserAlt } from "react-icons/fa";
+import useEnterChannel from "@/common/hooks/useEnterChannel";
+
+interface ExtendedChannel extends IChannel {
+  channelParticipantCount: number; // 또는 적절한 타입
+  channelStreamingTime: string; // 또는 적절한 타입
+}
 
 interface StreamCardProps {
-  readonly item: IChannel;
+  readonly item: ExtendedChannel;
 }
 
 export default function StreamCard({ item }: StreamCardProps) {
+  const navigate = useNavigate();
+  const enterChannelMutation = useEnterChannel();
+
   return (
-    <Card to={`/channel/${item.channelId}`}>
+    <Card
+      onClick={() => {
+        enterChannelMutation.mutate(item.channelId);
+        navigate(`/channel/${item.channelId}`);
+      }}
+    >
       <Thumbnail $thumbnailUrl={item.channelThumbnail} className="flex-shrink-0">
         <LiveBadge>
           <FaUserAlt size={8} className="mb-[1px]" />
@@ -27,7 +41,8 @@ export default function StreamCard({ item }: StreamCardProps) {
   );
 }
 
-const Card = styled(Link)`
+const Card = styled.button`
+  width: 100%;
   display: flex;
   gap: 16px;
   border: 1px solid #ddd;
@@ -72,6 +87,8 @@ const Thumbnail = styled.div<{ $thumbnailUrl: string }>`
 `;
 
 const StreamDetails = styled.div`
+  width: 100%;
+  height: 100px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

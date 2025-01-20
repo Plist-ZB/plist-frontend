@@ -4,11 +4,14 @@ import svgr from "vite-plugin-svgr";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), svgr({
+  plugins: [
+    react(),
+    svgr({
       // svgr options: https://react-svgr.com/docs/options/
       svgrOptions: { exportType: "default", ref: true, svgo: false, titleProp: true },
       include: "**/*.svg",
-    }),],
+    }),
+  ],
   resolve: {
     alias: [
       { find: "public", replacement: "/public" },
@@ -17,6 +20,13 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    proxy: {
+      "/api": {
+        target: "http://ec2-13-209-237-110.ap-northeast-2.compute.amazonaws.com/v3/api",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
   },
   build: {
     minify: "terser",

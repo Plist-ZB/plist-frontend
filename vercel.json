@@ -1,3 +1,9 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" },
+    {
+      "source": "/api/:path*",
+      "destination": "http://ec2-13-209-237-110.ap-northeast-2.compute.amazonaws.com/v3/api/:path*"
+    }
+  ]
 }

@@ -66,7 +66,7 @@ export default function ProfilePage() {
             className={`self-auto w-full max-w-xs py-4 mt-auto bg-white border rounded-lg border-gray-border hover:border-gray-border hover:text-black`}
           >
             {isPending ? (
-              <span className="animate-pulse text-primary-main">"변경중..."</span>
+              <span className="animate-pulse text-primary-main">변경중...</span>
             ) : (
               "변경하기"
             )}

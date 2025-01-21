@@ -1,5 +1,4 @@
 import ChannelTopBar from "@/pages/channel/components/ChannelTopBar";
-import { useState } from "react";
 import VideoPlayer from "@/pages/channel/components/VideoPlayer";
 import Playlist from "@/pages/channel/components/Playlist";
 import ChatArea from "@/pages/channel/components/ChatArea";

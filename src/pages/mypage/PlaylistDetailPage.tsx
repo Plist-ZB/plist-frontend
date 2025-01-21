@@ -5,10 +5,12 @@ import Item from "@/pages/mypage/components/playlit-detail/Item";
 import { useState } from "react";
 
 export default function PlaylistDetailPage() {
-  const { myPlaylistDetailQuery, updatePlaylistOrderMutation } = usePlaylistDetail();
+  const { videoList, setVideoList, myPlaylistDetailQuery, updatePlaylistOrderMutation } =
+    usePlaylistDetail();
 
   const [draggedItemId, setDraggedItemId] = useState<number | null>(null);
-  const [videoList, setVideoList] = useState(myPlaylistDetailQuery.data?.videoList || []);
+
+  console.log("videoList", videoList);
 
   const onDragStart = (id: number) => {
     setDraggedItemId(id);
@@ -28,19 +30,11 @@ export default function PlaylistDetailPage() {
 
     setVideoList(updatedVideoList); // 상태 업데이트
 
-    // 순서를 서버에 저장
-    const updatedOrder = updatedVideoList.map((item) => item.id);
-    updatePlaylistOrderMutation.mutate(
-      { playlistId: myPlaylistDetailQuery.data?.playlistId, updatedOrder },
-      {
-        onSuccess: () => {
-          console.log("순서 저장 완료!");
-        },
-        onError: () => {
-          console.error("순서 저장 실패!");
-        },
-      }
-    );
+    // 변경된 리스트를 서버에 저장
+    updatePlaylistOrderMutation.mutate({
+      playlistId: myPlaylistDetailQuery.data?.userPlaylistId,
+      updatedOrder: updatedVideoList,
+    });
 
     setDraggedItemId(null); // 드래그 상태 초기화
   };

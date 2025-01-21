@@ -28,12 +28,10 @@ const userAPI = {
     return response;
   },
 
-  updatePlaylistOrder: async (playlistId: number, updatedOrder: number[]) => {
+  updatePlaylistOrder: async (playlistId: number, updatedOrder: string) => {
     try {
       // API 호출로 updatedOrder를 서버로 전송
-      const response = await instance.patch(`/playlist/${playlistId}/update`, {
-        order: updatedOrder, // updatedOrder 배열 전송
-      });
+      const response = await instance.patch(`user/playlist/${playlistId}/update`, updatedOrder);
 
       // 서버에서 반환된 데이터 반환
       return response.data;

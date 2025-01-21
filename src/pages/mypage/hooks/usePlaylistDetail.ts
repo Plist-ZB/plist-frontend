@@ -1,10 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import userAPI from "@/services/api/userAPI";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 
 const usePlaylistDetail = () => {
   const { playlistId } = useParams();
   const queryClient = useQueryClient();
+  const [videoList, setVideoList] = useState<IVideo[]>([]);
 
   const myPlaylistDetailQuery = useQuery({
     queryKey: ["myPlaylistDetail", playlistId],
@@ -15,6 +17,8 @@ const usePlaylistDetail = () => {
         if (result.userPlaylistName === "favorite") {
           queryClient.setQueryData(["myPlaylistDetail", "favorite"], result);
         }
+
+        setVideoList(result.videoList);
 
         return result;
       } catch (error) {
@@ -77,14 +81,18 @@ const usePlaylistDetail = () => {
       updatedOrder,
     }: {
       playlistId: number;
-      updatedOrder: number[];
+      updatedOrder: IVideo[];
     }) => {
       if (!playlistId || !Array.isArray(updatedOrder)) {
         throw new Error("유효하지 않은 데이터입니다.");
       }
 
+      console.log("hi");
+
       // 서버에 순서 업데이트 요청
-      return userAPI.updatePlaylistOrder(playlistId, updatedOrder);
+      const res = await userAPI.updatePlaylistOrder(playlistId, JSON.stringify(updatedOrder));
+
+      return res;
     },
     onSuccess: () => {
       // 성공 시 캐시 무효화
@@ -98,6 +106,8 @@ const usePlaylistDetail = () => {
   });
 
   return {
+    videoList,
+    setVideoList,
     myPlaylistDetailQuery,
     addItemToPlaylistMutation,
     deletePlaylistMutation,

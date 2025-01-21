@@ -201,26 +201,6 @@ export default function VideoPlayer({
           </div>
         </div>
       )}
-
-      <button
-        className="fixed bg-red-300 bottom-20"
-        onClick={() => {
-          const state = player.getPlayerState();
-          const currentTime = player.getCurrentTime();
-
-          stompClient.publish({
-            destination: `/pub/video.control.${channelId}`,
-            body: JSON.stringify({
-              email: email,
-              videoId: currentVideoId,
-              currentTime: currentTime,
-              playState: state,
-            }),
-          });
-        }}
-      >
-        영상 재생 상태 테스트
-      </button>
     </div>
   );
 }

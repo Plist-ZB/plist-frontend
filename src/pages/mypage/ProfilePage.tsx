@@ -17,7 +17,10 @@ export default function ProfilePage() {
   /* 회원탈퇴 컴포넌트 */
   const WithdrawalButton = () => {
     return (
-      <button className="opacity-50 text-red-main" onClick={() => console.log("회원탈퇴")}>
+      <button
+        className="opacity-50 text-red-main hover:text-red-main"
+        onClick={() => console.log("회원탈퇴")}
+      >
         회원탈퇴
       </button>
     );

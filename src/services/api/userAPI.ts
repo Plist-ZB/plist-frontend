@@ -28,6 +28,20 @@ const userAPI = {
     return response;
   },
 
+  updatePlaylistOrder: async (playlistId: number, updatedOrder: string) => {
+    try {
+      // API 호출로 updatedOrder를 서버로 전송
+      const response = await instance.patch(`user/playlist/${playlistId}/update`, updatedOrder);
+
+      // 서버에서 반환된 데이터 반환
+      return response.data;
+    } catch (error) {
+      // 에러 핸들링 및 로그 출력
+      console.error("플레이리스트 순서 저장 실패:", error);
+      throw new Error("플레이리스트 순서 저장 실패");
+    }
+  },
+
   logout: async () => {
     const { data: response } = await instance.post(`auth/logout`);
 

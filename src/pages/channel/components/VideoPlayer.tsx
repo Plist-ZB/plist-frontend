@@ -6,9 +6,12 @@ import {
   currentVideoIdAtom,
   isChannelHostAtom,
   channelVideoListAtom,
+  currentTimeAtom,
 } from "@/store/channel";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
+import { FaPause, FaPlay } from "react-icons/fa";
+import { formatTime } from "@/pages/channel/utils/formatTime";
 
 export default function VideoPlayer({
   stompClient,
@@ -31,6 +34,10 @@ export default function VideoPlayer({
     currentTime: number;
   } | null>(null);
 
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useAtom(currentTimeAtom);
+  const [isPlaying, setIsPlaying] = useState(false);
+
   useEffect(() => {
     if (!playState || !currentVideoId) return;
 
@@ -51,24 +58,11 @@ export default function VideoPlayer({
 
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     setPlayer(event.target);
-    //console.log("플레이어가 준비되었습니다.", event.target, typeof event.target);
+    setDuration(event.target.getDuration());
   };
 
   const onStateChange = (event: any) => {
-    console.log(event);
-
-    /* console.log("플레이어 상태 변경", event.target.getPlayerState());
-    console.log("플레이어 상태 변경2", player.getPlaylist());
-
-    stompClient.publish({
-      destination: `/pub/video.control.${channelId}`,
-      body: JSON.stringify({
-        email: email,
-        videoId: currentVideoId,
-        currentTime: 0,
-        playState: event.target.getPlayerState(),
-      }),
-    }); */
+    setIsPlaying(event.data === 1);
   };
 
   useEffect(() => {
@@ -84,7 +78,6 @@ export default function VideoPlayer({
         }
 
         if (!body.videoId) {
-          console.log("body", body);
           setChannelVideoList(body);
         }
       });
@@ -103,23 +96,14 @@ export default function VideoPlayer({
   }, [stompClient, channelId, stompClient.connected, player]);
 
   useEffect(() => {
-    if (!player || !initVideoId) return;
-
-    console.log("initVideoId", initVideoId);
-
-    const state = player.getPlayerState();
-    const currentTime = player.getCurrentTime();
-
-    stompClient.publish({
-      destination: `/pub/video.control.${channelId}`,
-      body: JSON.stringify({
-        email: email,
-        videoId: currentVideoId,
-        currentTime: currentTime,
-        playState: state,
-      }),
-    });
-  }, [initVideoId, player]);
+    let interval: NodeJS.Timeout;
+    if (player && isPlaying) {
+      interval = setInterval(() => {
+        setCurrentTime(player.getCurrentTime());
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [player, isPlaying]);
 
   const opts: YouTubeProps["opts"] = {
     height: "100%",
@@ -128,8 +112,8 @@ export default function VideoPlayer({
       // https://developers.google.com/youtube/player_parameters
       autoplay: 0,
       modestbranding: 0,
-      controls: 1, //isChannelHost ? 1 : 0,
-      fs: 1, // 전체화면 버튼 활성화
+      controls: isChannelHost ? 0 : 1,
+      fs: 0, // 전체화면 버튼 활성화
       disablekb: 1,
       enablejsapi: 1,
     },
@@ -144,10 +128,79 @@ export default function VideoPlayer({
         videoId={initVideoId}
         opts={opts}
         onReady={onPlayerReady}
-        /* onStateChange={onStateChange} */
+        onStateChange={onStateChange}
         className="absolute top-0 left-0 w-full h-full"
         iframeClassName="w-full h-full"
       />
+      {isChannelHost && (
+        <div className="absolute bottom-0 left-0 w-full p-2 py-1 bg-black-bright ">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                if (isPlaying) {
+                  player?.pauseVideo();
+                  stompClient.publish({
+                    destination: `/pub/video.control.${channelId}`,
+                    body: JSON.stringify({
+                      email: email,
+                      videoId: currentVideoId,
+                      currentTime: currentTime,
+                      playState: 2,
+                    }),
+                  });
+                } else {
+                  player?.playVideo();
+                  stompClient.publish({
+                    destination: `/pub/video.control.${channelId}`,
+                    body: JSON.stringify({
+                      email: email,
+                      videoId: currentVideoId,
+                      currentTime: currentTime,
+                      playState: 1,
+                    }),
+                  });
+                }
+
+                //
+              }}
+              className="p-0 py-1 text-white"
+            >
+              {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
+            </button>
+
+            <div
+              role="button"
+              className="relative flex-1 h-1 bg-white rounded cursor-pointer"
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const percent = x / rect.width;
+                const newTime = percent * duration;
+                player?.seekTo(newTime, true);
+                setCurrentTime(newTime);
+                stompClient.publish({
+                  destination: `/pub/video.control.${channelId}`,
+                  body: JSON.stringify({
+                    email: email,
+                    videoId: currentVideoId,
+                    currentTime: newTime,
+                    playState: isPlaying ? 1 : 2,
+                  }),
+                });
+              }}
+            >
+              <div
+                className="absolute h-full rounded bg-red-main"
+                style={{ width: `${(currentTime / duration) * 100}%` }}
+              />
+            </div>
+
+            <span className="text-sm text-white">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </span>
+          </div>
+        </div>
+      )}
 
       <button
         className="fixed bg-red-300 bottom-20"
@@ -167,18 +220,6 @@ export default function VideoPlayer({
         }}
       >
         영상 재생 상태 테스트
-      </button>
-      <button
-        className="fixed bg-red-300 bottom-20 right-20"
-        onClick={() => {
-          const state = player.getPlayerState();
-          console.log(state);
-          console.log(player.getVideoData());
-
-          player.pauseVideo();
-        }}
-      >
-        영상 교체 테스트
       </button>
     </div>
   );

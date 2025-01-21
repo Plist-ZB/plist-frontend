@@ -9,6 +9,7 @@ import {
   currentVideoIdAtom,
   isChannelHostAtom,
   initVideoIdAtom,
+  currentTimeAtom,
 } from "@/store/channel";
 import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
 
@@ -25,9 +26,12 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
   const [currentVideoId, setCurrentVideoId] = useAtom(currentVideoIdAtom);
   const [isOpen, setIsOpen] = useState(false);
 
+  const setCurrentTime = useSetAtom(currentTimeAtom);
+
   const onClickHostSetCurrentVideoId = (item: IVideo) => {
     setCurrentVideoId(item.videoId);
     setInitialVideoId(item.videoId);
+    setCurrentTime(0);
   };
 
   return (

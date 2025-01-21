@@ -7,6 +7,7 @@ declare interface IChannel {
   channelStatus: string;
   channelHost: string;
   channelLastParticipantCount: number;
+  channelCreatedAt: string;
 }
 
 declare interface IVideo {

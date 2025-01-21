@@ -1,5 +1,5 @@
 import useExitChannel from "@/pages/channel/hooks/useExitChannel";
-import { isChannelHostAtom } from "@/store/channel";
+import { channelVideoListAtom, isChannelHostAtom } from "@/store/channel";
 import { useAtomValue } from "jotai";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -12,8 +12,10 @@ export default function ExitRoomModal({
   readonly channelId: number;
 }) {
   const navigate = useNavigate();
-  const { exitChannelMutation, closeChannelMutation } = useExitChannel();
+  const { exitChannelMutation, closeChannelMutation, saveChannelPlaylistMutation } =
+    useExitChannel();
   const isHost = useAtomValue(isChannelHostAtom);
+  const channelVideoList = useAtomValue(channelVideoListAtom);
 
   const onClickGoBack = () => {
     if (isHost) {
@@ -26,13 +28,9 @@ export default function ExitRoomModal({
   };
 
   const onClickGoBackWithSave = () => {
-    //TODO: 재생목록 추가하는 로직 추가
-    unmount();
-    navigate("../");
+    saveChannelPlaylistMutation.mutate(`${channelId}`);
+    onClickGoBack();
   };
-
-  // TODO: API 페칭으로 변경 후 삭제
-  const SAMPLE_PLAYLIST_IMAGE = "https://i.ytimg.com/vi/BS7tz2rAOSA/mqdefault.jpg";
 
   return (
     <div
@@ -57,12 +55,14 @@ export default function ExitRoomModal({
           <div className="flex flex-col items-center flex-shrink border rounded-lg max-w-48 border-gray-border">
             <div
               className="w-48 h-[108px] bg-cover rounded-t-lg bg-primary-500 shrink-0 aspect-video bg-center "
-              style={{ backgroundImage: `url('${SAMPLE_PLAYLIST_IMAGE}')` }}
+              style={{ backgroundImage: `url('${channelVideoList?.[0].videoThumbnail}')` }}
             ></div>
             <div className="self-start w-full px-3 mt-3 truncate">
               {"듣기 좋은 발라드 추천 좀 부탁드립니다.ddddddddd"}
             </div>
-            <div className="self-start px-3 pb-2 text-sm text-gray-dark">트랙 {120}개</div>
+            <div className="self-start px-3 pb-2 text-sm text-gray-dark">
+              트랙 {channelVideoList?.length}개
+            </div>
           </div>
 
           <div className="pt-3 text-sm text-primary-main">

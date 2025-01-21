@@ -1,4 +1,4 @@
-import { Heart, Menu } from "lucide-react";
+import { Heart, Menu, Trash2 } from "lucide-react";
 
 interface HostPlayListItemBoxProps {
   item: IVideo;
@@ -34,7 +34,16 @@ export default function HostPlayListItemBox({
       ></div>
       <div className="flex-grow truncate">{item.videoName}</div>
       <button
-        className="p-0 hover:border-transparent hover:text-red-main"
+        className="p-1 pr-0 hover:border-transparent hover:text-red-main"
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log("delete clicked");
+        }}
+      >
+        <Trash2 className="text-gray-600" />
+      </button>
+      <button
+        className="p-1 pr-0 hover:border-transparent hover:text-red-main"
         onClick={(e) => {
           e.stopPropagation();
           console.log("favorite clicked");

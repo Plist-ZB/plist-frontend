@@ -16,12 +16,13 @@ const PlaylistPage = lazy(() => import("@/pages/mypage/PlaylistPage"));
 const PlaylistDetailPage = lazy(() => import("@/pages/mypage/PlaylistDetailPage"));
 const HostHistoryPage = lazy(() => import("@/pages/mypage/HostHistoryPage"));
 const HostHistoryDetailPage = lazy(() => import("@/pages/mypage/HostHistoryDetailPage"));
+const PageNotFound = lazy(() => import("@/pages/error/PageNotFound"));
 
 const Router = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        <Route path="*" element={<div>404</div>} />
+        <Route path="*" element={<PageNotFound />} />
 
         <Route element={<RootLayout />}>
           <Route path="/" element={<HomePage />} />

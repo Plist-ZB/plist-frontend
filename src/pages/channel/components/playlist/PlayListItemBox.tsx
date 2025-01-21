@@ -1,11 +1,7 @@
 import { Heart } from "lucide-react";
 
 interface PlayListItemBoxProps {
-  item: {
-    id: number;
-    thumbnail: string;
-    title: string;
-  };
+  item: IVideo;
   currentVideoId: number;
   setCurrentVideoId: (id: number) => void;
   setIsOpen: (isOpen: boolean) => void;
@@ -33,9 +29,9 @@ export default function PlayListItemBox({
     >
       <div
         className="w-10 bg-gray-200 bg-cover rounded-lg shrink-0 aspect-square"
-        style={{ backgroundImage: `url('${item.thumbnail}')` }}
+        style={{ backgroundImage: `url('${item.videoThumbnail}')` }}
       ></div>
-      <div className="flex-grow truncate">{item.title}</div>
+      <div className="flex-grow truncate">{item.videoName}</div>
       <button
         className="p-0 hover:border-transparent hover:text-red-main"
         onClick={(e) => {

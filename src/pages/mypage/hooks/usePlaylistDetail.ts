@@ -1,10 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import userAPI from "@/services/api/userAPI";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 
 const usePlaylistDetail = () => {
   const { playlistId } = useParams();
   const queryClient = useQueryClient();
+  const [videoList, setVideoList] = useState<IVideo[]>([]);
 
   const myPlaylistDetailQuery = useQuery({
     queryKey: ["myPlaylistDetail", playlistId],
@@ -15,6 +17,8 @@ const usePlaylistDetail = () => {
         if (result.userPlaylistName === "favorite") {
           queryClient.setQueryData(["myPlaylistDetail", "favorite"], result);
         }
+
+        setVideoList(result.videoList);
 
         return result;
       } catch (error) {
@@ -71,10 +75,43 @@ const usePlaylistDetail = () => {
     },
   });
 
+  const updatePlaylistOrderMutation = useMutation({
+    mutationFn: async ({
+      playlistId,
+      updatedOrder,
+    }: {
+      playlistId: number;
+      updatedOrder: IVideo[];
+    }) => {
+      if (!playlistId || !Array.isArray(updatedOrder)) {
+        throw new Error("유효하지 않은 데이터입니다.");
+      }
+
+      console.log("hi");
+
+      // 서버에 순서 업데이트 요청
+      const res = await userAPI.updatePlaylistOrder(playlistId, JSON.stringify(updatedOrder));
+
+      return res;
+    },
+    onSuccess: () => {
+      // 성공 시 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: ["myPlaylistDetail", playlistId] });
+      console.log("플레이리스트 순서가 성공적으로 업데이트되었습니다.");
+    },
+    onError: (error) => {
+      console.error("플레이리스트 순서 업데이트 중 오류 발생:", error);
+      // 유저 피드백 처리 (예: 알림 창 표시)
+    },
+  });
+
   return {
+    videoList,
+    setVideoList,
     myPlaylistDetailQuery,
     addItemToPlaylistMutation,
     deletePlaylistMutation,
+    updatePlaylistOrderMutation, // 추가된 부분
   };
 };
 

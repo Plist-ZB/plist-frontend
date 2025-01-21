@@ -3,7 +3,15 @@ import { Menu, Trash2 } from "lucide-react";
 import { useCallback } from "react";
 import { decode } from "html-entities";
 
-const Item = ({ item }: { item: { id: number; videoThumbnail: string; videoName: string } }) => {
+const Item = ({
+  item,
+  onDragStart,
+  onDrop,
+}: {
+  item: { id: number; videoThumbnail: string; videoName: string };
+  onDragStart: (id: number) => void;
+  onDrop: (id: number) => void;
+}) => {
   const { deletePlaylistMutation } = usePlaylistDetail();
 
   const deleteItem = useCallback(
@@ -15,8 +23,16 @@ const Item = ({ item }: { item: { id: number; videoThumbnail: string; videoName:
   );
 
   return (
-    <div className="flex items-center gap-2 p-2 border rounded-lg">
-      <Menu className="flex-shrink-0" />
+    <div
+      className="flex items-center gap-2 p-2 border rounded-lg"
+      draggable // 드래그 가능 설정
+      onDragStart={() => onDragStart(item.id)} // 드래그 시작 이벤트
+      onDragOver={(e) => e.preventDefault()} // 드래그 중 기본 동작 방지
+      onDrop={() => onDrop(item.id)} // 드롭 이벤트
+    >
+      <div className="flex-shrink-0 cursor-move">
+        <Menu className="text-gray-600" />
+      </div>
       <div
         className="w-10 bg-gray-200 bg-center bg-cover rounded-lg shrink-0 aspect-square"
         style={{ backgroundImage: `url('${item.videoThumbnail}')` }}

@@ -32,6 +32,15 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
     setCurrentVideoId(item.videoId);
     setInitialVideoId(item.videoId);
     setCurrentTime(0);
+    stompClient.publish({
+      destination: `/pub/video.control.${channelId}`,
+      body: JSON.stringify({
+        email: email,
+        videoId: item.videoId,
+        currentTime: 0,
+        playState: 1,
+      }),
+    });
   };
 
   return (
@@ -42,21 +51,7 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
         }`}
       >
         <div className="text-base font-semibold">현재 음악</div>
-        <button
-          onClick={() => {
-            stompClient.publish({
-              destination: `/pub/video.control.${channelId}`,
-              body: JSON.stringify({
-                email: email,
-                videoId: currentVideoId,
-                currentTime: 0,
-                playState: 1,
-              }),
-            });
-          }}
-        >
-          펍 테스트
-        </button>
+
         <div className="flex-1 text-base truncate">
           {channelVideoList?.find((item) => item.videoId === currentVideoId)?.videoName}
         </div>

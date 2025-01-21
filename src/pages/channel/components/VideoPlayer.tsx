@@ -112,7 +112,7 @@ export default function VideoPlayer({
       // https://developers.google.com/youtube/player_parameters
       autoplay: 0,
       modestbranding: 0,
-      controls: isChannelHost ? 0 : 1,
+      controls: 0,
       fs: 0, // 전체화면 버튼 활성화
       disablekb: 1,
       enablejsapi: 1,

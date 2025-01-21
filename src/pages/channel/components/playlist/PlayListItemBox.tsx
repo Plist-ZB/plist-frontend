@@ -2,8 +2,8 @@ import { Heart } from "lucide-react";
 
 interface PlayListItemBoxProps {
   item: IVideo;
-  currentVideoId: number;
-  setCurrentVideoId: (id: number) => void;
+  currentVideoId: string;
+
   setIsOpen: (isOpen: boolean) => void;
   "data-id"?: string;
 }
@@ -11,7 +11,7 @@ interface PlayListItemBoxProps {
 export default function PlayListItemBox({
   item,
   currentVideoId,
-  setCurrentVideoId,
+
   setIsOpen,
   "data-id": dataId,
 }: PlayListItemBoxProps) {
@@ -19,10 +19,9 @@ export default function PlayListItemBox({
     <div
       data-id={dataId}
       className={`flex items-center gap-2 p-2 cursor-pointer border border-border rounded-lg hover:bg-gray-100 ${
-        currentVideoId === item.id ? "bg-gray-50" : ""
+        currentVideoId === item.videoId ? "bg-gray-50" : ""
       }`}
       onClick={() => {
-        setCurrentVideoId(item.id);
         setIsOpen(false);
       }}
       draggable={false}

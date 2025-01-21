@@ -3,21 +3,32 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import PlayListItemBox from "@/pages/channel/components/playlist/PlayListItemBox";
 import HostPlayListItemBox from "@/pages/channel/components/playlist/HostPlayListItemBox";
 import { Client } from "@stomp/stompjs";
-import { useAtomValue } from "jotai";
-import { channelVideoListAtom, isChannelHostAtom } from "@/store/channel";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import {
+  channelVideoListAtom,
+  currentVideoIdAtom,
+  isChannelHostAtom,
+  initVideoIdAtom,
+} from "@/store/channel";
+import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
 
 interface PlaylistProps {
   stompClient: Client;
+  channelId: number;
 }
 
-const Playlist = ({ stompClient }: PlaylistProps) => {
+const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
   const isHost = useAtomValue(isChannelHostAtom);
   const channelVideoList = useAtomValue(channelVideoListAtom);
-
-  console.log("in Playlist", isHost, channelVideoList);
-
-  const [currentVideoId, setCurrentVideoId] = useState(2);
+  const email = getEmailFromToken();
+  const setInitialVideoId = useSetAtom(initVideoIdAtom);
+  const [currentVideoId, setCurrentVideoId] = useAtom(currentVideoIdAtom);
   const [isOpen, setIsOpen] = useState(false);
+
+  const onClickHostSetCurrentVideoId = (item: IVideo) => {
+    setCurrentVideoId(item.videoId);
+    setInitialVideoId(item.videoId);
+  };
 
   return (
     <div className="relative">
@@ -27,8 +38,23 @@ const Playlist = ({ stompClient }: PlaylistProps) => {
         }`}
       >
         <div className="text-base font-semibold">현재 음악</div>
+        <button
+          onClick={() => {
+            stompClient.publish({
+              destination: `/pub/video.control.${channelId}`,
+              body: JSON.stringify({
+                email: email,
+                videoId: currentVideoId,
+                currentTime: 0,
+                playState: 1,
+              }),
+            });
+          }}
+        >
+          펍 테스트
+        </button>
         <div className="flex-1 text-base truncate">
-          {channelVideoList?.find((item) => item.id === currentVideoId)?.videoName}
+          {channelVideoList?.find((item) => item.videoId === currentVideoId)?.videoName}
         </div>
 
         <button
@@ -48,18 +74,17 @@ const Playlist = ({ stompClient }: PlaylistProps) => {
           {channelVideoList?.map((item) =>
             isHost ? (
               <HostPlayListItemBox
-                key={item.id}
+                key={item.videoId}
                 item={item}
-                currentVideoId={currentVideoId}
-                setCurrentVideoId={setCurrentVideoId}
+                currentVideoId={currentVideoId!}
+                onClickHostSetCurrentVideoId={onClickHostSetCurrentVideoId}
                 setIsOpen={setIsOpen}
               />
             ) : (
               <PlayListItemBox
-                key={item.id}
+                key={item.videoId}
                 item={item}
-                currentVideoId={currentVideoId}
-                setCurrentVideoId={setCurrentVideoId}
+                currentVideoId={currentVideoId!}
                 setIsOpen={setIsOpen}
               />
             )

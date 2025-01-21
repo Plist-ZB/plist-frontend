@@ -2,8 +2,8 @@ import { Heart, Menu } from "lucide-react";
 
 interface HostPlayListItemBoxProps {
   item: IVideo;
-  currentVideoId: number;
-  setCurrentVideoId: (id: number) => void;
+  currentVideoId: string;
+  onClickHostSetCurrentVideoId: (item: IVideo) => void;
   setIsOpen: (isOpen: boolean) => void;
   "data-id"?: string;
 }
@@ -11,7 +11,7 @@ interface HostPlayListItemBoxProps {
 export default function HostPlayListItemBox({
   item,
   currentVideoId,
-  setCurrentVideoId,
+  onClickHostSetCurrentVideoId,
   setIsOpen,
   "data-id": dataId,
 }: HostPlayListItemBoxProps) {
@@ -19,10 +19,10 @@ export default function HostPlayListItemBox({
     <div
       data-id={dataId}
       className={`flex items-center gap-4 p-2 rounded cursor-pointer hover:bg-gray-100 ${
-        currentVideoId === item.id ? "bg-gray-100" : ""
+        currentVideoId === item.videoId ? "bg-gray-100" : ""
       }`}
       onClick={() => {
-        setCurrentVideoId(item.id);
+        onClickHostSetCurrentVideoId(item);
         setIsOpen(false);
       }}
       draggable={true}

@@ -46,7 +46,6 @@ export default function SearchBottomSheet({ isOpen, unmount, channelId }: Search
       };
 
       const response = await instance.patch(`/channel/${channelId}/add-video`, data);
-      setChannelVideoList((prev) => [...prev, data]);
 
       console.log(response);
       alert("추가되었습니다.");

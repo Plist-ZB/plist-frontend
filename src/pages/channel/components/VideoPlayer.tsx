@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import YouTube, { YouTubeProps, YouTubePlayer } from "react-youtube";
+import YouTube, { YouTubeProps, YouTubePlayer, YouTubeEvent } from "react-youtube";
 import { Client } from "@stomp/stompjs";
 import {
   initVideoIdAtom,
@@ -61,7 +61,7 @@ export default function VideoPlayer({
     setDuration(event.target.getDuration());
   };
 
-  const onStateChange = (event: any) => {
+  const onStateChange = (event: YouTubeEvent) => {
     setIsPlaying(event.data === 1);
   };
 

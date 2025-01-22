@@ -83,14 +83,24 @@ export default function VideoPlayer({
       });
     };
 
+    const subscribeToJoin = () => {
+      stompClient.subscribe(`/sub/join.${channelId}`, (message) => {
+        const body = JSON.parse(message.body); // 수신된 메시지 파싱
+
+        console.log("join", body);
+      });
+    };
+
     // stompClient가 연결되었을 때 구독 설정
     stompClient.onConnect = () => {
       subscribeToVideoState();
+      subscribeToJoin();
     };
 
     return () => {
       if (stompClient.connected) {
         subscribeToVideoState();
+        subscribeToJoin();
       }
     };
   }, [stompClient, channelId, stompClient.connected, player]);

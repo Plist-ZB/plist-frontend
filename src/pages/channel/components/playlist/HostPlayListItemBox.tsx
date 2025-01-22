@@ -6,6 +6,8 @@ interface HostPlayListItemBoxProps {
   onClickHostSetCurrentVideoId: (item: IVideo) => void;
   setIsOpen: (isOpen: boolean) => void;
   "data-id"?: string;
+  deleteVideo: (id: number) => void;
+  saveVIdeoToFavorite: (item: IVideo) => void;
 }
 
 export default function HostPlayListItemBox({
@@ -14,6 +16,8 @@ export default function HostPlayListItemBox({
   onClickHostSetCurrentVideoId,
   setIsOpen,
   "data-id": dataId,
+  deleteVideo,
+  saveVIdeoToFavorite,
 }: HostPlayListItemBoxProps) {
   return (
     <div
@@ -37,7 +41,7 @@ export default function HostPlayListItemBox({
         className="p-1 pr-0 hover:border-transparent hover:text-red-main"
         onClick={(e) => {
           e.stopPropagation();
-          console.log("delete clicked");
+          deleteVideo(item.id);
         }}
       >
         <Trash2 className="text-gray-600" />
@@ -46,7 +50,7 @@ export default function HostPlayListItemBox({
         className="p-1 pr-0 hover:border-transparent hover:text-red-main"
         onClick={(e) => {
           e.stopPropagation();
-          console.log("favorite clicked");
+          saveVIdeoToFavorite(item);
         }}
       >
         <Heart className="text-red-main" />

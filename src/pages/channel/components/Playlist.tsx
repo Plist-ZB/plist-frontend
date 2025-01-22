@@ -12,6 +12,8 @@ import {
   currentTimeAtom,
 } from "@/store/channel";
 import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
+import useHostItemLogics from "@/pages/channel/hooks/useHostItemLogics";
+import useSaveToFavorite from "@/pages/channel/hooks/useSaveToFavorite";
 
 interface PlaylistProps {
   stompClient: Client;
@@ -25,8 +27,10 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
   const setInitialVideoId = useSetAtom(initVideoIdAtom);
   const [currentVideoId, setCurrentVideoId] = useAtom(currentVideoIdAtom);
   const [isOpen, setIsOpen] = useState(false);
-
   const setCurrentTime = useSetAtom(currentTimeAtom);
+
+  const { deleteVideoMutation, reorderChannelPlaylistMutation } = useHostItemLogics(channelId);
+  const { saveVIdeoToFavoriteMutation } = useSaveToFavorite();
 
   const onClickHostSetCurrentVideoId = (item: IVideo) => {
     setCurrentVideoId(item.videoId);
@@ -78,6 +82,8 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
                 currentVideoId={currentVideoId!}
                 onClickHostSetCurrentVideoId={onClickHostSetCurrentVideoId}
                 setIsOpen={setIsOpen}
+                deleteVideo={deleteVideoMutation.mutate}
+                saveVIdeoToFavorite={saveVIdeoToFavoriteMutation.mutate}
               />
             ) : (
               <PlayListItemBox
@@ -85,6 +91,7 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
                 item={item}
                 currentVideoId={currentVideoId!}
                 setIsOpen={setIsOpen}
+                saveVIdeoToFavorite={saveVIdeoToFavoriteMutation.mutate}
               />
             )
           )}

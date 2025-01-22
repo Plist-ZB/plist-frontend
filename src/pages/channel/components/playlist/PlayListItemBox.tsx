@@ -3,7 +3,7 @@ import { Heart } from "lucide-react";
 interface PlayListItemBoxProps {
   item: IVideo;
   currentVideoId: string;
-
+  saveVIdeoToFavorite: (item: IVideo) => void;
   setIsOpen: (isOpen: boolean) => void;
   "data-id"?: string;
 }
@@ -11,7 +11,7 @@ interface PlayListItemBoxProps {
 export default function PlayListItemBox({
   item,
   currentVideoId,
-
+  saveVIdeoToFavorite,
   setIsOpen,
   "data-id": dataId,
 }: PlayListItemBoxProps) {
@@ -35,7 +35,7 @@ export default function PlayListItemBox({
         className="p-0 hover:border-transparent hover:text-red-main"
         onClick={(e) => {
           e.stopPropagation();
-          console.log("favorite clicked");
+          saveVIdeoToFavorite(item);
         }}
       >
         <Heart className="text-red-main" />

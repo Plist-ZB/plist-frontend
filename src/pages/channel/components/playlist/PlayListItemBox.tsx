@@ -5,7 +5,6 @@ interface PlayListItemBoxProps {
   currentVideoId: string;
   saveVIdeoToFavorite: (item: IVideo) => void;
   setIsOpen: (isOpen: boolean) => void;
-  "data-id"?: string;
 }
 
 export default function PlayListItemBox({
@@ -13,11 +12,9 @@ export default function PlayListItemBox({
   currentVideoId,
   saveVIdeoToFavorite,
   setIsOpen,
-  "data-id": dataId,
 }: PlayListItemBoxProps) {
   return (
     <div
-      data-id={dataId}
       className={`flex items-center gap-2 p-2 cursor-pointer border border-border rounded-lg hover:bg-gray-100 ${
         currentVideoId === item.videoId ? "bg-gray-50" : ""
       }`}

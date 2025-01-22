@@ -5,7 +5,6 @@ interface HostPlayListItemBoxProps {
   currentVideoId: string;
   onClickHostSetCurrentVideoId: (item: IVideo) => void;
   setIsOpen: (isOpen: boolean) => void;
-  "data-id"?: string;
   deleteVideo: (id: number) => void;
   saveVIdeoToFavorite: (item: IVideo) => void;
 }
@@ -15,13 +14,11 @@ export default function HostPlayListItemBox({
   currentVideoId,
   onClickHostSetCurrentVideoId,
   setIsOpen,
-  "data-id": dataId,
   deleteVideo,
   saveVIdeoToFavorite,
 }: HostPlayListItemBoxProps) {
   return (
     <div
-      data-id={dataId}
       className={`flex items-center gap-4 p-2 rounded cursor-pointer hover:bg-gray-100 ${
         currentVideoId === item.videoId ? "bg-gray-100" : ""
       }`}

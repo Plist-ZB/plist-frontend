@@ -97,15 +97,17 @@ export default function VideoPlayer({
       console.log("새로운 유저 입장 감지 데이터");
       console.log(currentVideoId, isPlaying, currentTime);
 
-      stompClient.publish({
-        destination: `/pub/video.control.${channelId}`,
-        body: JSON.stringify({
-          email: email,
-          videoId: currentVideoId,
-          currentTime: player.getCurrentTime(),
-          playState: isPlaying ? 1 : 2,
-        }),
-      });
+      if (currentVideoId) {
+        stompClient.publish({
+          destination: `/pub/video.control.${channelId}`,
+          body: JSON.stringify({
+            email: email,
+            videoId: currentVideoId,
+            currentTime: player.getCurrentTime(),
+            playState: isPlaying ? 1 : 2,
+          }),
+        });
+      }
       setIsNewUserEntered(false);
     }
   }, [isNewUserEntered, player]);

@@ -124,6 +124,10 @@ export default function VideoPlayer({
       {/* Host를 제외하고 화면 클릭 못하게 막는 임시 레이어 */}
       {!isChannelHost && <div className="absolute z-10 w-full bg-transparent aspect-video"></div>}
 
+      {isChannelHost && (
+        <div className="absolute z-10 w-full h-[calc(100%-34px)] bg-transparent aspect-video"></div>
+      )}
+
       <YouTube
         videoId={initVideoId}
         opts={opts}

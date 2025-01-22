@@ -39,22 +39,26 @@ export default function VideoPlayer({
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    if (!playState || !currentVideoId) return;
+    if (!playState || !currentVideoId || !player) return;
 
     if (playState.videoId === currentVideoId) {
       player.seekTo(playState.currentTime);
-
-      /* state 참고: https://developers.google.com/youtube/iframe_api_reference?hl=ko#getPlayerState */
-      if (playState.playStates === 1) {
-        player.playVideo();
-      } else {
-        player.pauseVideo();
-      }
     } else {
       player.loadVideoById(playState.videoId, playState.currentTime);
       setCurrentVideoId(playState.videoId);
     }
-  }, [playState]);
+
+    if (player) {
+      /* state 참고: https://developers.google.com/youtube/iframe_api_reference?hl=ko#getPlayerState */
+      if (playState.playStates === 1) {
+        console.log("재생");
+        player.playVideo();
+      } else {
+        console.log("일시정지");
+        player.pauseVideo();
+      }
+    }
+  }, [playState, currentVideoId, player]);
 
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     setPlayer(event.target);
@@ -107,16 +111,30 @@ export default function VideoPlayer({
       }
     };
 
+    const subscribeToLeave = () => {
+      if (stompClient.connected && player && !isChannelHost) {
+        stompClient.subscribe(`/sub/exit.${channelId}`, (message) => {
+          const body = message.body;
+          if (body === "CHANNEL_CLOSED") {
+            alert("채널이 종료되었습니다.");
+            location.href = "/";
+          }
+        });
+      }
+    };
+
     // stompClient가 연결되었을 때 구독 설정
     stompClient.onConnect = () => {
       subscribeToVideoState();
       subscribeToJoin();
+      subscribeToLeave();
     };
 
     return () => {
       if (stompClient.connected) {
         subscribeToVideoState();
         subscribeToJoin();
+        subscribeToLeave();
       }
     };
   }, [stompClient, channelId, stompClient.connected, player, isChannelHost]);
@@ -136,7 +154,7 @@ export default function VideoPlayer({
     width: "100%",
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
-      autoplay: isChannelHost ? 0 : 1,
+      autoplay: 0, //isChannelHost ? 0 : 1,
       modestbranding: 0,
       controls: 0,
       fs: 0, // 전체화면 버튼 활성화

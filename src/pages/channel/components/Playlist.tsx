@@ -42,7 +42,7 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
         email: email,
         videoId: item.videoId,
         currentTime: 0,
-        playState: 1,
+        playState: 0,
       }),
     });
   };

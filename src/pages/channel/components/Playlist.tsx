@@ -22,7 +22,7 @@ interface PlaylistProps {
 
 const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
   const isHost = useAtomValue(isChannelHostAtom);
-  const channelVideoList = useAtomValue(channelVideoListAtom);
+  const [channelVideoList, setChannelVideoList] = useAtom(channelVideoListAtom);
   const email = getEmailFromToken();
   const setInitialVideoId = useSetAtom(initVideoIdAtom);
   const [currentVideoId, setCurrentVideoId] = useAtom(currentVideoIdAtom);
@@ -45,6 +45,32 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
         playState: 1,
       }),
     });
+  };
+
+  const [draggedItemId, setDraggedItemId] = useState<number | null>(null);
+
+  const onDragStart = (id: number) => {
+    setDraggedItemId(id);
+  };
+
+  const onDrop = (targetId: number) => {
+    if (draggedItemId === null || draggedItemId === targetId) return;
+
+    const draggedIndex = channelVideoList?.findIndex((item) => item.id === draggedItemId);
+    const targetIndex = channelVideoList?.findIndex((item) => item.id === targetId);
+
+    if (draggedIndex === -1 || targetIndex === -1) return;
+
+    const updatedVideoList = [...channelVideoList!];
+    const [draggedItem] = updatedVideoList.splice(draggedIndex!, 1);
+    updatedVideoList.splice(targetIndex!, 0, draggedItem);
+
+    setChannelVideoList(updatedVideoList); // 상태 업데이트
+
+    // 변경된 리스트를 서버에 저장
+    reorderChannelPlaylistMutation.mutate(updatedVideoList);
+
+    setDraggedItemId(null); // 드래그 상태 초기화
   };
 
   return (
@@ -84,6 +110,8 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
                 setIsOpen={setIsOpen}
                 deleteVideo={deleteVideoMutation.mutate}
                 saveVIdeoToFavorite={saveVIdeoToFavoriteMutation.mutate}
+                onDragStart={onDragStart}
+                onDrop={onDrop}
               />
             ) : (
               <PlayListItemBox

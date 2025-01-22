@@ -19,7 +19,7 @@ export default function useHostItemLogics(channelId: number) {
 
   const reorderChannelPlaylistMutation = useMutation({
     mutationFn: async (item: IVideo[]) => {
-      const response = await instance.post(`/channel/${channelId}/update`, JSON.stringify(item));
+      const response = await instance.patch(`/channel/${channelId}/update`, JSON.stringify(item));
 
       return response;
     },

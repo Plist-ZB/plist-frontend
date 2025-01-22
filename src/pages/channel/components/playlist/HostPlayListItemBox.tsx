@@ -7,6 +7,8 @@ interface HostPlayListItemBoxProps {
   setIsOpen: (isOpen: boolean) => void;
   deleteVideo: (id: number) => void;
   saveVIdeoToFavorite: (item: IVideo) => void;
+  onDragStart: (id: number) => void;
+  onDrop: (id: number) => void;
 }
 
 export default function HostPlayListItemBox({
@@ -16,6 +18,8 @@ export default function HostPlayListItemBox({
   setIsOpen,
   deleteVideo,
   saveVIdeoToFavorite,
+  onDragStart,
+  onDrop,
 }: HostPlayListItemBoxProps) {
   return (
     <div
@@ -27,6 +31,9 @@ export default function HostPlayListItemBox({
         setIsOpen(false);
       }}
       draggable={true}
+      onDragStart={() => onDragStart(item.id)} // 드래그 시작 이벤트
+      onDragOver={(e) => e.preventDefault()} // 드래그 중 기본 동작 방지
+      onDrop={() => onDrop(item.id)} // 드롭 이벤트
     >
       <Menu className="flex-shrink-0" />
       <div

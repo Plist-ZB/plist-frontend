@@ -70,25 +70,41 @@ export default function VideoPlayer({
 
     // 영상 재생상태 & 재생목록 리스트 구독
     const subscribeToVideoState = () => {
-      stompClient.subscribe(`/sub/video.${channelId}`, (message) => {
-        const body = JSON.parse(message.body); // 수신된 메시지 파싱
+      if (stompClient.connected && player && !isChannelHost) {
+        stompClient.subscribe(`/sub/video.${channelId}`, (message) => {
+          const body = JSON.parse(message.body); // 수신된 메시지 파싱
 
-        if (!isChannelHost && body.videoId) {
-          setPlayState(body);
-        }
+          if (!isChannelHost && body.videoId) {
+            setPlayState(body);
+          }
 
-        if (!body.videoId) {
-          setChannelVideoList(body);
-        }
-      });
+          if (!body.videoId) {
+            setChannelVideoList(body);
+          }
+        });
+
+        stompClient.publish({
+          destination: `/pub/enter.${channelId}`,
+        });
+      }
     };
 
     const subscribeToJoin = () => {
-      stompClient.subscribe(`/sub/join.${channelId}`, (message) => {
-        const body = JSON.parse(message.body); // 수신된 메시지 파싱
-
-        console.log("join", body);
-      });
+      if (stompClient.connected && player && isChannelHost) {
+        stompClient.subscribe(`/sub/enter.${channelId}`, (message) => {
+          if (message.body === "NEW_USER_ENTER") {
+            stompClient.publish({
+              destination: `/pub/video.control.${channelId}`,
+              body: JSON.stringify({
+                email: email,
+                videoId: playState?.videoId,
+                currentTime: playState?.currentTime,
+                playState: playState?.playStates,
+              }),
+            });
+          }
+        });
+      }
     };
 
     // stompClient가 연결되었을 때 구독 설정
@@ -103,7 +119,7 @@ export default function VideoPlayer({
         subscribeToJoin();
       }
     };
-  }, [stompClient, channelId, stompClient.connected, player]);
+  }, [stompClient, channelId, stompClient.connected, player, isChannelHost]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -120,7 +136,7 @@ export default function VideoPlayer({
     width: "100%",
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
-      autoplay: 0,
+      autoplay: isChannelHost ? 0 : 1,
       modestbranding: 0,
       controls: 0,
       fs: 0, // 전체화면 버튼 활성화

@@ -13,6 +13,7 @@ export default function useSaveToFavorite() {
     },
     onSuccess: () => {
       console.log("SAVE_TO_FAVORITE_SUCCESS");
+      alert("즐겨찾기에 추가되었습니다.");
       return "SAVE_TO_FAVORITE_SUCCESS";
     },
     onError: (error) => {

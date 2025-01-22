@@ -115,7 +115,7 @@ export default function VideoPlayer({
 
     // 영상 재생상태 & 재생목록 리스트 구독
     const subscribeToVideoState = () => {
-      if (stompClient.connected && player && !isChannelHost) {
+      if (stompClient.connected && player) {
         console.log("구독됨1");
         setIsVideoSubscribed(true);
         stompClient.subscribe(`/sub/video.${channelId}`, (message) => {

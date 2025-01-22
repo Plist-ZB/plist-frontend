@@ -192,7 +192,7 @@ export default function VideoPlayer({
       // https://developers.google.com/youtube/player_parameters
       autoplay: 1, //isChannelHost ? 0 : 1,
       modestbranding: 0,
-      controls: 1,
+      controls: 0,
       fs: 0, // 전체화면 버튼 활성화
       disablekb: 1,
       enablejsapi: 1,
@@ -202,7 +202,7 @@ export default function VideoPlayer({
   return (
     <div className="relative w-full aspect-video">
       {/* Host를 제외하고 화면 클릭 못하게 막는 임시 레이어 */}
-      {/* {isChannelHost && <div className="absolute z-10 w-full bg-transparent aspect-video"></div>} */}
+      {!isChannelHost && <div className="absolute z-10 w-full bg-transparent aspect-video"></div>}
 
       {isChannelHost && (
         <div className="absolute z-10 w-full h-[calc(100%-34px)] bg-transparent aspect-video"></div>
@@ -227,74 +227,143 @@ export default function VideoPlayer({
         iframeClassName="w-full h-full"
       />
       {isChannelHost && (
-        <div className="absolute bottom-0 left-0 w-full p-2 py-1 bg-black-bright ">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                if (isPlaying) {
-                  player?.pauseVideo();
-                  stompClient.publish({
-                    destination: `/pub/video.control.${channelId}`,
-                    body: JSON.stringify({
-                      email: email,
-                      videoId: currentVideoId,
-                      currentTime: currentTime,
-                      playState: 2,
-                    }),
-                  });
-                } else {
-                  player?.playVideo();
-                  stompClient.publish({
-                    destination: `/pub/video.control.${channelId}`,
-                    body: JSON.stringify({
-                      email: email,
-                      videoId: currentVideoId,
-                      currentTime: currentTime,
-                      playState: 1,
-                    }),
-                  });
-                }
+        <HostPlayBar
+          isPlaying={isPlaying}
+          stompClient={stompClient}
+          channelId={channelId!}
+          email={email}
+          currentVideoId={currentVideoId!}
+          currentTime={currentTime}
+          player={player}
+          duration={duration}
+          setCurrentTime={setCurrentTime}
+        />
+      )}
 
-                //
-              }}
-              className="p-0 py-1 text-white"
-            >
-              {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
-            </button>
-
-            <div
-              role="button"
-              className="relative flex-1 h-1 bg-white rounded cursor-pointer"
-              onClick={(e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const percent = x / rect.width;
-                const newTime = percent * duration;
-                player?.seekTo(newTime, true);
-                setCurrentTime(newTime);
-                stompClient.publish({
-                  destination: `/pub/video.control.${channelId}`,
-                  body: JSON.stringify({
-                    email: email,
-                    videoId: currentVideoId,
-                    currentTime: newTime,
-                    playState: isPlaying ? 1 : 2,
-                  }),
-                });
-              }}
-            >
-              <div
-                className="absolute h-full rounded bg-red-main"
-                style={{ width: `${(currentTime / duration) * 100}%` }}
-              />
-            </div>
-
-            <span className="text-sm text-white">
-              {formatTime(currentTime)} / {formatTime(duration)}
-            </span>
-          </div>
-        </div>
+      {!isChannelHost && (
+        <ParticipantPlayBar isPlaying={isPlaying} currentTime={currentTime} duration={duration} />
       )}
     </div>
   );
 }
+
+const HostPlayBar = ({
+  isPlaying,
+  stompClient,
+  channelId,
+  email,
+  currentVideoId,
+  currentTime,
+  player,
+  duration,
+  setCurrentTime,
+}: {
+  isPlaying: boolean;
+  stompClient: Client;
+  channelId: number;
+  email: string;
+  currentVideoId: string;
+  currentTime: number;
+  player: YouTubePlayer;
+  duration: number;
+  setCurrentTime: (time: number) => void;
+}) => {
+  return (
+    <div className="absolute bottom-0 left-0 w-full p-2 py-1 bg-black-bright ">
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => {
+            if (isPlaying) {
+              player?.pauseVideo();
+              stompClient.publish({
+                destination: `/pub/video.control.${channelId}`,
+                body: JSON.stringify({
+                  email: email,
+                  videoId: currentVideoId,
+                  currentTime: currentTime,
+                  playState: 2,
+                }),
+              });
+            } else {
+              player?.playVideo();
+              stompClient.publish({
+                destination: `/pub/video.control.${channelId}`,
+                body: JSON.stringify({
+                  email: email,
+                  videoId: currentVideoId,
+                  currentTime: currentTime,
+                  playState: 1,
+                }),
+              });
+            }
+          }}
+          className="p-0 py-1 text-white"
+        >
+          {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
+        </button>
+
+        <div
+          role="button"
+          className="relative flex-1 h-1 bg-white rounded cursor-pointer"
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const percent = x / rect.width;
+            const newTime = percent * duration;
+            player?.seekTo(newTime, true);
+            setCurrentTime(newTime);
+            stompClient.publish({
+              destination: `/pub/video.control.${channelId}`,
+              body: JSON.stringify({
+                email: email,
+                videoId: currentVideoId,
+                currentTime: newTime,
+                playState: isPlaying ? 1 : 2,
+              }),
+            });
+          }}
+        >
+          <div
+            className="absolute h-full rounded bg-red-main"
+            style={{ width: `${(currentTime / duration) * 100}%` }}
+          />
+        </div>
+
+        <span className="text-sm text-white">
+          {formatTime(currentTime)} / {formatTime(duration)}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+const ParticipantPlayBar = ({
+  isPlaying,
+  currentTime,
+  duration,
+}: {
+  isPlaying: boolean;
+  currentTime: number;
+  duration: number;
+}) => {
+  return (
+    <div className="absolute bottom-0 left-0 w-full p-2 py-1 bg-black-bright ">
+      <div className="flex items-center gap-2 px-1">
+        <div onClick={() => {}} className="p-0 py-1 text-white">
+          {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
+        </div>
+
+        <div className="relative flex-1 h-1 bg-white rounded">
+          <div
+            className="absolute h-full rounded bg-red-main"
+            style={{ width: `${(currentTime / duration) * 100}%` }}
+          />
+        </div>
+
+        <span className="text-sm text-white">
+          {formatTime(currentTime)} / {formatTime(duration)}
+        </span>
+      </div>
+    </div>
+  );
+};

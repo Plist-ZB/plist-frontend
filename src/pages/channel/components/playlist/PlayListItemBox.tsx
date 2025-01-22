@@ -1,3 +1,4 @@
+import { decode } from "html-entities";
 import { Heart } from "lucide-react";
 
 interface PlayListItemBoxProps {
@@ -27,7 +28,7 @@ export default function PlayListItemBox({
         className="w-10 bg-gray-200 bg-center bg-cover rounded-lg shrink-0 aspect-square"
         style={{ backgroundImage: `url('${item.videoThumbnail}')` }}
       ></div>
-      <div className="flex-grow truncate">{item.videoName}</div>
+      <div className="flex-grow truncate">{decode(item.videoName)}</div>
       <button
         className="p-0 hover:border-transparent hover:text-red-main"
         onClick={(e) => {

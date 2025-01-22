@@ -1,3 +1,4 @@
+import { decode } from "html-entities";
 import { Heart, Menu, Trash2 } from "lucide-react";
 
 interface HostPlayListItemBoxProps {
@@ -40,7 +41,7 @@ export default function HostPlayListItemBox({
         className="w-10 bg-gray-200 bg-center bg-cover rounded-lg shrink-0 aspect-square"
         style={{ backgroundImage: `url('${item.videoThumbnail}')` }}
       ></div>
-      <div className="flex-grow truncate">{item.videoName}</div>
+      <div className="flex-grow truncate">{decode(item.videoName)}</div>
       <button
         className="p-1 pr-0 hover:border-transparent hover:text-red-main"
         onClick={(e) => {

@@ -83,7 +83,10 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
         <div className="text-base font-semibold">현재 음악</div>
 
         <div className="flex-1 text-base truncate">
-          {channelVideoList?.find((item) => item.videoId === currentVideoId)?.videoName}
+          {channelVideoList &&
+          channelVideoList.find((item) => item.videoId === currentVideoId)?.videoName
+            ? channelVideoList.find((item) => item.videoId === currentVideoId)?.videoName
+            : ""}
         </div>
 
         <button

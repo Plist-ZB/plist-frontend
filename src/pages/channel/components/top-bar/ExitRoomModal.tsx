@@ -55,7 +55,7 @@ export default function ExitRoomModal({
           <div className="flex flex-col items-center flex-shrink border rounded-lg max-w-48 border-gray-border">
             <div
               className="w-48 h-[108px] bg-cover rounded-t-lg bg-primary-500 shrink-0 aspect-video bg-center "
-              style={{ backgroundImage: `url('${channelVideoList?.[0].videoThumbnail}')` }}
+              style={{ backgroundImage: `url('${channelVideoList?.[0]?.videoThumbnail || ""}')` }}
             ></div>
             <div className="self-start w-full px-3 mt-3 truncate">
               {"듣기 좋은 발라드 추천 좀 부탁드립니다.ddddddddd"}

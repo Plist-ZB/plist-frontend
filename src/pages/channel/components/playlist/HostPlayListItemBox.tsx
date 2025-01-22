@@ -37,7 +37,7 @@ export default function HostPlayListItemBox({
     >
       <Menu className="flex-shrink-0" />
       <div
-        className="w-10 bg-gray-200 bg-cover rounded-lg shrink-0 aspect-square"
+        className="w-10 bg-gray-200 bg-center bg-cover rounded-lg shrink-0 aspect-square"
         style={{ backgroundImage: `url('${item.videoThumbnail}')` }}
       ></div>
       <div className="flex-grow truncate">{item.videoName}</div>

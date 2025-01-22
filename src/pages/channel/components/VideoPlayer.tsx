@@ -208,16 +208,6 @@ export default function VideoPlayer({
         <div className="absolute z-10 w-full h-[calc(100%-34px)] bg-transparent aspect-video"></div>
       )}
 
-      <button
-        className="fixed bottom-20 left-20"
-        onClick={() => console.log(isPlaying, currentTime, currentVideoId)}
-      >
-        호스트 값 확인
-      </button>
-      <button className="fixed bottom-20 right-20" onClick={() => console.log(playState)}>
-        참여자 값 확인
-      </button>
-
       <YouTube
         videoId={initVideoId}
         opts={opts}

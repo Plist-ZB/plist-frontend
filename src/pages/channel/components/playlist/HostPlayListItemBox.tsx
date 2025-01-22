@@ -45,7 +45,7 @@ export default function HostPlayListItemBox({
         className="p-1 pr-0 hover:border-transparent hover:text-red-main"
         onClick={(e) => {
           e.stopPropagation();
-          deleteVideo(item.id);
+          if (item.videoId !== currentVideoId) deleteVideo(item.id);
         }}
       >
         <Trash2 className="text-gray-600" />

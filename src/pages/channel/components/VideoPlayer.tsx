@@ -190,7 +190,7 @@ export default function VideoPlayer({
     width: "100%",
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
-      autoplay: 0, //isChannelHost ? 0 : 1,
+      autoplay: 1, //isChannelHost ? 0 : 1,
       modestbranding: 0,
       controls: 1,
       fs: 0, // 전체화면 버튼 활성화

@@ -14,6 +14,7 @@ import {
 import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
 import useHostItemLogics from "@/pages/channel/hooks/useHostItemLogics";
 import useSaveToFavorite from "@/pages/channel/hooks/useSaveToFavorite";
+import { decode } from "html-entities";
 
 interface PlaylistProps {
   stompClient: Client;
@@ -85,7 +86,7 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
         <div className="flex-1 text-base truncate">
           {channelVideoList &&
           channelVideoList.find((item) => item.videoId === currentVideoId)?.videoName
-            ? channelVideoList.find((item) => item.videoId === currentVideoId)?.videoName
+            ? decode(channelVideoList.find((item) => item.videoId === currentVideoId)?.videoName)
             : ""}
         </div>
 

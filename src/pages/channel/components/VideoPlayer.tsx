@@ -41,11 +41,16 @@ export default function VideoPlayer({
   useEffect(() => {
     if (!playState || !currentVideoId || !player) return;
 
+    console.log("플레이 상태 변경 감지");
+    console.log(playState, currentVideoId);
+
     if (playState.videoId === currentVideoId) {
-      player.seekTo(playState.currentTime);
-    } else {
       player.loadVideoById(playState.videoId, playState.currentTime);
-      setCurrentVideoId(playState.videoId);
+    } else {
+      console.log("영상 변경");
+      console.log(playState);
+
+      player.loadVideoById(playState.videoId, playState.currentTime);
     }
 
     if (player) {
@@ -69,14 +74,53 @@ export default function VideoPlayer({
     setIsPlaying(event.data === 1);
   };
 
+  const [isVideoSubscribed, setIsVideoSubscribed] = useState(false);
+
+  useEffect(() => {
+    if (isVideoSubscribed && stompClient.connected && !isChannelHost) {
+      console.log("입장 날림");
+      stompClient.publish({
+        destination: `/pub/enter.${channelId}`,
+      });
+    }
+  }, [isVideoSubscribed, stompClient, channelId, isChannelHost]);
+
+  useEffect(() => {
+    console.log("호스트 재생 정보", playState);
+  }, [playState]);
+
+  const [isNewUserEntered, setIsNewUserEntered] = useState(false);
+
+  useEffect(() => {
+    if (isNewUserEntered && player) {
+      console.log("새로운 유저 입장 감지 데이터");
+      console.log(currentVideoId, isPlaying, currentTime);
+
+      stompClient.publish({
+        destination: `/pub/video.control.${channelId}`,
+        body: JSON.stringify({
+          email: email,
+          videoId: currentVideoId,
+          currentTime: player.getCurrentTime(),
+          playState: isPlaying ? 1 : 2,
+        }),
+      });
+      setIsNewUserEntered(false);
+    }
+  }, [isNewUserEntered, player]);
+
   useEffect(() => {
     if (!stompClient || !channelId) return;
 
     // 영상 재생상태 & 재생목록 리스트 구독
     const subscribeToVideoState = () => {
       if (stompClient.connected && player && !isChannelHost) {
+        console.log("구독됨1");
+        setIsVideoSubscribed(true);
         stompClient.subscribe(`/sub/video.${channelId}`, (message) => {
           const body = JSON.parse(message.body); // 수신된 메시지 파싱
+          console.log("비디오 받음");
+          console.log(body);
 
           if (!isChannelHost && body.videoId) {
             setPlayState(body);
@@ -86,10 +130,6 @@ export default function VideoPlayer({
             setChannelVideoList(body);
           }
         });
-
-        stompClient.publish({
-          destination: `/pub/enter.${channelId}`,
-        });
       }
     };
 
@@ -97,15 +137,10 @@ export default function VideoPlayer({
       if (stompClient.connected && player && isChannelHost) {
         stompClient.subscribe(`/sub/enter.${channelId}`, (message) => {
           if (message.body === "NEW_USER_ENTER") {
-            stompClient.publish({
-              destination: `/pub/video.control.${channelId}`,
-              body: JSON.stringify({
-                email: email,
-                videoId: playState?.videoId,
-                currentTime: playState?.currentTime,
-                playState: playState?.playStates,
-              }),
-            });
+            console.log("유저 입장해서 정보 날림");
+            console.log(isPlaying, currentTime, currentVideoId, player.getDuration());
+            console.log("=========");
+            setIsNewUserEntered(true);
           }
         });
       }
@@ -156,7 +191,7 @@ export default function VideoPlayer({
       // https://developers.google.com/youtube/player_parameters
       autoplay: 0, //isChannelHost ? 0 : 1,
       modestbranding: 0,
-      controls: 0,
+      controls: 1,
       fs: 0, // 전체화면 버튼 활성화
       disablekb: 1,
       enablejsapi: 1,
@@ -166,11 +201,21 @@ export default function VideoPlayer({
   return (
     <div className="relative w-full aspect-video">
       {/* Host를 제외하고 화면 클릭 못하게 막는 임시 레이어 */}
-      {!isChannelHost && <div className="absolute z-10 w-full bg-transparent aspect-video"></div>}
+      {/* {isChannelHost && <div className="absolute z-10 w-full bg-transparent aspect-video"></div>} */}
 
       {isChannelHost && (
         <div className="absolute z-10 w-full h-[calc(100%-34px)] bg-transparent aspect-video"></div>
       )}
+
+      <button
+        className="fixed bottom-20 left-20"
+        onClick={() => console.log(isPlaying, currentTime, currentVideoId)}
+      >
+        호스트 값 확인
+      </button>
+      <button className="fixed bottom-20 right-20" onClick={() => console.log(playState)}>
+        참여자 값 확인
+      </button>
 
       <YouTube
         videoId={initVideoId}

@@ -21,10 +21,12 @@ export default function useGetChannelInfo() {
     queryFn: async () => {
       const { data: response } = await instance.get<IChannelData>(`/channel/${channelId}`);
 
+      console.log(1, response);
+
       setIsHost(response.host);
-      setChannelVideoList(response.videoList);
-      setCurrentVideoId(response.videoList[0].videoId);
-      setInitVideoId(response.videoList[0].videoId);
+      setChannelVideoList(response.videoList || []);
+      setCurrentVideoId(response.videoList[0]?.videoId || "");
+      setInitVideoId(response.videoList[0]?.videoId || "");
 
       return response;
     },

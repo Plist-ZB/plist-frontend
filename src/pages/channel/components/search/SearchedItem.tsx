@@ -1,4 +1,5 @@
 import { CirclePlus } from "lucide-react";
+import { decode } from "html-entities";
 
 interface SearchedItemProps {
   readonly item: IVideo;
@@ -14,7 +15,7 @@ export default function SearchedItem({ item, onClickAddItemToChannel }: Searched
         className="w-10 bg-gray-200 bg-center bg-cover rounded-lg shrink-0 aspect-square"
         style={{ backgroundImage: `url('${item.videoThumbnail}')` }}
       ></div>
-      <div className="flex-grow text-lg font-medium truncate">{item.videoName}</div>
+      <div className="flex-grow text-lg font-medium truncate">{decode(item.videoName)}</div>
       <button
         className="p-0 hover:border-transparent hover:text-red-main"
         onClick={onClickAddItemToChannel(item)}

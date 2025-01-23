@@ -19,6 +19,8 @@ export default function Header({ className }: HeaderProps) {
         <TextLogo className="" />
       </Link>
 
+      <div>배포 테스트</div>
+
       {pathname !== "/mypage" && <HeaderButton />}
     </header>
   );

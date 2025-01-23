@@ -17,7 +17,10 @@ export default function ProfilePage() {
   /* 회원탈퇴 컴포넌트 */
   const WithdrawalButton = () => {
     return (
-      <button className="opacity-50 text-red-main" onClick={() => console.log("회원탈퇴")}>
+      <button
+        className="opacity-50 text-red-main hover:text-red-main"
+        onClick={() => console.log("회원탈퇴")}
+      >
         회원탈퇴
       </button>
     );
@@ -66,7 +69,7 @@ export default function ProfilePage() {
             className={`self-auto w-full max-w-xs py-4 mt-auto bg-white border rounded-lg border-gray-border hover:border-gray-border hover:text-black`}
           >
             {isPending ? (
-              <span className="animate-pulse text-primary-main">"변경중..."</span>
+              <span className="animate-pulse text-primary-main">변경중...</span>
             ) : (
               "변경하기"
             )}

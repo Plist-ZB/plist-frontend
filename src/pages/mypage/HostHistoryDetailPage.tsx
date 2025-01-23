@@ -60,7 +60,7 @@ export default function HostHistoryDetailPage() {
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1 text-sm text-gray-500">
                 {/* TODO: date 값 달라고 요청함 -> 추후에 수정 예정 */}
-                <Calendar size={16} /> {pastStreamInfo?.channelDurationTime}
+                <Calendar size={16} /> {pastStreamInfo?.channelCreatedAt?.split("T")[0]}
               </div>
 
               <div className="flex items-center gap-2">

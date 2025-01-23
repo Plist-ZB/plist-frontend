@@ -9,6 +9,7 @@ export default function useExitChannel() {
       return response;
     },
     onSuccess: () => {
+      console.log("EXIT_SUCCESS");
       return "EXIT_SUCCESS";
     },
     onError: (error) => {
@@ -16,5 +17,38 @@ export default function useExitChannel() {
     },
   });
 
-  return exitChannelMutation;
+  ///v3/api/channel/{channelId}/save-playlist
+  const saveChannelPlaylistMutation = useMutation({
+    mutationFn: async (channelId: string) => {
+      const response = await instance.post(`/channel/${channelId}/save-playlist`);
+
+      console.log(response);
+
+      return response;
+    },
+    onSuccess: () => {
+      console.log("EXIT_WITH_SAVE_SUCCESS");
+      return "EXIT_WITH_SAVE_SUCCESS";
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const closeChannelMutation = useMutation({
+    mutationFn: async (channelId: string) => {
+      const response = await instance.patch(`/channel/destroy/${channelId}`);
+
+      return response;
+    },
+    onSuccess: () => {
+      console.log("CLOSE_SUCCESS");
+      return "CLOSE_SUCCESS";
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  return { exitChannelMutation, closeChannelMutation, saveChannelPlaylistMutation };
 }

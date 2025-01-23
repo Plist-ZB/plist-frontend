@@ -1,8 +1,8 @@
 interface ChatBoxProps {
-  thumbnail: string; // 기본 썸네일
-  message: string;
-  username: string;
-  userProfileImg?: string; // 새로운 프로필 이미지 (선택적)
+  readonly thumbnail: string; // 기본 썸네일
+  readonly message: string;
+  readonly username: string;
+  readonly userProfileImg?: string; // 새로운 프로필 이미지 (선택적)
 }
 
 export default function ChatBox({ thumbnail, message, username, userProfileImg }: ChatBoxProps) {
@@ -13,7 +13,7 @@ export default function ChatBox({ thumbnail, message, username, userProfileImg }
         style={{ backgroundImage: `url('${userProfileImg || thumbnail}')` }} // userProfileImg가 있으면 해당 이미지를 사용
       ></div>
       <div>
-        <div>{username}</div>
+        <div className="font-semibold ">{username}</div>
         <div>{message}</div>
       </div>
     </div>

@@ -61,13 +61,13 @@ export default function HomePage() {
         <CategoryButtons>
           <CategoryButton
             onClick={() => setCurrentCategory("recent")}
-            isActive={currentCategory === "recent"}
+            $isActive={currentCategory === "recent"}
           >
             최근
           </CategoryButton>
           <CategoryButton
             onClick={() => setCurrentCategory("popular")}
-            isActive={currentCategory === "popular"}
+            $isActive={currentCategory === "popular"}
           >
             인기
           </CategoryButton>
@@ -111,12 +111,12 @@ const CategoryButtons = styled.div`
   color: var(--color-gray-dark);
 `;
 
-const CategoryButton = styled.button<{ isActive?: boolean }>`
+const CategoryButton = styled.button<{ $isActive?: boolean }>`
   padding: 8px 16px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background-color: ${({ isActive }) => (isActive ? "#adbfe3" : "#ffffff")};
-  color: ${({ isActive }) => (isActive ? "#fff" : "#000")};
+  background-color: ${({ $isActive }) => ($isActive ? "#adbfe3" : "#ffffff")};
+  color: ${({ $isActive }) => ($isActive ? "#fff" : "#000")};
   cursor: pointer;
 `;
 

@@ -5,7 +5,7 @@ import { Client } from "@stomp/stompjs";
 import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
 
 interface ChatAreaProps {
-  readonly channelId: string;
+  readonly channelId: number;
   readonly stompClient: Client;
 }
 

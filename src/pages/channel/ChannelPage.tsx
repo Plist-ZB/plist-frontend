@@ -1,23 +1,19 @@
 import ChannelTopBar from "@/pages/channel/components/ChannelTopBar";
-import { useState } from "react";
 import VideoPlayer from "@/pages/channel/components/VideoPlayer";
 import Playlist from "@/pages/channel/components/Playlist";
 import ChatArea from "@/pages/channel/components/ChatArea";
 import { useStomp } from "@/pages/channel/hooks/useStomp";
 import useGetChannelInfo from "@/pages/channel/hooks/useGetChannelInfo";
+import OnErrorTopBar from "@/pages/channel/components/OnErrorTopBar";
+import { Link } from "react-router-dom";
 
 export default function ChannelPage() {
   const getChannelInfoQuery = useGetChannelInfo();
   const { stompClient } = useStomp();
 
-  /* TODO: 위에서 얻은 id로 채널방 정보 가져오고 웹소켓 연결하기 */
-  const [videoId, setVideoId] = useState("2g811Eo7K8U");
-
   if (getChannelInfoQuery.isFetching) {
     return <div>Loading...</div>;
   }
-
-  console.log(getChannelInfoQuery.data);
 
   if (!stompClient) {
     return <div>Loading...</div>;
@@ -25,19 +21,31 @@ export default function ChannelPage() {
 
   return (
     <div className="flex flex-col w-full h-screen overflow-hidden">
-      {getChannelInfoQuery.data && (
+      {getChannelInfoQuery.data ? (
         <ChannelTopBar
           channelId={getChannelInfoQuery.data.channelId}
           channelName={getChannelInfoQuery.data.channelName}
           channelCreatedAt={getChannelInfoQuery.data.channelCreatedAt}
         />
+      ) : (
+        <OnErrorTopBar />
       )}
 
-      <VideoPlayer videoId={videoId} stompClient={stompClient} />
+      {getChannelInfoQuery.data ? (
+        <VideoPlayer channelId={getChannelInfoQuery.data?.channelId} stompClient={stompClient} />
+      ) : (
+        <Link to="/" className="mx-auto my-40 text-2xl font-semibold text-primary-900">
+          홈으로 돌아가기...
+        </Link>
+      )}
 
       <div className="flex flex-col flex-1 w-full min-h-0 bg-white">
-        <Playlist isHost={getChannelInfoQuery.data.host} stompClient={stompClient} />
-        <ChatArea channelId={getChannelInfoQuery.data.channelId} stompClient={stompClient} />
+        {getChannelInfoQuery.data && (
+          <>
+            <Playlist channelId={getChannelInfoQuery.data.channelId} stompClient={stompClient} />
+            <ChatArea channelId={getChannelInfoQuery.data.channelId} stompClient={stompClient} />
+          </>
+        )}
       </div>
     </div>
   );

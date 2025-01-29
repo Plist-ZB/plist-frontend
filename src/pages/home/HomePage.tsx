@@ -8,15 +8,8 @@ import { instance } from "@/services/api/instance";
 
 export default function HomePage() {
   const [currentCategory, setCurrentCategory] = useState<"recent" | "popular">("recent");
-  interface Stream {
-    channelId: string;
-    channelName: string;
-    channelCategoryName: string;
-    channelThumbnail: string;
-    channelStreamingTime: string;
-  }
 
-  const [streams, setStreams] = useState<Stream[]>([]); // 초기값을 빈 배열로 설정
+  const [streams, setStreams] = useState<IChannel[]>([]); // 초기값을 빈 배열로 설정
 
   // streams 데이터를 받아오는 API 호출
   useEffect(() => {

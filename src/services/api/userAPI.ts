@@ -100,7 +100,7 @@ const userAPI = {
   },
 
   getMyPastStreams: async () => {
-    const { data: response } = await instance.get(`/user/history`);
+    const { data: response } = await instance.get<IPastStream[]>(`/user/history`);
 
     return response;
   },

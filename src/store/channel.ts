@@ -6,7 +6,7 @@ export const isChannelHostAtom = atom<boolean | null>(null);
 
 export const channelVideoListAtom = atom<IVideo[] | null>(null);
 
-export const initVideoIdAtom = atom<string | null>(null);
+export const initVideoIdAtom = atom<string | undefined>(undefined);
 
 export const currentVideoIdAtom = atom<string | null>(null);
 

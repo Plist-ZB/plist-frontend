@@ -1,11 +1,18 @@
-declare interface IChannel {
+declare interface IChannelCommon {
   channelId: number;
   channelName: string;
   channelCategoryName: string;
   channelThumbnail: string;
-  channelDurationTime: string;
-  channelStatus: string;
   channelHost: string;
+}
+
+declare interface IChannel extends IChannelCommon {
+  channelStreamingTime: string;
+  channelParticipantCount: number;
+}
+
+declare interface IPastStream extends IChannelCommon {
+  channelDurationTime: string;
   channelLastParticipantCount: number;
   channelCreatedAt: string;
 }
@@ -17,7 +24,7 @@ declare interface IVideo {
   videoThumbnail: string;
 }
 
-declare interface IPastStreamInfo extends IChannel {
+declare interface IPastStreamInfo extends IPastStream {
   videoList: IVideo[];
 }
 
@@ -30,3 +37,4 @@ declare interface IChannelData {
 }
 
 declare type ChannelList = IChannel[];
+declare type PastStreamList = IPastStream[];

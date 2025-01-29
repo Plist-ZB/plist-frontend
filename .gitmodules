@@ -1,0 +1,3 @@
+[submodule "plist-fe-env"]
+	path = plist-fe-env
+	url = https://github.com/Plist-ZB/plist-fe-env.git

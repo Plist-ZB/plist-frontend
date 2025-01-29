@@ -4,11 +4,14 @@ import svgr from "vite-plugin-svgr";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), svgr({
+  plugins: [
+    react(),
+    svgr({
       // svgr options: https://react-svgr.com/docs/options/
       svgrOptions: { exportType: "default", ref: true, svgo: false, titleProp: true },
       include: "**/*.svg",
-    }),],
+    }),
+  ],
   resolve: {
     alias: [
       { find: "public", replacement: "/public" },
@@ -18,6 +21,7 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  envDir: "plist-fe-env",
   build: {
     minify: "terser",
     terserOptions: {

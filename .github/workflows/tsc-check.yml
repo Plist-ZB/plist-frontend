@@ -51,15 +51,29 @@ jobs:
           # tsc_output.txt 파일 삭제
           rm tsc_output.txt
 
+          # 에러가 있는지 확인
+          if grep -q "error" tsc_output.txt; then
+            echo "TSC_HAS_ERRORS=true" >> $GITHUB_ENV
+          else
+            echo "TSC_HAS_ERRORS=false" >> $GITHUB_ENV
+          fi
+
       - name: Comment PR
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const output = process.env.TSC_OUTPUT;
+            const hasErrors = process.env.TSC_HAS_ERRORS === 'true';
 
             let comment = '## TypeScript Build Results\n\n';
-            comment += '```\n' + output + '\n```';
+            if (hasErrors) {
+              comment += '❌ 에러가 발생했습니다. 자세한 내용은 아래를 참조하세요:\n\n';
+              comment += '```\n' + output + '\n```';
+              comment += '\n[자세한 로그 보기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})';
+            } else {
+              comment += '✅ TSC 빌드에 문제가 없습니다';
+            }
 
             await github.rest.issues.createComment({
               owner: context.repo.owner,

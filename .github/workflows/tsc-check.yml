@@ -56,6 +56,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
           # tsc_output.txt 파일 삭제
+          cat tsc_output.txt
           rm tsc_output.txt
 
       - name: Comment PR

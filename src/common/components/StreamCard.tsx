@@ -3,16 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaUserAlt } from "react-icons/fa";
 import useEnterChannel from "@/common/hooks/useEnterChannel";
 
-interface ExtendedChannel extends IChannel {
-  channelParticipantCount: number; // 또는 적절한 타입
-  channelStreamingTime: string; // 또는 적절한 타입
-}
-
-interface StreamCardProps {
-  readonly item: ExtendedChannel;
-}
-
-export default function StreamCard({ item }: StreamCardProps) {
+export default function StreamCard({ item }: { readonly item: IChannel }) {
   const navigate = useNavigate();
   const enterChannelMutation = useEnterChannel();
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import LogoIcon from "@/assets/svg/logo.svg";
@@ -46,19 +46,6 @@ const LogoWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   margin-bottom: 20px;
-`;
-
-const Logo = styled.img`
-  width: 80px;
-  height: 80px;
-  margin-bottom: 8px;
-`;
-
-const LogoText = styled.h1`
-  font-size: 24px;
-  color: #4654a3;
-  font-weight: bold;
-  margin: 0;
 `;
 
 const MessageWrapper = styled.div`

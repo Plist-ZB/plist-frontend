@@ -5,8 +5,6 @@ import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { instance } from "@/services/api/instance";
 
-type ChannelList = IChannel[]; // 채널 목록 타입 정의
-
 export default function CategoryDetailPage() {
   const { id } = useParams<{ id: string }>();
   const state = useLocation().state as { categoryName?: string };

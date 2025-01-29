@@ -82,7 +82,8 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
     null
   );
 
-  const handleCategoryChange = (selectedOption: { value: string; label: string } | null) => {
+  const handleCategoryChange = (newValue: unknown) => {
+    const selectedOption = newValue as { value: string; label: string } | null;
     if (!selectedOption || selectedOption.value === selectedCategory?.value) {
       return; // 이미 같은 값이 선택되어 있으면 무시
     }

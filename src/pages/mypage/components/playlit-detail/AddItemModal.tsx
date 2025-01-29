@@ -20,7 +20,7 @@ export default function AddItemModal({ playlistId, unmount }: AddItemModalProps)
   const searchYoutubeQuery = useQuery({
     queryKey: ["searchVideo", search],
     queryFn: async () => {
-      const { data } = await instance.get(`/search-video?keyword=${search}`);
+      const { data } = await instance.get<IVideo[]>(`/search-video?keyword=${search}`);
       return data;
     },
     enabled: isSearchEnabled && search.length > 0,

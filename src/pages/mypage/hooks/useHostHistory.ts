@@ -1,9 +1,7 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import userAPI from "@/services/api/userAPI";
 
 const useHostHistory = () => {
-  const queryClient = useQueryClient();
-
   const getPastStreamsQuery = useQuery({
     queryKey: ["pastStreams"],
     queryFn: async () => {

@@ -44,7 +44,7 @@ instance.interceptors.response.use(
     const axiosError = error as ErrorResponse;
 
     const isTokenExpired = axiosError.status === 401;
-    const errorMessage = axiosError.response.data.message;
+    //const errorMessage = axiosError.response.data.message;
 
     // 리프레시 토큰 롤백하면 복구할 코드
     /* if (isTokenExpired && errorMessage === "EXPIRED_ACCESS_TOKEN") {

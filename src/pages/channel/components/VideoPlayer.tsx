@@ -12,11 +12,23 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
 import { FaPause, FaPlay } from "react-icons/fa";
 import { formatTime } from "@/pages/channel/utils/formatTime";
+import { useParams } from "react-router-dom";
+
+/* const PLAYER_STATES = {
+  PLAYING: 1,
+  PAUSED: 2,
+} as const; */
+
+const SUBSCRIPTION_TOPICS = {
+  VIDEO: (channelId: string) => `/sub/video.${channelId}`,
+  ENTER: (channelId: string) => `/sub/enter.${channelId}`,
+  EXIT: (channelId: string) => `/sub/exit.${channelId}`,
+} as const;
 
 export default function VideoPlayer({
   stompClient,
-  channelId,
-}: {
+}: /* channelId, */
+{
   readonly stompClient: Client;
   readonly channelId: number | undefined;
 }) {
@@ -27,6 +39,10 @@ export default function VideoPlayer({
   const [currentVideoId, setCurrentVideoId] = useAtom(currentVideoIdAtom);
   const isChannelHost = useAtomValue(isChannelHostAtom);
   const setChannelVideoList = useSetAtom(channelVideoListAtom);
+
+  const { channelId } = useParams();
+
+  console.log(123123, channelId);
 
   const [playState, setPlayState] = useState<{
     videoId: string;
@@ -113,17 +129,19 @@ export default function VideoPlayer({
   }, [isNewUserEntered, player]);
 
   useEffect(() => {
-    if (!stompClient || !channelId) return;
+    if (!stompClient || !channelId || !player) return;
+
+    const subscriptions: any[] = [];
 
     // 영상 재생상태 & 재생목록 리스트 구독
-    const subscribeToVideoState = () => {
-      if (stompClient.connected && player) {
-        console.log("구독됨1");
-        setIsVideoSubscribed(true);
-        stompClient.subscribe(`/sub/video.${channelId}`, (message) => {
-          const body = JSON.parse(message.body); // 수신된 메시지 파싱
-          console.log("비디오 받음");
-          console.log(body);
+    if (stompClient.connected) {
+      console.log("비디오 상태 구독 시도:", SUBSCRIPTION_TOPICS.VIDEO(channelId.toString()));
+
+      const videoSubscription = stompClient.subscribe(
+        SUBSCRIPTION_TOPICS.VIDEO(channelId.toString()),
+        (message) => {
+          const body = JSON.parse(message.body);
+          console.log("비디오 메시지 수신:", body);
 
           if (!isChannelHost && body.videoId) {
             setPlayState(body);
@@ -132,48 +150,44 @@ export default function VideoPlayer({
           if (!body.videoId) {
             setChannelVideoList(body);
           }
-        });
-      }
-    };
+        }
+      );
+      subscriptions.push(videoSubscription);
+      setIsVideoSubscribed(true);
 
-    const subscribeToJoin = () => {
-      if (stompClient.connected && player && isChannelHost) {
-        stompClient.subscribe(`/sub/enter.${channelId}`, (message) => {
-          if (message.body === "NEW_USER_ENTER") {
-            console.log("유저 입장해서 정보 날림");
-            console.log(isPlaying, currentTime, currentVideoId, player.getDuration());
-            console.log("=========");
-            setIsNewUserEntered(true);
+      // 호스트인 경우에만 입장 구독
+      if (isChannelHost) {
+        const joinSubscription = stompClient.subscribe(
+          SUBSCRIPTION_TOPICS.ENTER(channelId.toString()),
+          (message) => {
+            if (message.body === "NEW_USER_ENTER") {
+              console.log("새 유저 입장 감지");
+              setIsNewUserEntered(true);
+            }
           }
-        });
+        );
+        subscriptions.push(joinSubscription);
       }
-    };
 
-    const subscribeToLeave = () => {
-      if (stompClient.connected && player && !isChannelHost) {
-        stompClient.subscribe(`/sub/exit.${channelId}`, (message) => {
-          const body = message.body;
-          if (body === "CHANNEL_CLOSED") {
-            alert("채널이 종료되었습니다.");
-            location.href = "/";
+      // 호스트가 아닌 경우에만 퇴장 구독
+      if (!isChannelHost) {
+        const leaveSubscription = stompClient.subscribe(
+          SUBSCRIPTION_TOPICS.EXIT(channelId.toString()),
+          (message) => {
+            if (message.body === "CHANNEL_CLOSED") {
+              alert("채널이 종료되었습니다.");
+              location.href = "/";
+            }
           }
-        });
+        );
+        subscriptions.push(leaveSubscription);
       }
-    };
+    }
 
-    // stompClient가 연결되었을 때 구독 설정
-    stompClient.onConnect = () => {
-      subscribeToVideoState();
-      subscribeToJoin();
-      subscribeToLeave();
-    };
-
+    // Cleanup: 모든 구독 해제
     return () => {
-      if (stompClient.connected) {
-        subscribeToVideoState();
-        subscribeToJoin();
-        subscribeToLeave();
-      }
+      console.log("구독 해제");
+      subscriptions.forEach((subscription) => subscription.unsubscribe());
     };
   }, [stompClient, channelId, stompClient.connected, player, isChannelHost]);
 
@@ -222,7 +236,7 @@ export default function VideoPlayer({
         <HostPlayBar
           isPlaying={isPlaying}
           stompClient={stompClient}
-          channelId={channelId!}
+          channelId={Number(channelId)}
           email={email}
           currentVideoId={currentVideoId!}
           currentTime={currentTime}

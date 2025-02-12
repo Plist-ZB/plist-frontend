@@ -9,7 +9,9 @@ import { Link } from "react-router-dom";
 
 export default function ChannelPage() {
   const getChannelInfoQuery = useGetChannelInfo();
-  const { stompClient } = useStomp();
+  const { stompClient } = useStomp({ isChannelDataFetched: getChannelInfoQuery.isSuccess });
+
+  console.log("is data fetched", getChannelInfoQuery.isSuccess);
 
   if (getChannelInfoQuery.isFetching) {
     return <div>Loading...</div>;

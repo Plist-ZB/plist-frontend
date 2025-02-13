@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import ChatBox from "./chat/ChatBox";
 import ChatInput from "./chat/ChatInput";
-import { Client } from "@stomp/stompjs";
+import { Client, StompSubscription } from "@stomp/stompjs";
 import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
 
 interface ChatAreaProps {
@@ -17,17 +17,19 @@ export default function ChatArea({ channelId, stompClient }: ChatAreaProps) {
     { sender: string; message: string; userProfileImg?: string }[]
   >([]);
 
+  console.log("chats", stompClient.connected);
+
   useEffect(() => {
     if (!stompClient || !channelId) return;
 
-    // 메시지 수신 구독
-    const subscribeToChat = () => {
-      stompClient.subscribe(`/sub/chat.${channelId}`, (message) => {
-        const body = JSON.parse(message.body); // 수신된 메시지 파싱
+    const subscriptions: StompSubscription[] = [];
 
-        // 받은 메시지를 `chats` 상태에 업데이트 (userProfileImg 포함)
-        setChats((prevChats) => [...prevChats, body]); // 기존 chats 상태에 새로운 메시지 추가
+    const subscribeToChat = () => {
+      const subscription = stompClient.subscribe(`/sub/chat.${channelId}`, (message) => {
+        const body = JSON.parse(message.body);
+        setChats((prevChats) => [...prevChats, body]);
       });
+      subscriptions.push(subscription);
     };
 
     // stompClient가 연결되었을 때 구독 설정
@@ -35,11 +37,14 @@ export default function ChatArea({ channelId, stompClient }: ChatAreaProps) {
       subscribeToChat();
     };
 
-    // 컴포넌트 언마운트 시 추가적인 정리 작업 없음
+    // 이미 연결된 상태라면 바로 구독
+    if (stompClient.connected) {
+      subscribeToChat();
+    }
+
+    // 컴포넌트 언마운트 시 구독 해제
     return () => {
-      if (stompClient.connected) {
-        subscribeToChat();
-      }
+      subscriptions.forEach((subscription) => subscription.unsubscribe());
     };
   }, [stompClient, channelId]);
 

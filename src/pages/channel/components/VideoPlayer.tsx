@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import YouTube, { YouTubeProps, YouTubePlayer, YouTubeEvent } from "react-youtube";
-import { Client } from "@stomp/stompjs";
+import { Client, StompSubscription } from "@stomp/stompjs";
 import {
   initVideoIdAtom,
   currentVideoIdAtom,
@@ -131,7 +131,7 @@ export default function VideoPlayer({
   useEffect(() => {
     if (!stompClient || !channelId || !player) return;
 
-    const subscriptions: any[] = [];
+    const subscriptions: StompSubscription[] = [];
 
     // 영상 재생상태 & 재생목록 리스트 구독
     if (stompClient.connected) {

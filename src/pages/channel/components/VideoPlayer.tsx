@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import YouTube, { YouTubeProps, YouTubePlayer, YouTubeEvent } from "react-youtube";
 import { Client, StompSubscription } from "@stomp/stompjs";
 import {
@@ -10,9 +10,9 @@ import {
 } from "@/store/channel";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
-import { FaPause, FaPlay } from "react-icons/fa";
-import { formatTime } from "@/pages/channel/utils/formatTime";
 import { useParams } from "react-router-dom";
+import HostPlayBar from "@/pages/channel/components/video-player/HostPlayBar";
+import ParticipantPlayBar from "@/pages/channel/components/video-player/ParticipantPlayBar";
 
 /* const PLAYER_STATES = {
   PLAYING: 1,
@@ -41,8 +41,6 @@ export default function VideoPlayer({
   const setChannelVideoList = useSetAtom(channelVideoListAtom);
 
   const { channelId } = useParams();
-
-  console.log(123123, channelId);
 
   const [playState, setPlayState] = useState<{
     videoId: string;
@@ -88,6 +86,7 @@ export default function VideoPlayer({
   };
 
   const onStateChange = (event: YouTubeEvent) => {
+    console.log("onStateChange", event);
     setIsPlaying(event.data === 1);
   };
 
@@ -215,6 +214,10 @@ export default function VideoPlayer({
     },
   };
 
+  const playerRef = useRef<YouTubePlayer>(null);
+
+  console.log("playerRef", playerRef.current);
+
   return (
     <div className="relative w-full aspect-video">
       {/* Host를 제외하고 화면 클릭 못하게 막는 임시 레이어 */}
@@ -225,6 +228,7 @@ export default function VideoPlayer({
       )}
 
       <YouTube
+        ref={playerRef}
         videoId={initVideoId}
         opts={opts}
         onReady={onPlayerReady}
@@ -252,124 +256,3 @@ export default function VideoPlayer({
     </div>
   );
 }
-
-const HostPlayBar = ({
-  isPlaying,
-  stompClient,
-  channelId,
-  email,
-  currentVideoId,
-  currentTime,
-  player,
-  duration,
-  setCurrentTime,
-}: {
-  isPlaying: boolean;
-  stompClient: Client;
-  channelId: number;
-  email: string;
-  currentVideoId: string;
-  currentTime: number;
-  player: YouTubePlayer;
-  duration: number;
-  setCurrentTime: (time: number) => void;
-}) => {
-  return (
-    <div className="absolute bottom-0 left-0 w-full p-2 py-1 bg-black-bright ">
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => {
-            if (isPlaying) {
-              player?.pauseVideo();
-              stompClient.publish({
-                destination: `/pub/video.control.${channelId}`,
-                body: JSON.stringify({
-                  email: email,
-                  videoId: currentVideoId,
-                  currentTime: currentTime,
-                  playState: 2,
-                }),
-              });
-            } else {
-              player?.playVideo();
-              stompClient.publish({
-                destination: `/pub/video.control.${channelId}`,
-                body: JSON.stringify({
-                  email: email,
-                  videoId: currentVideoId,
-                  currentTime: currentTime,
-                  playState: 1,
-                }),
-              });
-            }
-          }}
-          className="p-0 py-1 text-white"
-        >
-          {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
-        </button>
-
-        <div
-          role="button"
-          className="relative flex-1 h-1 bg-white rounded cursor-pointer"
-          onClick={(e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const percent = x / rect.width;
-            const newTime = percent * duration;
-            player?.seekTo(newTime, true);
-            setCurrentTime(newTime);
-            stompClient.publish({
-              destination: `/pub/video.control.${channelId}`,
-              body: JSON.stringify({
-                email: email,
-                videoId: currentVideoId,
-                currentTime: newTime,
-                playState: isPlaying ? 1 : 2,
-              }),
-            });
-          }}
-        >
-          <div
-            className="absolute h-full rounded bg-red-main"
-            style={{ width: `${(currentTime / duration) * 100}%` }}
-          />
-        </div>
-
-        <span className="text-sm text-white">
-          {formatTime(currentTime)} / {formatTime(duration)}
-        </span>
-      </div>
-    </div>
-  );
-};
-
-const ParticipantPlayBar = ({
-  isPlaying,
-  currentTime,
-  duration,
-}: {
-  isPlaying: boolean;
-  currentTime: number;
-  duration: number;
-}) => {
-  return (
-    <div className="absolute bottom-0 left-0 w-full p-2 py-1 bg-black-bright ">
-      <div className="flex items-center gap-2 px-1">
-        <div onClick={() => {}} className="p-0 py-1 text-white">
-          {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
-        </div>
-
-        <div className="relative flex-1 h-1 bg-white rounded">
-          <div
-            className="absolute h-full rounded bg-red-main"
-            style={{ width: `${(currentTime / duration) * 100}%` }}
-          />
-        </div>
-
-        <span className="text-sm text-white">
-          {formatTime(currentTime)} / {formatTime(duration)}
-        </span>
-      </div>
-    </div>
-  );
-};

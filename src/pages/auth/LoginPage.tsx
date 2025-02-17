@@ -7,26 +7,29 @@ const LOGIN_URL = import.meta.env.VITE_API_SERVER_DOMAIN + "/login/oauth2/code/g
 
 export default function LoginPage() {
   return (
-    <Container>
-      {/* 로고 */}
-      <LogoWrapper>
+    <StyledContainer>
+      <StyledLogoWrapper>
         <LogoIcon className="mr-1" />
         <TextLogoIcon />
-      </LogoWrapper>
+      </StyledLogoWrapper>
+      <GoogleLoginButton href={LOGIN_URL} />
+    </StyledContainer>
+  );
+}
 
-      {/* 구글 스타일 로그인 버튼 */}
-      <StyledGoogleButton href={LOGIN_URL} target="_self">
-        <GoogleIcon>
-          <FcGoogle />
-        </GoogleIcon>
-        <ButtonText>Google 계정으로 로그인</ButtonText>
-      </StyledGoogleButton>
-    </Container>
+function GoogleLoginButton({ href }: { href: string }) {
+  return (
+    <StyledGoogleButton href={href} target="_self">
+      <StyledGoogleIcon>
+        <FcGoogle />
+      </StyledGoogleIcon>
+      <StyledButtonText>Google 계정으로 로그인</StyledButtonText>
+    </StyledGoogleButton>
   );
 }
 
 // Styled-components
-const Container = styled.div`
+const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -35,7 +38,7 @@ const Container = styled.div`
   background-color: #fff;
 `;
 
-const LogoWrapper = styled.div`
+const StyledLogoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,36 +49,35 @@ const StyledGoogleButton = styled.a`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 280px;
-  padding: 10px 20px;
-  border-radius: 4px;
+  width: 230px;
+  height: 45px;
   background-color: #4285f4;
-  border: 1px solid #dcdcdc;
   text-decoration: none;
   transition: background-color 0.3s;
   cursor: pointer;
 
   &:hover {
-    background-color: #357ae8;
+    background-color: #115dd7;
   }
 `;
 
-const GoogleIcon = styled.span`
+const StyledGoogleIcon = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 45px;
+  height: 45px;
   background-color: #fff;
   border-radius: 2px;
   margin-right: 12px;
+  border: 1.5px solid #4285f4;
 
   svg {
-    font-size: 24px;
+    font-size: 23px;
   }
 `;
 
-const ButtonText = styled.span`
+const StyledButtonText = styled.span`
   font-size: 16px;
   font-weight: 500;
   color: #fff;

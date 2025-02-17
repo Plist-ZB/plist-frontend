@@ -235,9 +235,17 @@ const ModalHeader = styled.div`
   }
 `;
 
-const CloseButton = styled.button`
+const CloseButton = styled.div`
   background: none;
   cursor: pointer;
+  padding: 10px 10px;
+
+  &:hover {
+    border: 1px solid var(--color-primary);
+    border-radius: 8px;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
 `;
 
 const ModalBody = styled.div`

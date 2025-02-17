@@ -1,25 +1,26 @@
 import styled from "styled-components";
 import LogoIcon from "@/assets/svg/logo.svg";
 import TextLogoIcon from "@/assets/svg/text-logo.svg";
-import { FaGoogle } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 const LOGIN_URL = import.meta.env.VITE_API_SERVER_DOMAIN + "/login/oauth2/code/google";
 
 export default function LoginPage() {
   return (
     <Container>
+      {/* 로고 */}
       <LogoWrapper>
         <LogoIcon className="mr-1" />
         <TextLogoIcon />
       </LogoWrapper>
-      <ButtonWrapper>
-        <LoginButton href={LOGIN_URL} target="_self">
-          <Icon>
-            <FaGoogle />
-          </Icon>
-          <Text>Google 로그인</Text>
-        </LoginButton>
-      </ButtonWrapper>
+
+      {/* 구글 스타일 로그인 버튼 */}
+      <StyledGoogleButton href={LOGIN_URL} target="_self">
+        <GoogleIcon>
+          <FcGoogle />
+        </GoogleIcon>
+        <ButtonText>Google 계정으로 로그인</ButtonText>
+      </StyledGoogleButton>
     </Container>
   );
 }
@@ -41,39 +42,41 @@ const LogoWrapper = styled.div`
   margin-bottom: 40px;
 `;
 
-const ButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 80%;
-`;
-
-const Text = styled.div`
-  color: #333333;
-`;
-
-const LoginButton = styled.a`
+const StyledGoogleButton = styled.a`
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 12px 16px;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
-  background-color: #fff;
-  font-size: 16px;
-  font-weight: bold;
+  justify-content: flex-start;
+  width: 280px;
+  padding: 10px 20px;
+  border-radius: 4px;
+  background-color: #4285f4;
+  border: 1px solid #dcdcdc;
+  text-decoration: none;
+  transition: background-color 0.3s;
   cursor: pointer;
-  transition: background-color 0.2s, box-shadow 0.2s;
-  color: #333333;
 
   &:hover {
-    background-color: #f9f9f9;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #357ae8;
   }
 `;
 
-const Icon = styled.span`
-  font-size: 18px;
-  color: #333333;
+const GoogleIcon = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background-color: #fff;
+  border-radius: 2px;
+  margin-right: 12px;
+
+  svg {
+    font-size: 24px;
+  }
+`;
+
+const ButtonText = styled.span`
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
 `;

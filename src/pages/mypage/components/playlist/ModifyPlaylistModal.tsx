@@ -1,5 +1,6 @@
 import usePlaylist from "@/pages/mypage/hooks/usePlaylist";
 import { useState } from "react";
+import styled from "styled-components";
 
 interface ModifyPlaylistModalProps {
   readonly playListId: number;
@@ -46,6 +47,7 @@ export default function ModifyPlaylistModal({
             className="p-2 border rounded-lg border-gray-border"
           />
         </div>
+        <Validation>제목은 최대 30자까지 입력 가능합니다.</Validation>
 
         <div className="flex justify-end w-full gap-2">
           <button
@@ -65,3 +67,7 @@ export default function ModifyPlaylistModal({
     </div>
   );
 }
+
+const Validation = styled.div`
+  color: red;
+`;

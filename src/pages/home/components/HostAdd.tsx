@@ -137,13 +137,17 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
             value={channelTitle}
             onChange={(e) => setChannelTitle(e.target.value)}
           />
+          <Validation>제목은 최대 30자까지 입력 가능합니다.</Validation>
+
           <Label>카테고리 선택하기</Label>
           <SmallLabel>* 카테고리 선택은 필수입니다.</SmallLabel>
           <StyledSelect
-            options={categories?.map((category: { categoryId: number; categoryName: string }) => ({
-              value: category.categoryId.toString(),
-              label: category.categoryName,
-            }))}
+            options={categories.content.map(
+              (category: { categoryId: number; categoryName: string }) => ({
+                value: category.categoryId.toString(),
+                label: category.categoryName,
+              })
+            )}
             classNamePrefix="react-select"
             placeholder={CategoryPlaceholder}
             value={selectedCategory} // 선택된 카테고리를 명시적으로 설정
@@ -152,7 +156,7 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           />
           <Label>내 재생목록에서 가져오기</Label>
           <StyledSelect
-            options={playlists?.map((playlist: Playlist) => ({
+            options={playlists?.content.map((playlist: Playlist) => ({
               value: playlist.userPlaylistId, // id는 userPlaylistId로 변경
               label: playlist.userPlaylistName, // 이름은 userPlaylistName으로 설정
               thumbnail: playlist.userPlaylistThumbnail, // 썸네일은 userPlaylistThumbnail로 설정
@@ -213,6 +217,10 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
+const Validation = styled.div`
+  color: red;
+`;
+
 const ModalContainer = styled.div`
   width: 400px;
   background: #fff;
@@ -235,9 +243,17 @@ const ModalHeader = styled.div`
   }
 `;
 
-const CloseButton = styled.button`
+const CloseButton = styled.div`
   background: none;
   cursor: pointer;
+  padding: 10px 10px;
+
+  &:hover {
+    border: 1px solid var(--color-primary);
+    border-radius: 8px;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
 `;
 
 const ModalBody = styled.div`

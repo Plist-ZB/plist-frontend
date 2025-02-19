@@ -1,31 +1,35 @@
 import styled from "styled-components";
 import LogoIcon from "@/assets/svg/logo.svg";
 import TextLogoIcon from "@/assets/svg/text-logo.svg";
-import { FaGoogle } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 const LOGIN_URL = import.meta.env.VITE_API_SERVER_DOMAIN + "/login/oauth2/code/google";
 
 export default function LoginPage() {
   return (
-    <Container>
-      <LogoWrapper>
+    <StyledContainer>
+      <StyledLogoWrapper>
         <LogoIcon className="mr-1" />
         <TextLogoIcon />
-      </LogoWrapper>
-      <ButtonWrapper>
-        <LoginButton href={LOGIN_URL} target="_self">
-          <Icon>
-            <FaGoogle />
-          </Icon>
-          <Text>Google 로그인</Text>
-        </LoginButton>
-      </ButtonWrapper>
-    </Container>
+      </StyledLogoWrapper>
+      <GoogleLoginButton href={LOGIN_URL} />
+    </StyledContainer>
+  );
+}
+
+function GoogleLoginButton({ href }: { href: string }) {
+  return (
+    <StyledGoogleButton href={href} target="_self">
+      <StyledGoogleIcon>
+        <FcGoogle />
+      </StyledGoogleIcon>
+      <StyledButtonText>Google 계정으로 로그인</StyledButtonText>
+    </StyledGoogleButton>
   );
 }
 
 // Styled-components
-const Container = styled.div`
+const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -34,46 +38,47 @@ const Container = styled.div`
   background-color: #fff;
 `;
 
-const LogoWrapper = styled.div`
+const StyledLogoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 40px;
 `;
 
-const ButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 80%;
-`;
-
-const Text = styled.div`
-  color: #333333;
-`;
-
-const LoginButton = styled.a`
+const StyledGoogleButton = styled.a`
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 12px 16px;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
-  background-color: #fff;
-  font-size: 16px;
-  font-weight: bold;
+  justify-content: flex-start;
+  width: 230px;
+  height: 45px;
+  background-color: #4285f4;
+  text-decoration: none;
+  transition: background-color 0.3s;
   cursor: pointer;
-  transition: background-color 0.2s, box-shadow 0.2s;
-  color: #333333;
 
   &:hover {
-    background-color: #f9f9f9;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #115dd7;
   }
 `;
 
-const Icon = styled.span`
-  font-size: 18px;
-  color: #333333;
+const StyledGoogleIcon = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  background-color: #fff;
+  border-radius: 2px;
+  margin-right: 12px;
+  border: 1.5px solid #4285f4;
+
+  svg {
+    font-size: 23px;
+  }
+`;
+
+const StyledButtonText = styled.span`
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
 `;

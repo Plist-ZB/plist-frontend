@@ -1,6 +1,7 @@
 import TopBarLayout from "@/layout/TopBarLayout";
 import { Camera } from "lucide-react";
 import useProfile from "./hooks/useProfile";
+import styled from "styled-components";
 
 export default function ProfilePage() {
   /* 프로필 관련 로직 */
@@ -63,6 +64,7 @@ export default function ProfilePage() {
             placeholder={prevUserProfile?.nickname}
             onChange={onChangeNickname}
           />
+          <Validation>닉네임은 최대 20자까지 입력 가능합니다.</Validation>
 
           <button
             disabled={isPending}
@@ -79,3 +81,7 @@ export default function ProfilePage() {
     </TopBarLayout>
   );
 }
+
+const Validation = styled.div`
+  color: red;
+`;

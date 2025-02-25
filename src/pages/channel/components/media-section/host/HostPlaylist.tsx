@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import HostPlayListItemBox from "@/pages/channel/components/playlist/HostPlayListItemBox";
 import { Client } from "@stomp/stompjs";
@@ -15,8 +15,8 @@ import useSaveToFavorite from "@/pages/channel/hooks/useSaveToFavorite";
 import { decode } from "html-entities";
 
 interface PlaylistProps {
-  stompClient: Client;
-  channelId: number;
+  readonly stompClient: Client;
+  readonly channelId: number;
 }
 
 export default function HostPlaylist({ stompClient, channelId }: PlaylistProps) {
@@ -30,20 +30,23 @@ export default function HostPlaylist({ stompClient, channelId }: PlaylistProps) 
   const { deleteVideoMutation, reorderChannelPlaylistMutation } = useHostItemLogics(channelId);
   const { saveVIdeoToFavoriteMutation } = useSaveToFavorite();
 
-  const onClickHostSetCurrentVideoId = (item: IVideo) => {
-    setCurrentVideoId(item.videoId);
-    setInitialVideoId(item.videoId);
-    setCurrentTime(0);
-    stompClient.publish({
-      destination: `/pub/video.control.${channelId}`,
-      body: JSON.stringify({
-        email: email,
-        videoId: item.videoId,
-        currentTime: 0,
-        playState: 0,
-      }),
-    });
-  };
+  const onClickHostSetCurrentVideoId = useCallback(
+    (item: IVideo) => {
+      setCurrentVideoId(item.videoId);
+      setInitialVideoId(item.videoId);
+      setCurrentTime(0);
+      stompClient.publish({
+        destination: `/pub/video.control.${channelId}`,
+        body: JSON.stringify({
+          email: email,
+          videoId: item.videoId,
+          currentTime: 0,
+          playState: 0,
+        }),
+      });
+    },
+    [stompClient, channelId, email, setCurrentVideoId, setInitialVideoId, setCurrentTime]
+  );
 
   const [draggedItemId, setDraggedItemId] = useState<number | null>(null);
 

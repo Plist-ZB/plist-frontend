@@ -16,7 +16,7 @@ export const PLAYER_STATES = {
   2: "PAUSED",
 } as const;
 
-export const HOST_SUBSCRIPTION_TOPICS = {
+export const SUBSCRIPTION_TOPICS = {
   VIDEO: (channelId: number) => `/sub/video.${channelId}`,
   ENTER: (channelId: number) => `/sub/enter.${channelId}`,
   EXIT: (channelId: number) => `/sub/exit.${channelId}`,

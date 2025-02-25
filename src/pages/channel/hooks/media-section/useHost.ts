@@ -1,4 +1,4 @@
-import { HOST_SUBSCRIPTION_TOPICS } from "@/pages/channel/constants/channelConstants";
+import { SUBSCRIPTION_TOPICS } from "@/pages/channel/constants/channelConstants";
 import {
   channelVideoListAtom,
   currentTimeAtom,
@@ -33,11 +33,11 @@ export const useHost = ({ stompClient, channelId, email }: UseHostProps) => {
 
     // 영상 재생상태 & 재생목록 리스트 구독
     if (stompClient.connected) {
-      console.log("비디오 상태 구독 시도:", HOST_SUBSCRIPTION_TOPICS.VIDEO(channelId));
+      console.log("비디오 상태 구독 시도:", SUBSCRIPTION_TOPICS.VIDEO(channelId));
 
       /* 비디오 리스트 업데이트 */
       const videoSubscription = stompClient.subscribe(
-        HOST_SUBSCRIPTION_TOPICS.VIDEO(channelId),
+        SUBSCRIPTION_TOPICS.VIDEO(channelId),
         (message) => {
           const body = JSON.parse(message.body);
 
@@ -51,7 +51,7 @@ export const useHost = ({ stompClient, channelId, email }: UseHostProps) => {
 
       /* 신규 참여자에게 현재 재생전보 전달용 */
       const joinSubscription = stompClient.subscribe(
-        HOST_SUBSCRIPTION_TOPICS.ENTER(channelId),
+        SUBSCRIPTION_TOPICS.ENTER(channelId),
         (message) => {
           if (message.body === "NEW_USER_ENTER") {
             console.log("새 유저 입장 감지");
@@ -89,10 +89,10 @@ export const useHost = ({ stompClient, channelId, email }: UseHostProps) => {
   };
 
   const onStateChange = (event: YouTubeEvent) => {
-    console.log("\n onStateChange", event, event.target);
+    console.log("\n onStateChange", event);
     setIsPlaying(event.data === 1);
 
-    if (event.data === 0 && Math.ceil(currentTime) === event.target.getDuration()) {
+    if (event.data === 0 && Math.ceil(currentTime) >= event.target.getDuration() - 1) {
       console.log("영상 종료");
 
       if (!channelVideoList) return;

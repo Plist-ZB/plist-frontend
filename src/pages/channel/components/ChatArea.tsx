@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ChatBox from "./chat/ChatBox";
 import ChatInput from "./chat/ChatInput";
 import { Client, StompSubscription } from "@stomp/stompjs";
@@ -12,34 +12,34 @@ interface ChatAreaProps {
 const email = getEmailFromToken();
 
 export default function ChatArea({ channelId, stompClient }: ChatAreaProps) {
+  const chatChannelId = useMemo(() => channelId, [channelId]);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const [chats, setChats] = useState<
     { sender: string; message: string; userProfileImg?: string }[]
   >([]);
 
-  console.log("chats", stompClient.connected);
+  const subscribeToChat = (subscriptions: StompSubscription[]) => {
+    const subscription = stompClient.subscribe(`/sub/chat.${chatChannelId}`, (message) => {
+      const body = JSON.parse(message.body);
+      setChats((prevChats) => [...prevChats, body]);
+    });
+    subscriptions.push(subscription);
+  };
 
   useEffect(() => {
     if (!stompClient || !channelId) return;
 
     const subscriptions: StompSubscription[] = [];
 
-    const subscribeToChat = () => {
-      const subscription = stompClient.subscribe(`/sub/chat.${channelId}`, (message) => {
-        const body = JSON.parse(message.body);
-        setChats((prevChats) => [...prevChats, body]);
-      });
-      subscriptions.push(subscription);
-    };
-
     // stompClient가 연결되었을 때 구독 설정
     stompClient.onConnect = () => {
-      subscribeToChat();
+      subscribeToChat(subscriptions);
     };
 
     // 이미 연결된 상태라면 바로 구독
     if (stompClient.connected) {
-      subscribeToChat();
+      subscribeToChat(subscriptions);
     }
 
     // 컴포넌트 언마운트 시 구독 해제
@@ -71,7 +71,7 @@ export default function ChatArea({ channelId, stompClient }: ChatAreaProps) {
   };
 
   return (
-    <div className="flex flex-col flex-1 min-h-0">
+    <div className="flex flex-col flex-1 min-h-0 bg-white">
       {/* 채팅 메시지 표시 영역 */}
       <div className="flex flex-col flex-1 overflow-y-auto" ref={scrollRef}>
         {chats.map((chat, index) => (

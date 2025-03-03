@@ -3,6 +3,7 @@ import ChatBox from "./chat/ChatBox";
 import ChatInput from "./chat/ChatInput";
 import { Client, StompSubscription } from "@stomp/stompjs";
 import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
+import { SUBSCRIPTION_TOPICS } from "../constants/channelConstants";
 
 interface ChatAreaProps {
   readonly channelId: number;
@@ -20,10 +21,13 @@ export default function ChatArea({ channelId, stompClient }: ChatAreaProps) {
   >([]);
 
   const subscribeToChat = (subscriptions: StompSubscription[]) => {
-    const subscription = stompClient.subscribe(`/sub/chat.${chatChannelId}`, (message) => {
-      const body = JSON.parse(message.body);
-      setChats((prevChats) => [...prevChats, body]);
-    });
+    const subscription = stompClient.subscribe(
+      SUBSCRIPTION_TOPICS.CHAT(chatChannelId),
+      (message) => {
+        const body = JSON.parse(message.body);
+        setChats((prevChats) => [...prevChats, body]);
+      }
+    );
     subscriptions.push(subscription);
   };
 

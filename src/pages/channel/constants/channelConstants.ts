@@ -20,4 +20,5 @@ export const SUBSCRIPTION_TOPICS = {
   VIDEO: (channelId: number) => `/sub/video.${channelId}`,
   ENTER: (channelId: number) => `/sub/enter.${channelId}`,
   EXIT: (channelId: number) => `/sub/exit.${channelId}`,
+  CHAT: (channelId: number) => `/sub/chat.${channelId}`,
 } as const;

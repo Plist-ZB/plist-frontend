@@ -11,7 +11,7 @@ import {
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
 import { useParams } from "react-router-dom";
-import HostPlayBar from "@/pages/channel/components/video-player/HostPlayBar";
+import HostPlayBar from "@/pages/channel/components/media-section/host/HostPlayBar";
 import ParticipantPlayBar from "@/pages/channel/components/video-player/ParticipantPlayBar";
 
 /* const PLAYER_STATES = {
@@ -56,10 +56,12 @@ export default function VideoPlayer({
     if (!playState || !currentVideoId || !player) return;
 
     console.log("플레이 상태 변경 감지");
-    console.log(playState, currentVideoId);
+    console.log(playState, currentVideoId, initVideoId);
 
     if (playState.videoId === currentVideoId) {
-      player.loadVideoById(playState.videoId, playState.currentTime);
+      console.log("영상 재생", playState);
+
+      //player.loadVideoById(playState.videoId, playState.currentTime);
     } else {
       console.log("영상 변경");
       console.log(playState);
@@ -78,7 +80,7 @@ export default function VideoPlayer({
         player.pauseVideo();
       }
     }
-  }, [playState, currentVideoId, player]);
+  }, [playState, currentVideoId, player, setCurrentVideoId]);
 
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     setPlayer(event.target);
@@ -216,7 +218,7 @@ export default function VideoPlayer({
 
   const playerRef = useRef<YouTubePlayer>(null);
 
-  console.log("playerRef", playerRef.current);
+  //console.log("playerRef", playerRef.current);
 
   return (
     <div className="relative w-full aspect-video">

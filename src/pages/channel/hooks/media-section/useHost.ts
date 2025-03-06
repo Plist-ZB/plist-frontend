@@ -53,7 +53,10 @@ export const useHost = ({ stompClient, channelId, email }: UseHostProps) => {
       const joinSubscription = stompClient.subscribe(
         SUBSCRIPTION_TOPICS.ENTER(channelId),
         (message) => {
-          if (message.body === "NEW_USER_ENTER") {
+          const body = JSON.parse(message.body);
+          console.log("새 유저 입장 감지", body);
+
+          if (body.message === "NEW_USER_ENTER") {
             console.log("새 유저 입장 감지");
 
             if (!currentVideoId) return;

@@ -22,7 +22,7 @@ export default function PlaylistPage() {
         {debouncedLoading ? (
           <PlaylistSkeleton />
         ) : (
-          getMyPlaylistsQuery.data?.map((item) => (
+          getMyPlaylistsQuery.data?.content?.map((item) => (
             <PlaylistItem key={item.userPlaylistId} item={item} />
           ))
         )}

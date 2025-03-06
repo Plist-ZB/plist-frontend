@@ -19,6 +19,14 @@ export default function Header({ className }: HeaderProps) {
         <TextLogo className="" />
       </Link>
 
+      <button
+        onClick={() => {
+          alert("임시 테스트");
+        }}
+      >
+        임시 테스트
+      </button>
+
       {pathname !== "/mypage" && <HeaderButton />}
     </header>
   );

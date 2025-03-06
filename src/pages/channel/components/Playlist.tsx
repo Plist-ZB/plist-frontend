@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
-import PlayListItemBox from "@/pages/channel/components/playlist/PlayListItemBox";
+import PlayListItemBox from "@/pages/channel/components/playlist/ParticipantPlayListBox";
 import HostPlayListItemBox from "@/pages/channel/components/playlist/HostPlayListItemBox";
 import { Client } from "@stomp/stompjs";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";

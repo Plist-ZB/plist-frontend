@@ -12,8 +12,6 @@ export default function ParticipantPlaylist() {
   const [isOpen, setIsOpen] = useState(false);
   const { saveVIdeoToFavoriteMutation } = useSaveToFavorite();
 
-  //console.log("channelVideoList", channelVideoList);
-
   return (
     <div className="relative">
       <div

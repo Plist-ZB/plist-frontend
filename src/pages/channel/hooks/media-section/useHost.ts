@@ -53,7 +53,10 @@ export const useHost = ({ stompClient, channelId, email }: UseHostProps) => {
       const joinSubscription = stompClient.subscribe(
         SUBSCRIPTION_TOPICS.ENTER(channelId),
         (message) => {
-          if (message.body === "NEW_USER_ENTER") {
+          const body = JSON.parse(message.body);
+          console.log("새 유저 입장 감지", body);
+
+          if (body.message === "NEW_USER_ENTER") {
             console.log("새 유저 입장 감지");
 
             if (!currentVideoId) return;
@@ -92,7 +95,9 @@ export const useHost = ({ stompClient, channelId, email }: UseHostProps) => {
     console.log("\n onStateChange", event);
     setIsPlaying(event.data === 1);
 
-    if (event.data === 0 && Math.ceil(currentTime) >= event.target.getDuration() - 1) {
+    const playerDuration = event.target.getDuration();
+
+    if (event.data === 0 && Math.ceil(currentTime) >= playerDuration - 1) {
       console.log("영상 종료");
 
       if (!channelVideoList) return;

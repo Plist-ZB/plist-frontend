@@ -3,12 +3,18 @@ import { useParams } from "react-router-dom";
 import createStompClient from "@/pages/channel/utils/createStompClient";
 import { Client } from "@stomp/stompjs";
 
-export const useStomp = () => {
+interface UseStompProps {
+  isChannelDataFetched: boolean;
+}
+
+export const useStomp = ({ isChannelDataFetched }: UseStompProps) => {
   const { channelId } = useParams();
   const [stompClient, setStompClient] = useState<Client | undefined>(undefined);
 
   useEffect(() => {
-    if (!channelId) return;
+    if (!channelId || !isChannelDataFetched) return;
+
+    console.log("channelId", channelId, isChannelDataFetched);
 
     const client = createStompClient({
       onConnectCallback: (/* client */) => {
@@ -25,7 +31,7 @@ export const useStomp = () => {
     return () => {
       client.deactivate();
     };
-  }, [channelId]);
+  }, [channelId, isChannelDataFetched]);
 
   return { stompClient };
 };

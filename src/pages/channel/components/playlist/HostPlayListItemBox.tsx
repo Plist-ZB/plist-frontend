@@ -2,14 +2,14 @@ import { decode } from "html-entities";
 import { Heart, Menu, Trash2 } from "lucide-react";
 
 interface HostPlayListItemBoxProps {
-  item: IVideo;
-  currentVideoId: string;
-  onClickHostSetCurrentVideoId: (item: IVideo) => void;
-  setIsOpen: (isOpen: boolean) => void;
-  deleteVideo: (id: number) => void;
-  saveVIdeoToFavorite: (item: IVideo) => void;
-  onDragStart: (id: number) => void;
-  onDrop: (id: number) => void;
+  readonly item: IVideo;
+  readonly currentVideoId: string;
+  readonly onClickHostSetCurrentVideoId: (item: IVideo) => void;
+  readonly setIsOpen: (isOpen: boolean) => void;
+  readonly deleteVideo: (id: number) => void;
+  readonly saveVIdeoToFavorite: (item: IVideo) => void;
+  readonly onDragStart: (id: number) => void;
+  readonly onDrop: (id: number) => void;
 }
 
 export default function HostPlayListItemBox({
@@ -24,12 +24,20 @@ export default function HostPlayListItemBox({
 }: HostPlayListItemBoxProps) {
   return (
     <div
+      role="button"
+      tabIndex={0}
       className={`flex items-center gap-4 p-2 rounded cursor-pointer hover:bg-gray-100 ${
         currentVideoId === item.videoId ? "bg-gray-100" : ""
       }`}
       onClick={() => {
         onClickHostSetCurrentVideoId(item);
         setIsOpen(false);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onClickHostSetCurrentVideoId(item);
+          setIsOpen(false);
+        }
       }}
       draggable={true}
       onDragStart={() => onDragStart(item.id)} // 드래그 시작 이벤트

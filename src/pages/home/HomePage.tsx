@@ -9,11 +9,12 @@ import { instance } from "@/services/api/instance";
 export default function HomePage() {
   const [currentCategory, setCurrentCategory] = useState<"recent" | "popular">("recent");
   const [streams, setStreams] = useState<IChannel[]>([]);
-  const [cursorId, setCursorId] = useState<number | null>(null); // cursorId 추가
-  const [hasNext, setHasNext] = useState(true); // 다음 페이지 여부
-  const [isFetching, setIsFetching] = useState(false); // 요청 중인지 여부
+  const [cursorId, setCursorId] = useState<number | null>(null);
+  const [cursorPopular, setCursorPopular] = useState<number | null>(null);
+  const [hasNext, setHasNext] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
 
-  const observerRef = useRef<HTMLDivElement | null>(null); // 무한 스크롤 감지용 ref
+  const observerRef = useRef<HTMLDivElement | null>(null); // 무한 스크롤 감지 ref
 
   // 📌 streams 데이터를 받아오는 API 호출
   const fetchStreams = useCallback(
@@ -28,12 +29,24 @@ export default function HomePage() {
             params: { cursorId: reset ? null : cursorId },
           });
         } else {
-          response = await instance.get("/channels/popular");
+          response = await instance.get("/channels/popular", {
+            params: {
+              cursorId: reset ? null : cursorId,
+              cursorPopular: reset ? null : cursorPopular,
+            },
+          });
         }
 
         const newStreams = response.data.content;
         setStreams((prevStreams) => (reset ? newStreams : [...prevStreams, ...newStreams]));
-        setCursorId(newStreams.length > 0 ? newStreams[newStreams.length - 1].channelId : null);
+
+        if (newStreams.length > 0) {
+          setCursorId(newStreams[newStreams.length - 1].channelId);
+          setCursorPopular(newStreams[newStreams.length - 1].channelParticipantCount);
+        } else {
+          setCursorId(null);
+          setCursorPopular(null);
+        }
         setHasNext(response.data.hasNext);
       } catch (error) {
         console.error("Error fetching streams:", error);
@@ -41,20 +54,21 @@ export default function HomePage() {
         setIsFetching(false);
       }
     },
-    [currentCategory, cursorId, hasNext, isFetching]
+    [currentCategory, cursorId, cursorPopular, hasNext, isFetching]
   );
 
   // 📌 카테고리 변경 시 데이터 초기화 및 새로 요청
   useEffect(() => {
-    setStreams([]); // 기존 데이터 초기화
+    setStreams([]);
     setCursorId(null);
+    setCursorPopular(null);
     setHasNext(true);
     fetchStreams(true); // 새 데이터 요청
   }, [currentCategory, fetchStreams]);
 
   // 📌 Intersection Observer를 활용한 무한 스크롤
   useEffect(() => {
-    if (!observerRef.current || currentCategory !== "recent") return;
+    if (!observerRef.current) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -65,7 +79,7 @@ export default function HomePage() {
 
     observer.observe(observerRef.current);
     return () => observer.disconnect();
-  }, [currentCategory, cursorId, hasNext, fetchStreams]);
+  }, [currentCategory, cursorId, cursorPopular, hasNext, fetchStreams]);
 
   // 📌 스크롤 이벤트 처리 (호스트 버튼 숨김)
   const [showHostButton, setShowHostButton] = useState(true);
@@ -111,7 +125,7 @@ export default function HomePage() {
         )}
 
         {/* 마지막 요소를 감지하기 위한 div */}
-        {currentCategory === "recent" && <ObserverDiv ref={observerRef} />}
+        <ObserverDiv ref={observerRef} />
 
         {isFetching && <LoadingMessage>로딩 중...</LoadingMessage>}
       </MainContent>
@@ -171,6 +185,10 @@ const LoadingMessage = styled.p`
   margin-top: 10px;
 `;
 
+const ObserverDiv = styled.div`
+  height: 10px;
+`;
+
 const HostButton = styled.button`
   position: fixed;
   bottom: calc(20px + var(--height-fnb));
@@ -195,8 +213,4 @@ const HostButton = styled.button`
 const HostText = styled.span`
   font-size: 14px;
   color: #000;
-`;
-
-const ObserverDiv = styled.div`
-  height: 10px;
 `;

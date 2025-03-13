@@ -12,27 +12,30 @@ export default function HomePage() {
   const [cursorId, setCursorId] = useState<number | null>(null);
   const [cursorPopular, setCursorPopular] = useState<number | null>(null);
   const [hasNext, setHasNext] = useState(true);
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetching] = useState(false);
 
   const observerRef = useRef<HTMLDivElement | null>(null); // 무한 스크롤 감지 ref
 
   // 📌 streams 데이터를 받아오는 API 호출
+  const isFetchingRef = useRef(false);
+
   const fetchStreams = useCallback(
     async (reset = false) => {
-      if (isFetching || (!hasNext && !reset)) return; // 중복 요청 방지
+      if (isFetchingRef.current) return;
 
-      setIsFetching(true);
+      isFetchingRef.current = true;
       try {
         let response;
         if (currentCategory === "recent") {
           response = await instance.get("/channels", {
-            params: { cursorId: reset ? null : cursorId },
+            params: { cursorId: reset ? null : cursorId, limit: 20 },
           });
         } else {
           response = await instance.get("/channels/popular", {
             params: {
               cursorId: reset ? null : cursorId,
               cursorPopular: reset ? null : cursorPopular,
+              limit: 20,
             },
           });
         }
@@ -40,22 +43,41 @@ export default function HomePage() {
         const newStreams = response.data.content;
         setStreams((prevStreams) => (reset ? newStreams : [...prevStreams, ...newStreams]));
 
-        if (newStreams.length > 0) {
-          setCursorId(newStreams[newStreams.length - 1].channelId);
-          setCursorPopular(newStreams[newStreams.length - 1].channelParticipantCount);
-        } else {
-          setCursorId(null);
-          setCursorPopular(null);
-        }
+        setCursorId((prevCursorId) =>
+          newStreams.length > 0 ? newStreams[newStreams.length - 1].channelId : prevCursorId
+        );
+        setCursorPopular((prevCursorPopular) =>
+          newStreams.length > 0
+            ? newStreams[newStreams.length - 1].channelParticipantCount
+            : prevCursorPopular
+        );
+
         setHasNext(response.data.hasNext);
       } catch (error) {
         console.error("Error fetching streams:", error);
       } finally {
-        setIsFetching(false);
+        isFetchingRef.current = false;
       }
     },
-    [currentCategory, cursorId, cursorPopular, hasNext, isFetching]
+    [currentCategory]
   );
+
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  useEffect(() => {
+    if (!observerRef.current || observer.current) return;
+
+    observer.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) fetchStreams();
+      },
+      { threshold: 1.0 }
+    );
+
+    observer.current.observe(observerRef.current);
+
+    return () => observer.current?.disconnect();
+  }, [fetchStreams]);
 
   // 📌 카테고리 변경 시 데이터 초기화 및 새로 요청
   useEffect(() => {
@@ -63,8 +85,11 @@ export default function HomePage() {
     setCursorId(null);
     setCursorPopular(null);
     setHasNext(true);
-    fetchStreams(true); // 새 데이터 요청
-  }, [currentCategory, fetchStreams]);
+  }, [currentCategory]);
+
+  useEffect(() => {
+    fetchStreams(true);
+  }, [currentCategory]); //
 
   // 📌 Intersection Observer를 활용한 무한 스크롤
   useEffect(() => {
@@ -119,11 +144,12 @@ export default function HomePage() {
         </CategoryButtons>
 
         {streams.length > 0 ? (
-          streams.map((stream) => <StreamCard key={stream.channelId} item={stream} />)
+          streams.map((stream, index) => (
+            <StreamCard key={stream.channelId + index} item={stream} />
+          ))
         ) : (
           <NoStreamsMessage>라이브중인 방송이 없습니다.</NoStreamsMessage>
         )}
-
         {/* 마지막 요소를 감지하기 위한 div */}
         <ObserverDiv ref={observerRef} />
 

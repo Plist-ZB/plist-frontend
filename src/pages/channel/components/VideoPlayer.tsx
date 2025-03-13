@@ -4,7 +4,7 @@ import { Client } from "@stomp/stompjs";
 import {
   initVideoIdAtom,
   currentVideoIdAtom,
-  isChannelHostAtom,
+  ischannelHostNameAtom,
   channelVideoListAtom,
   currentTimeAtom,
 } from "@/store/channel";
@@ -25,7 +25,7 @@ export default function VideoPlayer({
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const initVideoId = useAtomValue(initVideoIdAtom);
   const [currentVideoId, setCurrentVideoId] = useAtom(currentVideoIdAtom);
-  const isChannelHost = useAtomValue(isChannelHostAtom);
+  const ischannelHostName = useAtomValue(ischannelHostNameAtom);
   const setChannelVideoList = useSetAtom(channelVideoListAtom);
 
   const [playState, setPlayState] = useState<{
@@ -78,13 +78,13 @@ export default function VideoPlayer({
   const [isVideoSubscribed, setIsVideoSubscribed] = useState(false);
 
   useEffect(() => {
-    if (isVideoSubscribed && stompClient.connected && !isChannelHost) {
+    if (isVideoSubscribed && stompClient.connected && !ischannelHostName) {
       console.log("입장 날림");
       stompClient.publish({
         destination: `/pub/enter.${channelId}`,
       });
     }
-  }, [isVideoSubscribed, stompClient, channelId, isChannelHost]);
+  }, [isVideoSubscribed, stompClient, channelId, ischannelHostName]);
 
   useEffect(() => {
     console.log("호스트 재생 정보", playState);
@@ -125,7 +125,7 @@ export default function VideoPlayer({
           console.log("비디오 받음");
           console.log(body);
 
-          if (!isChannelHost && body.videoId) {
+          if (!ischannelHostName && body.videoId) {
             setPlayState(body);
           }
 
@@ -137,7 +137,7 @@ export default function VideoPlayer({
     };
 
     const subscribeToJoin = () => {
-      if (stompClient.connected && player && isChannelHost) {
+      if (stompClient.connected && player && ischannelHostName) {
         stompClient.subscribe(`/sub/enter.${channelId}`, (message) => {
           if (message.body === "NEW_USER_ENTER") {
             console.log("유저 입장해서 정보 날림");
@@ -150,7 +150,7 @@ export default function VideoPlayer({
     };
 
     const subscribeToLeave = () => {
-      if (stompClient.connected && player && !isChannelHost) {
+      if (stompClient.connected && player && !ischannelHostName) {
         stompClient.subscribe(`/sub/exit.${channelId}`, (message) => {
           const body = message.body;
           if (body === "CHANNEL_CLOSED") {
@@ -175,7 +175,7 @@ export default function VideoPlayer({
         subscribeToLeave();
       }
     };
-  }, [stompClient, channelId, stompClient.connected, player, isChannelHost]);
+  }, [stompClient, channelId, stompClient.connected, player, ischannelHostName]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -192,7 +192,7 @@ export default function VideoPlayer({
     width: "100%",
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
-      autoplay: 1, //isChannelHost ? 0 : 1,
+      autoplay: 1, //ischannelHostName ? 0 : 1,
       modestbranding: 0,
       controls: 0,
       fs: 0, // 전체화면 버튼 활성화
@@ -204,9 +204,11 @@ export default function VideoPlayer({
   return (
     <div className="relative w-full aspect-video">
       {/* Host를 제외하고 화면 클릭 못하게 막는 임시 레이어 */}
-      {!isChannelHost && <div className="absolute z-10 w-full bg-transparent aspect-video"></div>}
+      {!ischannelHostName && (
+        <div className="absolute z-10 w-full bg-transparent aspect-video"></div>
+      )}
 
-      {isChannelHost && (
+      {ischannelHostName && (
         <div className="absolute z-10 w-full h-[calc(100%-34px)] bg-transparent aspect-video"></div>
       )}
 
@@ -218,7 +220,7 @@ export default function VideoPlayer({
         className="absolute top-0 left-0 w-full h-full"
         iframeClassName="w-full h-full"
       />
-      {isChannelHost && (
+      {ischannelHostName && (
         <HostPlayBar
           isPlaying={isPlaying}
           stompClient={stompClient}
@@ -232,7 +234,7 @@ export default function VideoPlayer({
         />
       )}
 
-      {!isChannelHost && (
+      {!ischannelHostName && (
         <ParticipantPlayBar isPlaying={isPlaying} currentTime={currentTime} duration={duration} />
       )}
     </div>

@@ -6,7 +6,7 @@ export const channelMockData = [
     channelThumbnail: "https://i.ytimg.com/vi/g83xaZiMqbs/mqdefault.jpg",
     channelCreatedAt: "2025-01-09 19:00:00",
     channelStatus: "live",
-    channelHost: "노지훈",
+    channelHostName: "노지훈",
     channelParticipantCount: 1011,
   },
   {
@@ -16,7 +16,7 @@ export const channelMockData = [
     channelThumbnail: "https://i.ytimg.com/vi/Mhyi9p7T7OM/mqdefault.jpg",
     channelCreatedAt: "2025-01-01 00:00:00",
     channelStatus: "live",
-    channelHost: "송유나",
+    channelHostName: "송유나",
     channelParticipantCount: 20,
   },
   {
@@ -26,7 +26,7 @@ export const channelMockData = [
     channelThumbnail: "https://i.ytimg.com/vi/Mhyi9p7T7OM/mqdefault.jpg",
     channelCreatedAt: "2025-01-09 20:01:10",
     channelStatus: "live",
-    channelHost: "송유나",
+    channelHostName: "송유나",
     channelParticipantCount: 75,
   },
   {
@@ -36,7 +36,7 @@ export const channelMockData = [
     channelThumbnail: "https://i.ytimg.com/vi/Mhyi9p7T7OM/mqdefault.jpg",
     channelCreatedAt: "2025-01-09 20:01:10",
     channelStatus: "live",
-    channelHost: "윤학수",
+    channelHostName: "윤학수",
     channelParticipantCount: 50,
   },
   {
@@ -46,7 +46,7 @@ export const channelMockData = [
     channelThumbnail: "https://i.ytimg.com/vi/Mhyi9p7T7OM/mqdefault.jpg",
     channelCreatedAt: "2025-01-09 20:01:10",
     channelStatus: "live",
-    channelHost: "박철현",
+    channelHostName: "박철현",
     channelParticipantCount: 3,
   },
   {
@@ -56,7 +56,7 @@ export const channelMockData = [
     channelThumbnail: "https://i.ytimg.com/vi/Mhyi9p7T7OM/mqdefault.jpg",
     channelCreatedAt: "2025-01-09 20:01:10",
     channelStatus: "live",
-    channelHost: "이은선",
+    channelHostName: "이은선",
     channelParticipantCount: 20,
   },
 ];

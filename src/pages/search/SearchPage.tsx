@@ -13,7 +13,7 @@ interface SearchResult {
   channelStreamingTime: string;
   channelCreatedAt: string; // timestampz 데이터
   channelStatus: string;
-  channelHost: string;
+  channelHostName: string;
   channelParticipantCount: number;
 }
 

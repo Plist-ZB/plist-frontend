@@ -1,5 +1,5 @@
 import useExitChannel from "@/pages/channel/hooks/useExitChannel";
-import { channelVideoListAtom, isChannelHostAtom } from "@/store/channel";
+import { channelVideoListAtom, ischannelHostNameAtom } from "@/store/channel";
 import { useAtomValue } from "jotai";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,7 @@ export default function ExitRoomModal({
   const navigate = useNavigate();
   const { exitChannelMutation, closeChannelMutation, saveChannelPlaylistMutation } =
     useExitChannel();
-  const isHost = useAtomValue(isChannelHostAtom);
+  const isHost = useAtomValue(ischannelHostNameAtom);
   const channelVideoList = useAtomValue(channelVideoListAtom);
 
   const onClickGoBack = () => {

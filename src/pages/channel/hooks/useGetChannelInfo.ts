@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { useSetAtom } from "jotai";
 import {
-  isChannelHostAtom,
+  ischannelHostNameAtom,
   channelVideoListAtom,
   initVideoIdAtom,
   currentVideoIdAtom,
@@ -11,7 +11,7 @@ import {
 
 export default function useGetChannelInfo() {
   const { channelId } = useParams();
-  const setIsHost = useSetAtom(isChannelHostAtom);
+  const setIsHost = useSetAtom(ischannelHostNameAtom);
   const setChannelVideoList = useSetAtom(channelVideoListAtom);
   const setCurrentVideoId = useSetAtom(currentVideoIdAtom);
   const setInitVideoId = useSetAtom(initVideoIdAtom);

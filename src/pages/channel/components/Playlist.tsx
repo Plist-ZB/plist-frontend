@@ -7,7 +7,7 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   channelVideoListAtom,
   currentVideoIdAtom,
-  isChannelHostAtom,
+  ischannelHostNameAtom,
   initVideoIdAtom,
   currentTimeAtom,
 } from "@/store/channel";
@@ -22,7 +22,7 @@ interface PlaylistProps {
 }
 
 const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
-  const isHost = useAtomValue(isChannelHostAtom);
+  const isHost = useAtomValue(ischannelHostNameAtom);
   const [channelVideoList, setChannelVideoList] = useAtom(channelVideoListAtom);
   const email = getEmailFromToken();
   const setInitialVideoId = useSetAtom(initVideoIdAtom);

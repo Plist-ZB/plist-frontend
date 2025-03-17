@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ChatBox from "./chat/ChatBox";
 import ChatInput from "./chat/ChatInput";
-import { Client } from "@stomp/stompjs";
+import { Client, StompSubscription } from "@stomp/stompjs";
 import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
+import { SUBSCRIPTION_TOPICS } from "../constants/channelConstants";
 
 interface ChatAreaProps {
   readonly channelId: number;
@@ -12,34 +13,42 @@ interface ChatAreaProps {
 const email = getEmailFromToken();
 
 export default function ChatArea({ channelId, stompClient }: ChatAreaProps) {
+  const chatChannelId = useMemo(() => channelId, [channelId]);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const [chats, setChats] = useState<
     { sender: string; message: string; userProfileImg?: string }[]
   >([]);
 
+  const subscribeToChat = (subscriptions: StompSubscription[]) => {
+    const subscription = stompClient.subscribe(
+      SUBSCRIPTION_TOPICS.CHAT(chatChannelId),
+      (message) => {
+        const body = JSON.parse(message.body);
+        setChats((prevChats) => [...prevChats, body]);
+      }
+    );
+    subscriptions.push(subscription);
+  };
+
   useEffect(() => {
     if (!stompClient || !channelId) return;
 
-    // 메시지 수신 구독
-    const subscribeToChat = () => {
-      stompClient.subscribe(`/sub/chat.${channelId}`, (message) => {
-        const body = JSON.parse(message.body); // 수신된 메시지 파싱
-
-        // 받은 메시지를 `chats` 상태에 업데이트 (userProfileImg 포함)
-        setChats((prevChats) => [...prevChats, body]); // 기존 chats 상태에 새로운 메시지 추가
-      });
-    };
+    const subscriptions: StompSubscription[] = [];
 
     // stompClient가 연결되었을 때 구독 설정
     stompClient.onConnect = () => {
-      subscribeToChat();
+      subscribeToChat(subscriptions);
     };
 
-    // 컴포넌트 언마운트 시 추가적인 정리 작업 없음
+    // 이미 연결된 상태라면 바로 구독
+    if (stompClient.connected) {
+      subscribeToChat(subscriptions);
+    }
+
+    // 컴포넌트 언마운트 시 구독 해제
     return () => {
-      if (stompClient.connected) {
-        subscribeToChat();
-      }
+      subscriptions.forEach((subscription) => subscription.unsubscribe());
     };
   }, [stompClient, channelId]);
 
@@ -66,7 +75,7 @@ export default function ChatArea({ channelId, stompClient }: ChatAreaProps) {
   };
 
   return (
-    <div className="flex flex-col flex-1 min-h-0">
+    <div className="flex flex-col flex-1 min-h-0 bg-white">
       {/* 채팅 메시지 표시 영역 */}
       <div className="flex flex-col flex-1 overflow-y-auto" ref={scrollRef}>
         {chats.map((chat, index) => (

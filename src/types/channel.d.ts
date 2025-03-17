@@ -38,3 +38,9 @@ declare interface IChannelData {
 
 declare type ChannelList = IChannel[];
 declare type PastStreamList = IPastStream[];
+
+declare type PlayState = {
+  videoId: string;
+  playStates: number;
+  currentTime: number;
+};

@@ -1,13 +1,11 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
-import PlayListItemBox from "@/pages/channel/components/playlist/PlayListItemBox";
 import HostPlayListItemBox from "@/pages/channel/components/playlist/HostPlayListItemBox";
 import { Client } from "@stomp/stompjs";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import {
   channelVideoListAtom,
   currentVideoIdAtom,
-  isChannelHostAtom,
   initVideoIdAtom,
   currentTimeAtom,
 } from "@/store/channel";
@@ -17,12 +15,11 @@ import useSaveToFavorite from "@/pages/channel/hooks/useSaveToFavorite";
 import { decode } from "html-entities";
 
 interface PlaylistProps {
-  stompClient: Client;
-  channelId: number;
+  readonly stompClient: Client;
+  readonly channelId: number;
 }
 
-const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
-  const isHost = useAtomValue(isChannelHostAtom);
+export default function HostPlaylist({ stompClient, channelId }: PlaylistProps) {
   const [channelVideoList, setChannelVideoList] = useAtom(channelVideoListAtom);
   const email = getEmailFromToken();
   const setInitialVideoId = useSetAtom(initVideoIdAtom);
@@ -33,20 +30,23 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
   const { deleteVideoMutation, reorderChannelPlaylistMutation } = useHostItemLogics(channelId);
   const { saveVIdeoToFavoriteMutation } = useSaveToFavorite();
 
-  const onClickHostSetCurrentVideoId = (item: IVideo) => {
-    setCurrentVideoId(item.videoId);
-    setInitialVideoId(item.videoId);
-    setCurrentTime(0);
-    stompClient.publish({
-      destination: `/pub/video.control.${channelId}`,
-      body: JSON.stringify({
-        email: email,
-        videoId: item.videoId,
-        currentTime: 0,
-        playState: 0,
-      }),
-    });
-  };
+  const onClickHostSetCurrentVideoId = useCallback(
+    (item: IVideo) => {
+      setCurrentVideoId(item.videoId);
+      setInitialVideoId(item.videoId);
+      setCurrentTime(0);
+      stompClient.publish({
+        destination: `/pub/video.control.${channelId}`,
+        body: JSON.stringify({
+          email: email,
+          videoId: item.videoId,
+          currentTime: 0,
+          playState: 0,
+        }),
+      });
+    },
+    [stompClient, channelId, email, setCurrentVideoId, setInitialVideoId, setCurrentTime]
+  );
 
   const [draggedItemId, setDraggedItemId] = useState<number | null>(null);
 
@@ -74,6 +74,8 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
     setDraggedItemId(null); // 드래그 상태 초기화
   };
 
+  //console.log("channelVideoList", channelVideoList);
+
   return (
     <div className="relative">
       <div
@@ -100,37 +102,23 @@ const Playlist = ({ stompClient, channelId }: PlaylistProps) => {
       </div>
 
       {isOpen && (
-        /* TODO: 드래그앤드랍 적용하기 */
         /* TODO: 호스트가 아이템박스 클릭 시 현재 재생 영상 변경 */
-        /* TODO: 클릭하면 favorite에 추가하기 */
         <div className="overflow-y-auto flex flex-col gap-2 px-2 py-4 absolute left-0 right-0 z-10 transition-all duration-300 ease-in-out origin-top transform bg-white border-b shadow-lg max-h-[calc(100vh*0.5)] top-full animate-dropdown rounded-b-lg">
-          {channelVideoList?.map((item) =>
-            isHost ? (
-              <HostPlayListItemBox
-                key={item.videoId}
-                item={item}
-                currentVideoId={currentVideoId!}
-                onClickHostSetCurrentVideoId={onClickHostSetCurrentVideoId}
-                setIsOpen={setIsOpen}
-                deleteVideo={deleteVideoMutation.mutate}
-                saveVIdeoToFavorite={saveVIdeoToFavoriteMutation.mutate}
-                onDragStart={onDragStart}
-                onDrop={onDrop}
-              />
-            ) : (
-              <PlayListItemBox
-                key={item.videoId}
-                item={item}
-                currentVideoId={currentVideoId!}
-                setIsOpen={setIsOpen}
-                saveVIdeoToFavorite={saveVIdeoToFavoriteMutation.mutate}
-              />
-            )
-          )}
+          {channelVideoList?.map((item) => (
+            <HostPlayListItemBox
+              key={item.videoId}
+              item={item}
+              currentVideoId={currentVideoId!}
+              onClickHostSetCurrentVideoId={onClickHostSetCurrentVideoId}
+              setIsOpen={setIsOpen}
+              deleteVideo={deleteVideoMutation.mutate}
+              saveVIdeoToFavorite={saveVIdeoToFavoriteMutation.mutate}
+              onDragStart={onDragStart}
+              onDrop={onDrop}
+            />
+          ))}
         </div>
       )}
     </div>
   );
-};
-
-export default Playlist;
+}

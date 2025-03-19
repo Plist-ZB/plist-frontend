@@ -62,6 +62,12 @@ export default function HomePage() {
     [currentCategory]
   );
 
+  useEffect(() => {
+    if (cursorId !== null) {
+      fetchStreams();
+    }
+  }, [cursorId]);
+
   const observer = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
@@ -89,22 +95,32 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchStreams(true);
-  }, [currentCategory]); //
+  }, [fetchStreams]);
 
   // 📌 Intersection Observer를 활용한 무한 스크롤
   useEffect(() => {
     if (!observerRef.current) return;
 
-    const observer = new IntersectionObserver(
+    if (observer.current) {
+      observer.current.disconnect();
+    }
+
+    observer.current = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) fetchStreams();
+        if (entries[0].isIntersecting && hasNext) {
+          fetchStreams();
+        }
       },
       { threshold: 1.0 }
     );
 
-    observer.observe(observerRef.current);
-    return () => observer.disconnect();
-  }, [currentCategory, cursorId, cursorPopular, hasNext, fetchStreams]);
+    observer.current.observe(observerRef.current);
+
+    return () => {
+      observer.current?.disconnect();
+      observer.current = null; // 🔥 다음 useEffect에서 다시 등록될 수 있도록 초기화
+    };
+  }, [hasNext, fetchStreams]);
 
   // 📌 스크롤 이벤트 처리 (호스트 버튼 숨김)
   const [showHostButton, setShowHostButton] = useState(true);

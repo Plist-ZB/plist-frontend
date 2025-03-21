@@ -65,8 +65,8 @@ export default function HomePage() {
             인기
           </CategoryButton>
         </CategoryButtons>
-        {streams.length > 0 ? (
-          streams.map((stream) => (
+        {streams?.content?.length > 0 ? (
+          streams?.content?.map((stream) => (
             <StreamCard key={stream.channelId} item={stream} /> // 받은 스트림 데이터로 StreamCard 렌더링
           ))
         ) : (

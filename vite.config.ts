@@ -24,11 +24,11 @@ export default defineConfig({
   envDir: "plist-fe-env",
   build: {
     minify: "terser",
-    terserOptions: {
+    /*  terserOptions: {
       compress: {
         drop_console: true,
         drop_debugger: true,
       },
-    },
+    }, */
   },
 });

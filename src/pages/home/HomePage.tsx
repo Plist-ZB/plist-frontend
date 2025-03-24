@@ -16,7 +16,7 @@ export default function HomePage() {
 
   const observerRef = useRef<HTMLDivElement | null>(null); // 무한 스크롤 감지 ref
 
-  // 📌 streams 데이터를 받아오는 API 호출
+  //streams 데이터를 받아오는 API 호출
   const isFetchingRef = useRef(false);
 
   const fetchStreams = useCallback(
@@ -25,32 +25,26 @@ export default function HomePage() {
 
       isFetchingRef.current = true;
       try {
-        let response;
-        if (currentCategory === "recent") {
-          response = await instance.get("/channels", {
-            params: { cursorId: reset ? null : cursorId, limit: 20 },
-          });
-        } else {
-          response = await instance.get("/channels/popular", {
-            params: {
-              cursorId: reset ? null : cursorId,
-              cursorPopular: reset ? null : cursorPopular,
-              limit: 20,
-            },
-          });
+        const params: { cursorId: number | null; limit: number; cursorPopular?: number | null } = {
+          cursorId: reset ? null : cursorId,
+          limit: 20,
+        };
+        if (currentCategory === "popular") {
+          params.cursorPopular = reset ? null : cursorPopular;
         }
+
+        const response = await instance.get(
+          currentCategory === "recent" ? "/channels" : "/channels/popular",
+          { params }
+        );
 
         const newStreams = response.data.content;
         setStreams((prevStreams) => (reset ? newStreams : [...prevStreams, ...newStreams]));
 
-        setCursorId((prevCursorId) =>
-          newStreams.length > 0 ? newStreams[newStreams.length - 1].channelId : prevCursorId
-        );
-        setCursorPopular((prevCursorPopular) =>
-          newStreams.length > 0
-            ? newStreams[newStreams.length - 1].channelParticipantCount
-            : prevCursorPopular
-        );
+        if (newStreams.length > 0) {
+          setCursorId(newStreams[newStreams.length - 1].channelId);
+          setCursorPopular(newStreams[newStreams.length - 1].channelParticipantCount);
+        }
 
         setHasNext(response.data.hasNext);
       } catch (error) {
@@ -59,7 +53,7 @@ export default function HomePage() {
         isFetchingRef.current = false;
       }
     },
-    [currentCategory]
+    [currentCategory, cursorId, cursorPopular]
   );
 
   useEffect(() => {
@@ -75,17 +69,22 @@ export default function HomePage() {
 
     observer.current = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) fetchStreams();
+        if (entries[0].isIntersecting && hasNext) {
+          fetchStreams();
+        }
       },
       { threshold: 1.0 }
     );
 
     observer.current.observe(observerRef.current);
 
-    return () => observer.current?.disconnect();
-  }, [fetchStreams]);
+    return () => {
+      observer.current?.disconnect();
+      observer.current = null;
+    };
+  }, [hasNext, fetchStreams]);
 
-  // 📌 카테고리 변경 시 데이터 초기화 및 새로 요청
+  // 카테고리 변경 시 데이터 초기화 및 새로 요청
   useEffect(() => {
     setStreams([]);
     setCursorId(null);
@@ -97,7 +96,7 @@ export default function HomePage() {
     fetchStreams(true);
   }, [fetchStreams]);
 
-  // 📌 Intersection Observer를 활용한 무한 스크롤
+  // Intersection Observer를 활용한 무한 스크롤
   useEffect(() => {
     if (!observerRef.current) return;
 
@@ -122,24 +121,23 @@ export default function HomePage() {
     };
   }, [hasNext, fetchStreams]);
 
-  // 📌 스크롤 이벤트 처리 (호스트 버튼 숨김)
+  // 스크롤 이벤트 처리 (호스트 버튼 숨김)
   const [showHostButton, setShowHostButton] = useState(true);
-  const [mouseTimeout, setMouseTimeout] = useState<NodeJS.Timeout | null>(null);
+  const mouseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setShowHostButton(false);
-      if (mouseTimeout) clearTimeout(mouseTimeout);
-      const timeout = setTimeout(() => setShowHostButton(true), 3000);
-      setMouseTimeout(timeout);
+      if (mouseTimeoutRef.current) clearTimeout(mouseTimeoutRef.current);
+      mouseTimeoutRef.current = setTimeout(() => setShowHostButton(true), 3000);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      if (mouseTimeout) clearTimeout(mouseTimeout);
+      if (mouseTimeoutRef.current) clearTimeout(mouseTimeoutRef.current);
     };
-  }, [mouseTimeout]);
+  }, []);
 
   return (
     <Container>
@@ -160,9 +158,7 @@ export default function HomePage() {
         </CategoryButtons>
 
         {streams.length > 0 ? (
-          streams.map((stream, index) => (
-            <StreamCard key={stream.channelId + index} item={stream} />
-          ))
+          streams.map((stream) => <StreamCard key={stream.channelId} item={stream} />)
         ) : (
           <NoStreamsMessage>라이브중인 방송이 없습니다.</NoStreamsMessage>
         )}

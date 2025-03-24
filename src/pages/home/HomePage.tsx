@@ -27,7 +27,7 @@ export default function HomePage() {
       try {
         const params: { cursorId: number | null; limit: number; cursorPopular?: number | null } = {
           cursorId: reset ? null : cursorId,
-          limit: 20, // 한 번에 20개씩 불러오기
+          limit: 20, // 항상 20개씩 가져옴
         };
         if (currentCategory === "popular") {
           params.cursorPopular = reset ? null : cursorPopular;
@@ -40,7 +40,7 @@ export default function HomePage() {
 
         const newStreams = response.data.content;
 
-        setStreams((prevStreams) => (reset ? newStreams : [...prevStreams, ...newStreams])); // 추가 데이터 유지
+        setStreams((prevStreams) => [...prevStreams, ...newStreams]); // 이전 데이터 유지하면서 새로운 데이터 추가
 
         if (newStreams.length > 0) {
           setCursorId(newStreams[newStreams.length - 1].channelId); // 마지막 채널 ID를 cursorId로 저장

@@ -4,7 +4,7 @@ import { Client } from "@stomp/stompjs";
 import {
   initVideoIdAtom,
   currentVideoIdAtom,
-  ischannelHostNameAtom,
+  isChannelHostAtom,
   channelVideoListAtom,
   currentTimeAtom,
 } from "@/store/channel";
@@ -25,7 +25,7 @@ export default function VideoPlayer({
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const initVideoId = useAtomValue(initVideoIdAtom);
   const [currentVideoId, setCurrentVideoId] = useAtom(currentVideoIdAtom);
-  const ischannelHostName = useAtomValue(ischannelHostNameAtom);
+  const ischannelHostName = useAtomValue(isChannelHostAtom);
   const setChannelVideoList = useSetAtom(channelVideoListAtom);
 
   const [playState, setPlayState] = useState<{

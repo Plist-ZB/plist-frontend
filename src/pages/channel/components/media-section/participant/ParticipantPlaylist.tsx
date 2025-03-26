@@ -5,6 +5,7 @@ import { useAtomValue } from "jotai";
 import { channelVideoListAtom, currentVideoIdAtom } from "@/store/channel";
 import useSaveToFavorite from "@/pages/channel/hooks/useSaveToFavorite";
 import { decode } from "html-entities";
+import PlayListWrapper from "@/pages/channel/components/media-section/PlayListWrapper";
 
 export default function ParticipantPlaylist() {
   const channelVideoList = useAtomValue(channelVideoListAtom);
@@ -39,7 +40,7 @@ export default function ParticipantPlaylist() {
 
       {isOpen && (
         /* TODO: 호스트가 아이템박스 클릭 시 현재 재생 영상 변경 */
-        <div className="overflow-y-auto flex flex-col gap-2 px-2 py-4 absolute left-0 right-0 z-10 transition-all duration-300 ease-in-out origin-top transform bg-white border-b shadow-lg max-h-[calc(100vh*0.5)] top-full animate-dropdown rounded-b-lg">
+        <PlayListWrapper>
           {channelVideoList?.map((item) => (
             <ParticipantPlayListBox
               key={item.videoId}
@@ -48,7 +49,7 @@ export default function ParticipantPlaylist() {
               saveVIdeoToFavorite={saveVIdeoToFavoriteMutation.mutate}
             />
           ))}
-        </div>
+        </PlayListWrapper>
       )}
     </div>
   );

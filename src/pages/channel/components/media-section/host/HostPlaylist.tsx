@@ -13,6 +13,7 @@ import { getEmailFromToken } from "@/pages/channel/utils/getDataFromToken";
 import useHostItemLogics from "@/pages/channel/hooks/useHostItemLogics";
 import useSaveToFavorite from "@/pages/channel/hooks/useSaveToFavorite";
 import { decode } from "html-entities";
+import PlayListWrapper from "@/pages/channel/components/media-section/PlayListWrapper";
 
 interface PlaylistProps {
   readonly stompClient: Client;
@@ -74,8 +75,6 @@ export default function HostPlaylist({ stompClient, channelId }: PlaylistProps) 
     setDraggedItemId(null); // 드래그 상태 초기화
   };
 
-  //console.log("channelVideoList", channelVideoList);
-
   return (
     <div className="relative">
       <div
@@ -103,7 +102,7 @@ export default function HostPlaylist({ stompClient, channelId }: PlaylistProps) 
 
       {isOpen && (
         /* TODO: 호스트가 아이템박스 클릭 시 현재 재생 영상 변경 */
-        <div className="overflow-y-auto flex flex-col gap-2 px-2 py-4 absolute left-0 right-0 z-10 transition-all duration-300 ease-in-out origin-top transform bg-white border-b shadow-lg max-h-[calc(100vh*0.5)] top-full animate-dropdown rounded-b-lg">
+        <PlayListWrapper>
           {channelVideoList?.map((item) => (
             <HostPlayListItemBox
               key={item.videoId}
@@ -117,7 +116,7 @@ export default function HostPlaylist({ stompClient, channelId }: PlaylistProps) 
               onDrop={onDrop}
             />
           ))}
-        </div>
+        </PlayListWrapper>
       )}
     </div>
   );

@@ -6,7 +6,7 @@ import {
   initVideoIdAtom,
 } from "@/store/channel";
 import { Client, StompSubscription } from "@stomp/stompjs";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { YouTubeEvent, YouTubePlayer, YouTubeProps } from "react-youtube";
 
@@ -22,10 +22,10 @@ function isPlayState(body: IVideo[] | PlayState): body is PlayState {
 export const useParticipant = ({ stompClient, channelId }: UseParticipantProps) => {
   const [isReady, setIsReady] = useState(false);
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
-  const [channelVideoList, setChannelVideoList] = useAtom(channelVideoListAtom);
-  const [currentVideoId, setCurrentVideoId] = useAtom(currentVideoIdAtom);
+  const setChannelVideoList = useSetAtom(channelVideoListAtom);
+  const setCurrentVideoId = useSetAtom(currentVideoIdAtom);
   const [initVideoId, setInitVideoId] = useAtom(initVideoIdAtom);
-  const [currentTime, setCurrentTime] = useAtom(currentTimeAtom);
+  const setCurrentTime = useSetAtom(currentTimeAtom);
   const [duration, setDuration] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 

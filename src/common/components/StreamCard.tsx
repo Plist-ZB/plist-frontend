@@ -24,7 +24,7 @@ export default function StreamCard({ item }: { readonly item: IChannel }) {
         <Title>
           <b>{item.channelName}</b>
         </Title>
-        <Info>{item.channelHost}</Info>
+        <Info>{item.channelHostName}</Info>
         <Info>카테고리: {item.channelCategoryName}</Info>
         <Info>스트리밍 시간: {item.channelStreamingTime}</Info>
       </StreamDetails>

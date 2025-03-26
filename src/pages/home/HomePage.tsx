@@ -3,50 +3,114 @@ import StreamCard from "@/common/components/StreamCard";
 import { Headphones } from "lucide-react";
 import { overlay } from "overlay-kit";
 import HostAdd from "./components/HostAdd";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { instance } from "@/services/api/instance";
 
 export default function HomePage() {
   const [currentCategory, setCurrentCategory] = useState<"recent" | "popular">("recent");
+  const [streams, setStreams] = useState<IChannel[]>([]);
+  const [cursorId, setCursorId] = useState<number | null>(null);
+  const [cursorPopular, setCursorPopular] = useState<number | null>(null);
+  const [hasNext, setHasNext] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
 
-  const [streams, setStreams] = useState<IChannel[]>([]); // 초기값을 빈 배열로 설정
+  const observerRef = useRef<HTMLDivElement | null>(null); // 무한 스크롤 감지 ref
 
-  // streams 데이터를 받아오는 API 호출
-  useEffect(() => {
-    const fetchStreams = async () => {
+  //streams 데이터를 받아오는 API 호출
+  const isFetchingRef = useRef(false);
+
+  const fetchStreams = useCallback(
+    async (reset = false) => {
+      if (isFetchingRef.current) return;
+
+      isFetchingRef.current = true;
       try {
-        const endpoint = currentCategory === "recent" ? "/channels" : "/channels/popular";
-        const response = await instance.get(endpoint); // API에서 데이터를 받아옴
-        setStreams(response.data); // 받아온 데이터로 streams 상태를 업데이트
+        // 항상 20개씩 가져옴 => 서버 기본값
+        const params: { cursorId: number | null; size?: number; cursorPopular?: number | null } = {
+          cursorId: reset ? null : cursorId,
+        };
+        if (currentCategory === "popular") {
+          params.cursorPopular = reset ? null : cursorPopular;
+        }
+
+        const response = await instance.get(
+          currentCategory === "recent" ? "/channels" : "/channels/popular",
+          { params }
+        );
+
+        const newStreams = response.data.content;
+
+        setStreams((prevStreams) => [...prevStreams, ...newStreams]); // 이전 데이터 유지하면서 새로운 데이터 추가
+
+        if (newStreams.length > 0) {
+          setCursorId(newStreams[newStreams.length - 1].channelId); // 마지막 채널 ID를 cursorId로 저장
+          setCursorPopular(newStreams[newStreams.length - 1].channelParticipantCount);
+        }
+
+        setHasNext(response.data.hasNext);
+        setIsFetching(false);
       } catch (error) {
-        console.error("Error fetching streams:", error); // 오류 처리
+        console.error("Error fetching streams:", error);
+      } finally {
+        isFetchingRef.current = false;
       }
+    },
+    [currentCategory, cursorId, cursorPopular]
+  );
+
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  // 카테고리 변경 시 데이터 초기화 및 새로 요청
+  useEffect(() => {
+    setStreams([]);
+    setCursorId(null);
+    setCursorPopular(null);
+    setHasNext(true);
+  }, [currentCategory]);
+
+  // Intersection Observer를 활용한 무한 스크롤
+  useEffect(() => {
+    if (!observerRef.current) return;
+
+    if (observer.current) {
+      observer.current.disconnect();
+    }
+
+    observer.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNext) {
+          setIsFetching(true);
+          fetchStreams();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    observer.current.observe(observerRef.current);
+
+    return () => {
+      observer.current?.disconnect();
+      observer.current = null; // 🔥 다음 useEffect에서 다시 등록될 수 있도록 초기화
     };
+  }, [hasNext, fetchStreams]);
 
-    fetchStreams();
-  }, [currentCategory]); // currentCategory가 변경될 때마다 API 호출
-
-  // 호스트 버튼 노출 관련
+  // 스크롤 이벤트 처리 (호스트 버튼 숨김)
   const [showHostButton, setShowHostButton] = useState(true);
-  const [mouseTimeout, setMouseTimeout] = useState<NodeJS.Timeout | null>(null);
+  const mouseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 스크롤 이벤트 처리
   useEffect(() => {
     const handleScroll = () => {
-      setShowHostButton(false); // 스크롤 시 버튼 숨기기
-
-      // 3초 후 버튼 다시 표시
-      if (mouseTimeout) clearTimeout(mouseTimeout);
-      const timeout = setTimeout(() => setShowHostButton(true), 3000);
-      setMouseTimeout(timeout);
+      setShowHostButton(false);
+      if (mouseTimeoutRef.current) clearTimeout(mouseTimeoutRef.current);
+      mouseTimeoutRef.current = setTimeout(() => setShowHostButton(true), 3000);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      if (mouseTimeout) clearTimeout(mouseTimeout); // 컴포넌트 언마운트 시 타이머 제거
+      if (mouseTimeoutRef.current) clearTimeout(mouseTimeoutRef.current);
     };
-  }, [mouseTimeout]);
+  }, []);
 
   return (
     <Container>
@@ -65,14 +129,18 @@ export default function HomePage() {
             인기
           </CategoryButton>
         </CategoryButtons>
+
         {streams.length > 0 ? (
-          streams.map((stream) => (
-            <StreamCard key={stream.channelId} item={stream} /> // 받은 스트림 데이터로 StreamCard 렌더링
-          ))
+          streams.map((stream) => <StreamCard key={stream.channelId} item={stream} />)
         ) : (
-          <NoStreamsMessage>라이브 방송이 없습니다.</NoStreamsMessage> // 데이터가 없을 경우 표시할 메시지
+          <NoStreamsMessage>라이브중인 방송이 없습니다.</NoStreamsMessage>
         )}
+        {/* 마지막 요소를 감지하기 위한 div */}
+        <ObserverDiv ref={observerRef} />
+
+        {isFetching && <LoadingMessage>로딩 중...</LoadingMessage>}
       </MainContent>
+
       {showHostButton && (
         <HostButton
           onClick={() =>
@@ -87,6 +155,7 @@ export default function HomePage() {
   );
 }
 
+// 스타일 정의
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -113,8 +182,26 @@ const CategoryButton = styled.button<{ $isActive?: boolean }>`
   cursor: pointer;
 `;
 
+const NoStreamsMessage = styled.p`
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+  margin-top: 20px;
+`;
+
+const LoadingMessage = styled.p`
+  text-align: center;
+  color: #555;
+  font-size: 14px;
+  margin-top: 10px;
+`;
+
+const ObserverDiv = styled.div`
+  height: 10px;
+`;
+
 const HostButton = styled.button`
-  position: fixed; /* 화면 기준으로 설정 */
+  position: fixed;
   bottom: calc(20px + var(--height-fnb));
   right: 12px;
   padding: 0;
@@ -127,7 +214,7 @@ const HostButton = styled.button`
   border-radius: 50%;
   border: 1px solid var(--color-gray-dark);
   background-color: #ffffff;
-  z-index: 10; /* 다른 콘텐츠 위로 표시 */
+  z-index: 10;
 
   @media screen and (min-width: 768px) {
     right: calc(((100% - 768px) / 2) + 12px);
@@ -137,11 +224,4 @@ const HostButton = styled.button`
 const HostText = styled.span`
   font-size: 14px;
   color: #000;
-`;
-
-const NoStreamsMessage = styled.p`
-  text-align: center;
-  color: #888;
-  font-size: 16px;
-  margin-top: 20px;
 `;

@@ -3,7 +3,7 @@ declare interface IChannelCommon {
   channelName: string;
   channelCategoryName: string;
   channelThumbnail: string;
-  channelHost: string;
+  channelHostName: string;
 }
 
 declare interface IChannel extends IChannelCommon {

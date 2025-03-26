@@ -19,7 +19,7 @@ export default function HostVideoPlayer({
   const { player, onPlayerReady, onStateChange, duration, isPlaying, initVideoId } = useHost({
     stompClient,
     channelId,
-    email,
+    email: email ?? "",
   });
 
   return (
@@ -39,7 +39,7 @@ export default function HostVideoPlayer({
         isPlaying={isPlaying}
         stompClient={stompClient}
         channelId={Number(channelId)}
-        email={email}
+        email={email ?? ""}
         player={player}
         duration={duration}
       />

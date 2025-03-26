@@ -12,7 +12,7 @@ export default function HomePage() {
   const [cursorId, setCursorId] = useState<number | null>(null);
   const [cursorPopular, setCursorPopular] = useState<number | null>(null);
   const [hasNext, setHasNext] = useState(true);
-  const [isFetching] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
 
   const observerRef = useRef<HTMLDivElement | null>(null); // 무한 스크롤 감지 ref
 
@@ -25,9 +25,9 @@ export default function HomePage() {
 
       isFetchingRef.current = true;
       try {
-        const params: { cursorId: number | null; limit: number; cursorPopular?: number | null } = {
+        // 항상 20개씩 가져옴 => 서버 기본값
+        const params: { cursorId: number | null; size?: number; cursorPopular?: number | null } = {
           cursorId: reset ? null : cursorId,
-          limit: 20, // 항상 20개씩 가져옴
         };
         if (currentCategory === "popular") {
           params.cursorPopular = reset ? null : cursorPopular;
@@ -48,6 +48,7 @@ export default function HomePage() {
         }
 
         setHasNext(response.data.hasNext);
+        setIsFetching(false);
       } catch (error) {
         console.error("Error fetching streams:", error);
       } finally {
@@ -57,33 +58,7 @@ export default function HomePage() {
     [currentCategory, cursorId, cursorPopular]
   );
 
-  useEffect(() => {
-    if (cursorId !== null) {
-      fetchStreams();
-    }
-  }, [cursorId]);
-
   const observer = useRef<IntersectionObserver | null>(null);
-
-  useEffect(() => {
-    if (!observerRef.current || observer.current) return;
-
-    observer.current = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNext) {
-          fetchStreams();
-        }
-      },
-      { threshold: 1.0 }
-    );
-
-    observer.current.observe(observerRef.current);
-
-    return () => {
-      observer.current?.disconnect();
-      observer.current = null;
-    };
-  }, [hasNext, fetchStreams]);
 
   // 카테고리 변경 시 데이터 초기화 및 새로 요청
   useEffect(() => {
@@ -92,10 +67,6 @@ export default function HomePage() {
     setCursorPopular(null);
     setHasNext(true);
   }, [currentCategory]);
-
-  useEffect(() => {
-    fetchStreams(true);
-  }, [fetchStreams]);
 
   // Intersection Observer를 활용한 무한 스크롤
   useEffect(() => {
@@ -108,6 +79,7 @@ export default function HomePage() {
     observer.current = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasNext) {
+          setIsFetching(true);
           fetchStreams();
         }
       },

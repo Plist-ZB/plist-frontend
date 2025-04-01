@@ -1,21 +1,28 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import userAPI from "@/services/api/userAPI";
 
 const usePlaylist = () => {
   const queryClient = useQueryClient();
 
-  const getMyPlaylistsQuery = useQuery({
+  const getMyPlaylistsQuery = useInfiniteQuery({
     queryKey: ["myPlaylists"],
-    queryFn: async () => {
+    initialPageParam: undefined,
+    queryFn: async ({ pageParam }: { pageParam?: number }) => {
       try {
-        const result = await userAPI.getMyPlaylists();
+        const result = await userAPI.getMyPlaylists({ cursorId: pageParam, size: 20 });
         return result;
       } catch (error) {
-        console.error("플레이리스트 조회 실패:", error);
-        return [] as const;
+        console.error("내 과거 호스트 이력 조회 실패:", error);
+        throw error;
       }
     },
-    enabled: true,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.hasNext) return undefined;
+
+      const lastItem = lastPage.content.at(-1);
+
+      return lastItem?.userPlaylistId;
+    },
   });
 
   const addPlaylistMutation = useMutation({

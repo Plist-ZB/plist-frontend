@@ -1,24 +1,29 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import userAPI from "@/services/api/userAPI";
 
 const useHostHistory = () => {
-  const getPastStreamsQuery = useQuery({
+  return useInfiniteQuery({
     queryKey: ["pastStreams"],
-    queryFn: async () => {
+    initialPageParam: undefined,
+    queryFn: async ({ pageParam }: { pageParam?: number }) => {
       try {
-        const result = await userAPI.getMyPastStreams();
+        const result = await userAPI.getMyPastStreams({ cursorId: pageParam, size: 20 });
         return result;
       } catch (error) {
         console.error("내 과거 호스트 이력 조회 실패:", error);
-        return [] as const;
+        throw error;
       }
     },
-    enabled: true,
-  });
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.hasNext) {
+        return undefined;
+      }
 
-  return {
-    getPastStreamsQuery,
-  };
+      const lastItem = lastPage.content.at(-1);
+
+      return lastItem?.channelId;
+    },
+  });
 };
 
 export default useHostHistory;

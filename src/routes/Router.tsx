@@ -17,6 +17,8 @@ const PlaylistDetailPage = lazy(() => import("@/pages/mypage/PlaylistDetailPage"
 const HostHistoryPage = lazy(() => import("@/pages/mypage/HostHistoryPage"));
 const HostHistoryDetailPage = lazy(() => import("@/pages/mypage/HostHistoryDetailPage"));
 const PageNotFound = lazy(() => import("@/pages/error/PageNotFound"));
+const NotificationPage = lazy(() => import("@/pages/notify/NotificationPage"));
+const UserPage = lazy(() => import("@/pages/user/UserPage"));
 
 const Router = () => {
   return (
@@ -36,6 +38,10 @@ const Router = () => {
           <Route path="redirect" element={<RedirectPage />} />
           <Route path="welcome" element={<WelcomePage />} />
         </Route>
+
+        <Route path="/notify" element={<NotificationPage />} />
+
+        <Route path="/user/:id" element={<UserPage />} />
 
         <Route path="/category/:id" element={<CategoryDetailPage />} />
 

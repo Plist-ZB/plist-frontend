@@ -48,8 +48,16 @@ const userAPI = {
     return response;
   },
 
-  getMyPlaylists: async () => {
-    const { data: response } = await instance.get<MyPlaylists>(`${userPrefix}/playlists`);
+  getMyPlaylists: async ({
+    cursorId = undefined,
+    size = 20,
+  }: {
+    cursorId?: number;
+    size?: number;
+  }) => {
+    const { data: response } = await instance.get<MyPlaylists>(`${userPrefix}/playlists`, {
+      params: { cursorId, size },
+    });
 
     return response;
   },

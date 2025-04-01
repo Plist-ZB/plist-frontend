@@ -11,10 +11,15 @@ declare interface IChannel extends IChannelCommon {
   channelParticipantCount: number;
 }
 
-declare interface IPastStream extends IChannelCommon {
+declare interface IPastStreamContent extends IChannelCommon {
   channelDurationTime: string;
   channelLastParticipantCount: number;
   channelCreatedAt: string;
+}
+
+declare interface IPastStream {
+  content: IPastStreamContent[];
+  hasNext: boolean;
 }
 
 declare interface IVideo {

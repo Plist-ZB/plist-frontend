@@ -5,4 +5,7 @@ declare interface IPlaylist {
   videoCount: number;
 }
 
-declare type MyPlaylists = IPlaylist[];
+declare interface MyPlaylists {
+  content: IPlaylist[];
+  hasNext: boolean;
+}

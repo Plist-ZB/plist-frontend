@@ -29,7 +29,7 @@ declare interface IVideo {
   videoThumbnail: string;
 }
 
-declare interface IPastStreamInfo extends IPastStream {
+declare interface IPastStreamInfo extends IPastStreamContent {
   videoList: IVideo[];
 }
 

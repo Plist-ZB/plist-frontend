@@ -107,8 +107,16 @@ const userAPI = {
     return response;
   },
 
-  getMyPastStreams: async () => {
-    const { data: response } = await instance.get<IPastStream[]>(`/user/history`);
+  getMyPastStreams: async ({
+    cursorId = undefined,
+    size = 20,
+  }: {
+    cursorId?: number;
+    size?: number;
+  }) => {
+    const { data: response } = await instance.get<IPastStream>(`/user/history`, {
+      params: { cursorId, size },
+    });
 
     return response;
   },

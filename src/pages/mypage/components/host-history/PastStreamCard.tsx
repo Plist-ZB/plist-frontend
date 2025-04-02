@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FaUserAlt } from "react-icons/fa";
 
 interface PastStreamCardProps {
-  readonly item: IPastStream;
+  readonly item: IPastStreamContent;
 }
 
 export default function PastStreamCard({ item }: PastStreamCardProps) {

@@ -51,7 +51,6 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
     queryKey: ["/channels/category", categoryId], // categoryId에 따라 API를 호출
     queryFn: fetchCategories,
   });
-  console.log(categories);
 
   const { data: playlists, isLoading: playlistsLoading } = useQuery({
     queryKey: ["playlists"],
@@ -142,12 +141,10 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
           <Label>카테고리 선택하기</Label>
           <SmallLabel>* 카테고리 선택은 필수입니다.</SmallLabel>
           <StyledSelect
-            options={categories.content.map(
-              (category: { categoryId: number; categoryName: string }) => ({
-                value: category.categoryId.toString(),
-                label: category.categoryName,
-              })
-            )}
+            options={categories.map((category: { categoryId: number; categoryName: string }) => ({
+              value: category.categoryId.toString(),
+              label: category.categoryName,
+            }))}
             classNamePrefix="react-select"
             placeholder={CategoryPlaceholder}
             value={selectedCategory} // 선택된 카테고리를 명시적으로 설정
@@ -170,15 +167,6 @@ export default function HostAdd({ isOpen, onClose }: HostAddProps) {
             } // 매개변수 추가
             components={{ IndicatorSeparator: () => null }}
           />
-          {/* <Label>채널 최대 인원 수</Label>
-          <RadioGroup>
-            {["5명", "15명", "20명", "25명"].map((option) => (
-              <RadioButton key={option}>
-                <input type="radio" name="maxUsers" value={option} />
-                <span>{option}</span>
-              </RadioButton>
-            ))}
-          </RadioGroup> */}
           <Label>썸네일</Label>
           <SmallLabel>* 썸네일은 재생목록 첫번째 이미지로 자동 선택됩니다.</SmallLabel>
           <ThumbnailPreview>

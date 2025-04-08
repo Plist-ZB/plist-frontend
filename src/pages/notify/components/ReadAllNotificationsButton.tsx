@@ -11,6 +11,7 @@ export default function ReadAllNotificationsButton() {
       console.log(response);
 
       queryClient.invalidateQueries({ queryKey: ["messages"] });
+      queryClient.invalidateQueries({ queryKey: ["hasUnreadMessages"] });
     } catch (error) {
       console.log(error);
     }

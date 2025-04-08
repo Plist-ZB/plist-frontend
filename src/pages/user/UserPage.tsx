@@ -1,5 +1,64 @@
+import React, { useState, useEffect, Key } from "react";
 import styled from "styled-components";
 import TopBarLayout from "@/layout/TopBarLayout";
+import InfiniteScroll from "react-infinite-scroll-component";
+import PastStreamCard from "@/pages/mypage/components/host-history/PastStreamCard";
+
+const ProfilePage = () => {
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  interface Stream {
+    channelId: Key | null | undefined;
+    id: string;
+    title: string;
+    thumbnailUrl: string;
+    channelDurationTime: number;
+    channelLastParticipantCount: number;
+    channelCreatedAt: string;
+    channelName: string;
+    // Add other fields as necessary
+  }
+
+  const [streams, setStreams] = useState<Stream[]>([]);
+  const [cursorId, setCursorId] = useState<string | null>(null);
+  const [hasNext, setHasNext] = useState(true);
+
+  useEffect(() => {
+    fetchStreams();
+  }, []);
+
+  const fetchStreams = async () => {
+    if (!hasNext) return;
+    const res = await fetch(`/api/streams?cursorId=${cursorId ?? ""}&size=20`);
+    const data = await res.json();
+    setStreams((prev) => [...prev, ...data.content]);
+    setCursorId(data.lastId);
+    setHasNext(data.hasNext);
+  };
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+      fetchStreams();
+    }
+  };
+
+  const handleSubscribeClick = () => {
+    if (isSubscribed) {
+      setShowConfirmModal(true);
+    } else {
+      setIsSubscribed(true);
+    }
+  };
+
+  const confirmUnsubscribe = () => {
+    setIsSubscribed(false);
+    setShowConfirmModal(false);
+  };
+
+  function fetchNextPage() {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <Container onScroll={handleScroll}>

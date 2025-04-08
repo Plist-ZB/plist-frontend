@@ -4,7 +4,7 @@ import TopBarLayout from "@/layout/TopBarLayout";
 import InfiniteScroll from "react-infinite-scroll-component";
 import PastStreamCard from "@/pages/mypage/components/host-history/PastStreamCard";
 
-const ProfilePage = () => {
+const UserPage = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   interface Stream {
@@ -112,7 +112,7 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default UserPage;
 
 const Container = styled.div`
   height: 100vh;

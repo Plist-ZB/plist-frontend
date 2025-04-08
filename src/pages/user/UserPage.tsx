@@ -171,12 +171,17 @@ const Subscribers = styled.div`
 const SubscribeButton = styled.button<{ isSubscribed: boolean }>`
   margin-top: 8px;
   padding: 6px 12px;
-  background: ${({ isSubscribed }) => (isSubscribed ? "#869fd4" : "#ffffff")};
+  background: ${({ isSubscribed }) => (isSubscribed ? "#4854a2" : "#ffffff")};
   color: ${({ isSubscribed }) => (isSubscribed ? "#ffffff" : "#4854a2")};
   border: 1px solid #4854a2;
   border-radius: 8px;
   cursor: pointer;
   justify-content: center;
+
+  &:hover {
+    color: #ffffff;
+    background-color: #6981c8;
+  }
 `;
 
 const StreamTitle = styled.h2`
@@ -193,35 +198,6 @@ const StreamName = styled.h2`
 
 const StreamLine = styled.h2`
   border-top: 1px solid #d9d9d9;
-`;
-
-const StreamCard = styled.div`
-  display: flex;
-  margin: 12px 0;
-`;
-
-const Thumbnail = styled.div`
-  width: 80px;
-  height: 80px;
-  background: #ccc;
-  margin-right: 12px;
-`;
-
-const StreamInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const StreamTitleText = styled.div`
-  font-weight: bold;
-`;
-
-const StreamMeta = styled.div`
-  color: gray;
-`;
-
-const StreamDate = styled.div`
-  color: gray;
 `;
 
 const Modal = styled.div`

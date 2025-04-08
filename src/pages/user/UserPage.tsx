@@ -16,7 +16,6 @@ const ProfilePage = () => {
     channelLastParticipantCount: number;
     channelCreatedAt: string;
     channelName: string;
-    // Add other fields as necessary
   }
 
   const [streams, setStreams] = useState<Stream[]>([]);
@@ -64,7 +63,7 @@ const ProfilePage = () => {
     <Container onScroll={handleScroll}>
       <TopBarLayout
         topBarProps={{
-          title: "송유나님의 프로필", // Replace with actual data source
+          title: "다른사용자님의 프로필", // Replace with actual data source
           backURL: "/mypage",
           hasAction: true,
         }}
@@ -74,7 +73,7 @@ const ProfilePage = () => {
             <LiveBadge>Live</LiveBadge>
           </ProfileImage>
           <UserInfo>
-            <Username>송유나</Username>
+            <Username>다른사용자</Username>
             <Subscribers>구독자 2,586명</Subscribers>
             <SubscribeButton onClick={handleSubscribeClick} isSubscribed={isSubscribed}>
               {isSubscribed ? "구독중" : "구독하기"}
@@ -83,7 +82,7 @@ const ProfilePage = () => {
         </ProfileSection>
         <StreamLine />
         <StreamTitle>
-          <StreamName>송유나</StreamName>님의 과거 스트리밍
+          <StreamName>다른사용자</StreamName>님의 과거 스트리밍
         </StreamTitle>
         <InfiniteScroll
           dataLength={streams.length}

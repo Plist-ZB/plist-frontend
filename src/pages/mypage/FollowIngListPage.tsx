@@ -1,9 +1,58 @@
+import React, { useState } from "react";
 import TopBarLayout from "@/layout/TopBarLayout";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
+interface SubscribedUser {
+  id: number;
+  name: string;
+  color: string;
+  isSubscribed: boolean;
+}
+
+const mockData: SubscribedUser[] = [
+  { id: 1, name: "노지훈", color: "#3366FF", isSubscribed: true },
+  { id: 2, name: "이은선", color: "#CC33FF", isSubscribed: true },
+  { id: 3, name: "윤학수", color: "#557A00", isSubscribed: true },
+];
 
 export default function FollowIngListPage() {
-  return <div>FollowIngListPage</div>;
+  const [subscribedUsers, setSubscribedUsers] = useState<SubscribedUser[]>(mockData);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const navigate = useNavigate();
+
+  const handleUserClick = (userId: number) => {
+    navigate(`/user/${userId}`);
+  };
+
+  const handleSubscribeClick = (userId: number) => {
+    const user = subscribedUsers.find((u) => u.id === userId);
+    if (!user) return;
+
+    if (user.isSubscribed) {
+      setSelectedUserId(userId);
+      setShowConfirmModal(true);
+    } else {
+      updateSubscription(userId, true);
+    }
+  };
+
+  const updateSubscription = (userId: number, subscribed: boolean) => {
+    const updatedList = subscribedUsers.map((user) =>
+      user.id === userId ? { ...user, isSubscribed: subscribed } : user
+    );
+    setSubscribedUsers(updatedList);
+  };
+
+  const confirmUnsubscribe = () => {
+    if (selectedUserId !== null) {
+      updateSubscription(selectedUserId, false);
+      setSelectedUserId(null);
+      setShowConfirmModal(false);
+    }
+  };
+
   return (
     <TopBarLayout
       topBarProps={{

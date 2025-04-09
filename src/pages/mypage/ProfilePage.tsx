@@ -2,6 +2,19 @@ import TopBarLayout from "@/layout/TopBarLayout";
 import { Camera } from "lucide-react";
 import useProfile from "./hooks/useProfile";
 import styled from "styled-components";
+import { LuLoaderCircle } from "react-icons/lu";
+
+/* 회원탈퇴 컴포넌트 */
+const WithdrawalButton = () => {
+  return (
+    <button
+      className="opacity-50 text-red-main hover:text-red-main"
+      onClick={() => console.log("회원탈퇴")}
+    >
+      회원탈퇴
+    </button>
+  );
+};
 
 export default function ProfilePage() {
   /* 프로필 관련 로직 */
@@ -13,19 +26,14 @@ export default function ProfilePage() {
     onChangeNickname,
     onSubmit,
     isPending,
+    isLoading,
   } = useProfile();
 
-  /* 회원탈퇴 컴포넌트 */
-  const WithdrawalButton = () => {
-    return (
-      <button
-        className="opacity-50 text-red-main hover:text-red-main"
-        onClick={() => console.log("회원탈퇴")}
-      >
-        회원탈퇴
-      </button>
-    );
-  };
+  //console.log(prevUserProfile);
+
+  if (isLoading) {
+    return <div>...</div>;
+  }
 
   return (
     <TopBarLayout
@@ -51,10 +59,10 @@ export default function ProfilePage() {
 
           <label
             htmlFor="profile-image"
-            className="relative flex bg-cover border rounded-full bg-primary-50 center w-36 h-36 border-gray-border aspect-square"
+            className="relative flex bg-cover border rounded-full cursor-pointer bg-primary-50 center w-36 h-36 border-gray-border aspect-square"
             style={backgroundImageStyle}
           >
-            <Camera className="absolute bottom-0 right-0 flex w-8 h-8 p-1 bg-white border rounded-full cursor-pointer center border-gray-border" />
+            <Camera className="absolute bottom-0 right-0 flex w-8 h-8 p-1 bg-white border rounded-full center border-gray-border" />
           </label>
 
           <input
@@ -68,10 +76,13 @@ export default function ProfilePage() {
 
           <button
             disabled={isPending}
-            className={`self-auto w-full max-w-xs py-4 mt-auto bg-white border rounded-lg border-gray-border hover:border-gray-border hover:text-black`}
+            className={`flex items-center justify-center gap-2 self-auto w-full max-w-xs py-4 mt-auto bg-white border rounded-lg border-gray-border hover:border-gray-border hover:text-black disabled:cursor-not-allowed`}
           >
             {isPending ? (
-              <span className="animate-pulse text-primary-main">변경중...</span>
+              <>
+                <LuLoaderCircle className="inline animate-spin" size={20} />
+                <span className="">변경중...</span>
+              </>
             ) : (
               "변경하기"
             )}

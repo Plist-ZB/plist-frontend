@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import RootLayout from "@/layout/RootLayout";
 
@@ -17,6 +17,10 @@ const PlaylistDetailPage = lazy(() => import("@/pages/mypage/PlaylistDetailPage"
 const HostHistoryPage = lazy(() => import("@/pages/mypage/HostHistoryPage"));
 const HostHistoryDetailPage = lazy(() => import("@/pages/mypage/HostHistoryDetailPage"));
 const PageNotFound = lazy(() => import("@/pages/error/PageNotFound"));
+const NotificationPage = lazy(() => import("@/pages/notify/NotificationPage"));
+const UserPage = lazy(() => import("@/pages/user/UserPage"));
+const UserPastStreamDetailPage = lazy(() => import("@/pages/user/UserPastStreamDetailPage"));
+const FollowIngListPage = lazy(() => import("@/pages/mypage/FollowIngListPage"));
 
 const Router = () => {
   return (
@@ -37,6 +41,14 @@ const Router = () => {
           <Route path="welcome" element={<WelcomePage />} />
         </Route>
 
+        <Route path="/notify" element={<NotificationPage />} />
+
+        <Route path="user">
+          <Route index element={<Navigate to="/" replace />} />
+          <Route path=":userId" element={<UserPage />} />
+          <Route path="past-stream/:id" element={<UserPastStreamDetailPage />} />
+        </Route>
+
         <Route path="/category/:id" element={<CategoryDetailPage />} />
 
         <Route path="/channel/:channelId" element={<ChannelPage />} />
@@ -51,6 +63,7 @@ const Router = () => {
             <Route index element={<HostHistoryPage />} />
             <Route path=":channelId" element={<HostHistoryDetailPage />} />
           </Route>
+          <Route path="following" element={<FollowIngListPage />} />
         </Route>
       </Routes>
     </Suspense>

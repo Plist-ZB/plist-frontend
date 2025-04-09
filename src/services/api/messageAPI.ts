@@ -13,7 +13,7 @@ export const patchAllMessagesToRead = async () => {
 };
 
 export const patchMessageToReadById = async (messageId: number) => {
-  const { data: response } = await instance.patch(`/messages${messageId}`);
+  const { data: response } = await instance.patch(`/message/${messageId}`);
 
   return response;
 };

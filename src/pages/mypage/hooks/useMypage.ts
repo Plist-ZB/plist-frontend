@@ -1,42 +1,11 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import userAPI from "@/services/api/userAPI";
-import { useAtom } from "jotai";
-import { userProfileAtom } from "@/store/user";
-import { useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
+import { userProfileAtom } from "@/store/user-profile";
 import { useNavigate } from "react-router-dom";
 
 const useMypage = () => {
   const navigate = useNavigate();
-  const [userProfile, setUserProfile] = useAtom(userProfileAtom);
-
-  const { data, isLoading: isProfileLoading } = useQuery<UserProfile>({
-    queryKey: ["userProfile"],
-    queryFn: async () => {
-      try {
-        const result = await userAPI.getProfile();
-
-        return result;
-      } catch (error) {
-        //navigate("/auth/login");
-
-        const fallbackData = {
-          id: 1,
-          nickname: "",
-          email: "",
-          image: "",
-        };
-
-        return fallbackData;
-      }
-    },
-    enabled: true,
-  });
-
-  useEffect(() => {
-    if (!userProfile && data) {
-      setUserProfile(data);
-    }
-  }, [data, userProfile, setUserProfile]);
+  const { data: userProfile, isLoading: isProfileLoading } = useAtomValue(userProfileAtom);
 
   const { mutate: logout } = useMutation({
     mutationFn: async () => {

@@ -2,22 +2,28 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useAtomValue } from "jotai";
 import { userProfileAtom } from "@/store/user-profile";
+import NotificationButton from "@/layout/components/NotificationButton";
 
 export default function HeaderButton() {
-  // Access token 가져오기
-
   const userProfile = useAtomValue(userProfileAtom);
+  const bgImageUrl = { backgroundImage: `url('${userProfile.data?.image}')` };
 
   return (
-    <>
+    <div className="flex items-center gap-2">
       {!userProfile.data ? (
         <StyledButton to={"/auth/login"}>로그인</StyledButton>
       ) : (
-        <StyledButton to={"/mypage"} className="truncate">
-          {userProfile.data?.nickname}
-        </StyledButton>
+        <>
+          <NotificationButton />
+
+          <Link
+            to={"/mypage"}
+            className="truncate bg-center bg-cover rounded-full w-9 h-9 aspect-square center"
+            style={bgImageUrl}
+          />
+        </>
       )}
-    </>
+    </div>
   );
 }
 

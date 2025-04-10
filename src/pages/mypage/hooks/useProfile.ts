@@ -1,15 +1,15 @@
 import userAPI from "@/services/api/userAPI";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { useAtom } from "jotai";
-import { userProfileAtom } from "@/store/user";
+import { useEffect, useState } from "react";
+import { useAtomValue } from "jotai";
 import { useNavigate } from "react-router-dom";
+import { userProfileAtom } from "@/store/user-profile";
 
 const useProfile = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const [prevUserProfile, setUserProfile] = useAtom(userProfileAtom);
+  const { data: prevUserProfile, isLoading } = useAtomValue(userProfileAtom);
 
   const [newProfile, setNewProfile] = useState({
     nickname: prevUserProfile?.nickname ?? "",
@@ -17,6 +17,10 @@ const useProfile = () => {
   });
 
   const [previewAvatar, setPreviewAvatar] = useState(prevUserProfile?.image);
+
+  useEffect(() => {
+    if (prevUserProfile) setPreviewAvatar(prevUserProfile.image);
+  }, [prevUserProfile]);
 
   const onChangeFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -60,7 +64,12 @@ const useProfile = () => {
       try {
         const result = await userAPI.patchUserProfile({ nickname, image });
 
-        setUserProfile(result);
+        console.log("프로필 업데이트", result);
+
+        setNewProfile({
+          nickname: result.nickname,
+          image: null,
+        });
 
         return result;
       } catch (error) {
@@ -68,7 +77,9 @@ const useProfile = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+      queryClient.invalidateQueries({
+        queryKey: ["userProfile", localStorage.getItem("access_token")],
+      });
       navigate("/mypage");
     },
   });
@@ -88,6 +99,7 @@ const useProfile = () => {
     onSubmit,
     isPending,
     isError,
+    isLoading,
   };
 };
 

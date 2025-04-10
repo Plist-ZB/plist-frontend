@@ -106,7 +106,7 @@ export default function SearchPage() {
             <SubscriberText>구독자 {result.channelParticipantCount}명</SubscriberText>
           </ChannelInfo>
 
-          <SubscribeButton onClick={handleSubscribeClick} isSubscribed={isSubscribed}>
+          <SubscribeButton onClick={handleSubscribeClick} $isSubscribed={isSubscribed}>
             {isSubscribed ? "구독중" : "구독하기"}
           </SubscribeButton>
           {/* 구독 상태는 상태값에 따라 조건부로 처리 가능 */}

@@ -78,7 +78,7 @@ const UserPage = () => {
           <UserInfo>
             <Username>다른사용자</Username>
             <Subscribers>구독자 2,586명</Subscribers>
-            <SubscribeButton onClick={handleSubscribeClick} isSubscribed={isSubscribed}>
+            <SubscribeButton onClick={handleSubscribeClick} $isSubscribed={isSubscribed}>
               {isSubscribed ? "구독중" : "구독하기"}
             </SubscribeButton>
           </UserInfo>

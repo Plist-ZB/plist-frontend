@@ -71,7 +71,7 @@ export default function FollowIngListPage() {
             <UserName onClick={() => handleUserClick(user.id)}>{user.name}</UserName>
             <SubscribeButton
               onClick={() => handleSubscribeClick(user.id)}
-              isSubscribed={user.isSubscribed}
+              $isSubscribed={user.isSubscribed}
             >
               {user.isSubscribed ? "구독중" : "구독하기"}
             </SubscribeButton>

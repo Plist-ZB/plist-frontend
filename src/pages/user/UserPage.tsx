@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Key } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TopBarLayout from "@/layout/TopBarLayout";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -7,15 +7,18 @@ import PastStreamCard from "@/pages/mypage/components/host-history/PastStreamCar
 const UserPage = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  interface Stream {
-    channelId: Key | null | undefined;
+  interface Stream extends IPastStreamContent {
+    channelId: number;
     id: string;
     title: string;
     thumbnailUrl: string;
-    channelDurationTime: number;
+    channelDurationTime: string;
     channelLastParticipantCount: number;
     channelCreatedAt: string;
     channelName: string;
+    channelCategoryName: string;
+    channelThumbnail: string;
+    channelHostName: string;
   }
 
   const [streams, setStreams] = useState<Stream[]>([]);

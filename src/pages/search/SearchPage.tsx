@@ -214,11 +214,11 @@ const SubscriberText = styled.p`
   color: #666;
 `;
 
-const SubscribeButton = styled.button<{ isSubscribed: boolean }>`
+const SubscribeButton = styled.button<{ $isSubscribed: boolean }>`
   margin-right: 20px;
   padding: 6px 12px;
-  background: ${({ isSubscribed }) => (isSubscribed ? "#4854a2" : "#ffffff")};
-  color: ${({ isSubscribed }) => (isSubscribed ? "#ffffff" : "#4854a2")};
+  background: ${({ $isSubscribed }) => ($isSubscribed ? "#4854a2" : "#ffffff")};
+  color: ${({ $isSubscribed }) => ($isSubscribed ? "#ffffff" : "#4854a2")};
   border: 1px solid #4854a2;
   border-radius: 8px;
   cursor: pointer;

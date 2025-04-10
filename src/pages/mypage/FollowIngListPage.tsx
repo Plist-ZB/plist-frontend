@@ -118,14 +118,15 @@ const UserName = styled.div`
   cursor: pointer;
 `;
 
-const SubscribeButton = styled.button<{ isSubscribed: boolean }>`
-  padding: 6px 12px;
+const SubscribeButton = styled.button<{ $isSubscribed: boolean }>`
   margin-right: 20px;
-  background: ${({ isSubscribed }) => (isSubscribed ? "#4854a2" : "#ffffff")};
-  color: ${({ isSubscribed }) => (isSubscribed ? "#ffffff" : "#4854a2")};
+  padding: 6px 12px;
+  background: ${({ $isSubscribed }) => ($isSubscribed ? "#4854a2" : "#ffffff")};
+  color: ${({ $isSubscribed }) => ($isSubscribed ? "#ffffff" : "#4854a2")};
   border: 1px solid #4854a2;
   border-radius: 8px;
   cursor: pointer;
+  display: flex;
   justify-content: center;
 
   &:hover {

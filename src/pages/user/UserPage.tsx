@@ -171,14 +171,15 @@ const Subscribers = styled.div`
   justify-content: center;
 `;
 
-const SubscribeButton = styled.button<{ isSubscribed: boolean }>`
-  margin-top: 8px;
+const SubscribeButton = styled.button<{ $isSubscribed: boolean }>`
+  margin-right: 20px;
   padding: 6px 12px;
-  background: ${({ isSubscribed }) => (isSubscribed ? "#4854a2" : "#ffffff")};
-  color: ${({ isSubscribed }) => (isSubscribed ? "#ffffff" : "#4854a2")};
+  background: ${({ $isSubscribed }) => ($isSubscribed ? "#4854a2" : "#ffffff")};
+  color: ${({ $isSubscribed }) => ($isSubscribed ? "#ffffff" : "#4854a2")};
   border: 1px solid #4854a2;
   border-radius: 8px;
   cursor: pointer;
+  display: flex;
   justify-content: center;
 
   &:hover {
@@ -187,19 +188,19 @@ const SubscribeButton = styled.button<{ isSubscribed: boolean }>`
   }
 `;
 
-const StreamTitle = styled.h2`
+const StreamTitle = styled.div`
   font-size: 18px;
   display: flex;
   justify-content: center;
   margin-top: 20px;
 `;
 
-const StreamName = styled.h2`
+const StreamName = styled.span`
   color: #4854a2;
   font-weight: bold;
 `;
 
-const StreamLine = styled.h2`
+const StreamLine = styled.div`
   border-top: 1px solid #d9d9d9;
 `;
 

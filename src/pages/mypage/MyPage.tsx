@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { UserRoundPen } from "lucide-react";
 import useMypage from "@/pages/mypage/hooks/useMypage";
 import { useCallback } from "react";
+import PushNotiMenu from "@/pages/mypage/components/mypage/PushNotiMenu";
 
 const myPageMenus = [
   {
@@ -11,8 +12,12 @@ const myPageMenus = [
     to: "/mypage/playlist",
   },
   {
-    name: "내 호스트 이력 보기",
+    name: "내 호스트 이력",
     to: "/mypage/host-history",
+  },
+  {
+    name: "내 구독 리스트",
+    to: "/mypage/following",
   },
 ];
 
@@ -38,6 +43,8 @@ export default function MyPage() {
       <UserInfo />
 
       <div className="flex flex-col w-full gap-6 px-4 py-8">
+        <PushNotiMenu />
+
         {myPageMenus.map((menu) => (
           <MenuButton key={menu.name} name={menu.name} to={menu.to} />
         ))}

@@ -24,3 +24,6 @@ dist-ssr
 *.sln
 *.sw?
 *.env
+
+# Firebase Config
+firebase-config.json

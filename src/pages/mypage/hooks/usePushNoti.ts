@@ -65,6 +65,7 @@ const usePushNoti = () => {
 
   onMessage(messaging, (payload) => {
     console.log("Message received in Hook", payload);
+    queryClient.invalidateQueries({ queryKey: ["hasUnreadMessages"] });
   });
 
   return { isPushAllowed, onClickPushHandler, isOffPushLoading, isOnPushLoading };

@@ -45,7 +45,7 @@ const Router = () => {
 
         <Route path="user">
           <Route index element={<Navigate to="/" replace />} />
-          <Route path=":userId" element={<UserPage />} />
+          <Route path="profile/:userId" element={<UserPage />} />
           <Route path="past-stream/:id" element={<UserPastStreamDetailPage />} />
         </Route>
 

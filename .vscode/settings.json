@@ -6,5 +6,6 @@
     "source.fixAll.eslint": "always",
     "source.fixAll.prettier": "always"
   },
-  "cSpell.words": ["tailwindcss", "tanstack", "mypage", "Pretendard", "grayscale", "Noti"]
+  "cSpell.words": ["tailwindcss", "tanstack", "mypage", "Pretendard", "grayscale", "Noti"],
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

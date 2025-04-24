@@ -14,9 +14,9 @@ const useGetUnread = () => {
       }
     },
     enabled: true,
-    refetchInterval: 1000 * 10,
-    staleTime: 1000 * 10,
-    gcTime: 1000 * 10,
+    refetchInterval: 1000 * 60,
+    staleTime: 1000 * 60,
+    gcTime: 1000 * 60,
   });
 
   return { data, isLoading };
